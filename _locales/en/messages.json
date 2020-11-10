@@ -1,0 +1,115 @@
+{
+  "extensionDescription": {
+    "message": "A high-level live view of your bookmarks.",
+    "description": "Description of the extension."
+  },
+  "bookmarks": {
+    "message": "Bookmarks",
+    "description": "Standard name for bookmarks."
+  },
+  "preferences": {
+    "message": "Preferences",
+    "description": "Label on button to open preferences."
+  },
+  "menuItemOpenAllInTabs": {
+    "message": "&Open All in Tabs",
+    "description": "Title of context menu item that opens all of a folder's bookmarks in new tabs."
+  },
+  "menuItemDelete": {
+    "message": "&Delete",
+    "description": "Title of context menu item that deletes a bookmark."
+  },
+  "menuItemProperties": {
+    "message": "Propert&ies",
+    "description": "Title of context menu item to edit bookmark properties."
+  },
+  "dialogButtonCancel": {
+    "message": "Cancel",
+    "description": "Label on button to cancel a dialog."
+  },
+  "dialogButtonDelete": {
+    "message": "Delete",
+    "description": "Label on button to perform a delete action."
+  },
+  "dialogButtonSave": {
+    "message": "Save",
+    "description": "Label on button to perform a save action."
+  },
+  "dialogHeadingDeleteFolder": {
+    "message": "Delete Folder",
+    "description": "Title of dialog to confirm deleting a folder."
+  },
+  "dialogHeadingBookmarkProperties": {
+    "message": "Properties for \"$TITLE$\"",
+    "description": "Title of dialog to edit bookmark properties.",
+    "placeholders": {
+      "title": {
+        "content": "$1"
+      }
+    }
+  },
+  "dialogMessageDeleteFolder": {
+    "message": "Are you sure you want to delete this folder and all its bookmarks?",
+    "description": "Message on dialog to confirm deleting a folder."
+  },
+  "optionHeadingGeneral": {
+    "message": "General",
+    "description": "Title of group for general options."
+  },
+  "optionHeadingBookmarks": {
+    "message": "Bookmarks",
+    "description": "Title of group for bookmark options."
+  },
+  "optionShowBookmarksToolbar": {
+    "message": "Show Bookmarks Toolbar",
+    "description": "Title of option to show the Bookmarks Toolbar folder."
+  },
+  "optionShowBookmarksMenu": {
+    "message": "Show Bookmarks Menu",
+    "description": "Title of option to show the Bookmarks Menu folder."
+  },
+  "optionShowOtherBookmarks": {
+    "message": "Show Other Bookmarks",
+    "description": "Title of option to show the Other Bookmarks folder."
+  },
+  "optionTruncateLongTitles": {
+    "message": "Truncate long titles",
+    "description": "Title of option to truncate long bookmark titles."
+  },
+  "optionDisplayTooltips": {
+    "message": "Show tooltips",
+    "description": "Title of option to display bookmark tooltips."
+  },
+  "optionShowRecentlyVisited": {
+    "message": "Increase font size if recently visited",
+    "description": "Title of option to increase the font size of recently visited bookmarks."
+  },
+  "folderNoTitle": {
+    "message": "(no title)",
+    "description": "Display text for folder that has no name."
+  },
+  "emptyFolder": {
+    "message": "Empty folder",
+    "description": "Display text for the contents of an empty folder."
+  },
+  "errorRetrievingBookmark": {
+    "message": "Error retrieving bookmark.",
+    "description": "Message shown when an error occurs when showing the properties dialog."
+  },
+  "errorSavingBookmark": {
+    "message": "Error saving bookmark.",
+    "description": "Message shown when an error occurs when saving a bookmark's properties."
+  },
+  "errorLoadingPreferences": {
+    "message": "Error loading preferences.",
+    "description": "Message shown when an error occurs when loading the extension's preferences."
+  },
+  "errorLoadingBookmarks": {
+    "message": "Error loading bookmarks.",
+    "description": "Message shown when an error occurs when loading bookmarks."
+  },
+  "errorLoadingHistory": {
+    "message": "Error loading history.",
+    "description": "Message shown when an error occurs when loading history."
+  }
+}

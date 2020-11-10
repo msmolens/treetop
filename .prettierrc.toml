@@ -1,0 +1,5 @@
+singleQuote = true
+svelteAllowShorthand = true
+svelteBracketNewLine = false
+svelteSortOrder = "scripts-styles-markup"
+svelteStrictMode = false
