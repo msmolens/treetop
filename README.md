@@ -12,6 +12,8 @@ Treetop is a Firefox extension that provides a high-level live view of your book
 
 - Open Treetop by clicking its icon in the toolbar.
 
+- Treetop shows all your bookmarks on a single page.
+
 ### Always up-to-date
 
 - Treetop updates automatically as you browse.
@@ -61,7 +63,7 @@ npm install
 
 #### Development
 - [Svelte](https://svelte.dev/): Component framework.
-- [Typescript](https://www.typescriptlang.org/): Typed JavaScript.
+- [TypeScript](https://www.typescriptlang.org/): Typed JavaScript.
 - [Rollup](https://rollupjs.org/): Module bundler.
 - [Svelte Material UI](https://sveltematerialui.com/): Material UI components for Svelte.
 - [ESLint](https://eslint.org/): Static analyzer.
@@ -70,7 +72,7 @@ npm install
 
 #### Testing
 - [Jest](https://jestjs.io/): Testing framework.
-- [Svelte Testing Library](https://testing-library.com/): Framework to test Svelte components.
+- [DOM Testing Library](https://testing-library.com/): Framework to test Svelte components.
 - [mockzilla-webextension](https://lusito.github.io/mockzilla-webextension/): Mocking toolkit for web extensions.
 
 ## History
