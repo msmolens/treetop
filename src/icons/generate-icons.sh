@@ -15,6 +15,16 @@ for px in $PX
     treetop.svg
 end
 
+# Generate social preview icon.
+
+  inkscape \
+    --export-filename="generated/treetop-social.png" \
+    --export-type="png" \
+    --export-area-page \
+    --export-width=1280  \
+    --export-height=640 \
+    treetop-social.svg
+
 # Generate optimized SVG icon.
 # Requires scour: https://github.com/scour-project/scour
 
