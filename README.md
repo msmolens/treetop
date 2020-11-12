@@ -1,4 +1,4 @@
-![CI](https://github.com/msmolens/treetop/workflows/CI/badge.svg)
+[![CI](https://github.com/msmolens/treetop/workflows/CI/badge.svg)](https://github.com/msmolens/treetop/actions?query=workflow%3ACI)
 
 # ![Treetop logo](src/icons/generated/icon48.png) Treetop
 
