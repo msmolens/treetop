@@ -358,13 +358,13 @@ describe('handleBookmarkCreated', () => {
     await bookmarksManager.loadBookmarks();
     expect(nodeStoreMap.size).toBe(NUM_BOOKMARK_ROOTS + 1);
     expect(nodeStoreMap.get(baseNode.id)).toBeDefined();
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children.length).toBe(
+    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children).toHaveLength(
       2
     );
     expect(nodeStoreMap.get(folderNode.id)).toBeDefined();
-    expect(getFolderNode(nodeStoreMap.get(folderNode.id)).children.length).toBe(
-      1
-    );
+    expect(
+      getFolderNode(nodeStoreMap.get(folderNode.id)).children
+    ).toHaveLength(1);
   });
 
   it('created bookmark', async () => {
@@ -384,9 +384,9 @@ describe('handleBookmarkCreated', () => {
     expect(nodeStoreMap.size).toBe(NUM_BOOKMARK_ROOTS + 1);
 
     // New bookmark node appears in parent node's children
-    expect(getFolderNode(nodeStoreMap.get(folderNode.id)).children.length).toBe(
-      2
-    );
+    expect(
+      getFolderNode(nodeStoreMap.get(folderNode.id)).children
+    ).toHaveLength(2);
     expect(
       getFolderNode(nodeStoreMap.get(folderNode.id)).children
     ).toContainEqual({
@@ -414,9 +414,9 @@ describe('handleBookmarkCreated', () => {
     expect(nodeStoreMap.size).toBe(NUM_BOOKMARK_ROOTS + 1);
 
     // New separator node appears in parent node's children
-    expect(getFolderNode(nodeStoreMap.get(folderNode.id)).children.length).toBe(
-      2
-    );
+    expect(
+      getFolderNode(nodeStoreMap.get(folderNode.id)).children
+    ).toHaveLength(2);
     expect(
       getFolderNode(nodeStoreMap.get(folderNode.id)).children
     ).toContainEqual({
@@ -455,9 +455,9 @@ describe('handleBookmarkCreated', () => {
     });
 
     // New folder node appears in parent node's children
-    expect(getFolderNode(nodeStoreMap.get(folderNode.id)).children.length).toBe(
-      2
-    );
+    expect(
+      getFolderNode(nodeStoreMap.get(folderNode.id)).children
+    ).toHaveLength(2);
     expect(
       getFolderNode(nodeStoreMap.get(folderNode.id)).children
     ).toContainEqual({
@@ -501,7 +501,7 @@ describe('handleBookmarkRemoved', () => {
     await bookmarksManager.loadBookmarks();
     expect(nodeStoreMap.size).toBe(NUM_BOOKMARK_ROOTS + 2);
     expect(nodeStoreMap.get(baseNode.id)).toBeDefined();
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children.length).toBe(
+    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children).toHaveLength(
       2
     );
     expect(nodeStoreMap.get(folderNode1.id)).toBeDefined();
@@ -542,7 +542,7 @@ describe('handleBookmarkRemoved', () => {
       removeInfo
     );
 
-    expect(removedNodeIds.length).toBe(1);
+    expect(removedNodeIds).toHaveLength(1);
     expect(removedNodeIds).toContain(bookmarkNode4.id);
     expect(nodeStoreMap.size).toBe(initialNodeStoreMapSize);
     expect(
@@ -575,7 +575,7 @@ describe('handleBookmarkRemoved', () => {
       removeInfo
     );
 
-    expect(removedNodeIds.length).toBe(1);
+    expect(removedNodeIds).toHaveLength(1);
     expect(removedNodeIds).toContain(separatorNode.id);
     expect(nodeStoreMap.size).toBe(initialNodeStoreMapSize);
     expect(
@@ -589,7 +589,7 @@ describe('handleBookmarkRemoved', () => {
     mockBrowser.bookmarks.get.expect(baseNode.id).andResolve([baseNode]);
     mockBrowser.bookmarks.getChildren.expect(baseNode.id).andResolve(children);
     expect(baseNode.id).toBe(folderNode1.parentId);
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children.length).toBe(
+    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children).toHaveLength(
       2
     );
     expect(
@@ -611,7 +611,7 @@ describe('handleBookmarkRemoved', () => {
       removeInfo
     );
 
-    expect(removedNodeIds.length).toBe(6);
+    expect(removedNodeIds).toHaveLength(6);
     expect(removedNodeIds).toContain(folderNode1.id);
     expect(removedNodeIds).toContain(bookmarkNode2.id);
     expect(removedNodeIds).toContain(bookmarkNode3.id);
@@ -619,7 +619,7 @@ describe('handleBookmarkRemoved', () => {
     expect(removedNodeIds).toContain(bookmarkNode4.id);
     expect(removedNodeIds).toContain(separatorNode.id);
     expect(nodeStoreMap.size).toBe(initialNodeStoreMapSize - 2);
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children.length).toBe(
+    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children).toHaveLength(
       1
     );
   });
@@ -645,7 +645,7 @@ describe('handleBookmarkChanged', () => {
     await bookmarksManager.loadBookmarks();
     expect(nodeStoreMap.size).toBe(NUM_BOOKMARK_ROOTS + 1);
     expect(nodeStoreMap.get(baseNode.id)).toBeDefined();
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children.length).toBe(
+    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children).toHaveLength(
       1
     );
     expect(nodeStoreMap.get(folderNode1.id)).toBeDefined();
@@ -764,7 +764,7 @@ describe('handleBookmarkMoved', () => {
     await bookmarksManager.loadBookmarks();
     expect(nodeStoreMap.size).toBe(NUM_BOOKMARK_ROOTS + 1);
     expect(nodeStoreMap.get(baseNode.id)).toBeDefined();
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children.length).toBe(
+    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children).toHaveLength(
       2
     );
     expect(nodeStoreMap.get(folderNode1.id)).toBeDefined();
@@ -856,7 +856,7 @@ describe('handleBookmarkMoved', () => {
     await bookmarksManager.handleBookmarkMoved(bookmarkNode3.id, moveInfo);
 
     expect(nodeStoreMap.size).toBe(initialNodeStoreMapSize);
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children.length).toBe(
+    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children).toHaveLength(
       3
     );
     expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children[0].id).toBe(
@@ -916,7 +916,7 @@ describe('handleBookmarkMoved', () => {
     await bookmarksManager.handleBookmarkMoved(bookmarkNode1.id, moveInfo);
 
     expect(nodeStoreMap.size).toBe(initialNodeStoreMapSize);
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children.length).toBe(
+    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children).toHaveLength(
       1
     );
     expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children[0].id).toBe(

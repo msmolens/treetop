@@ -39,12 +39,12 @@ describe('folders', () => {
   });
 
   it('is disabled for empty folder', () => {
-    expect(folderNode.children.length).toBe(0);
+    expect(folderNode.children).toHaveLength(0);
     expect(menuItem.enabled(folderNode.id)).toBe(false);
   });
 
   it('is enabled for non-empty folder', () => {
-    expect(folderNode.children.length).toBe(0);
+    expect(folderNode.children).toHaveLength(0);
     folderNode.children.push(createBookmarkNode());
     expect(menuItem.enabled(folderNode.id)).toBe(true);
   });
