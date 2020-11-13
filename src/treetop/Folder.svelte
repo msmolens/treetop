@@ -28,13 +28,7 @@
 
   // Include selected root title in document title.
   // Don't use fallback title.
-  let documentTitle: string = 'Treetop';
-  $: if (root && folderNodes) {
-    const rootFolderTitle = folderNodes[folderNodes.length - 1].title;
-    if (rootFolderTitle) {
-      documentTitle = `Treetop: ${rootFolderTitle}`;
-    }
-  }
+  $: documentTitle = $node.title ? `Treetop: ${$node.title}`: 'Treetop';
 
   /**
    * Get folder nodes from bookmarks root to the selected root.
@@ -132,7 +126,9 @@
 </style>
 
 <svelte:head>
-  <title>{documentTitle}</title>
+  {#if root}
+    <title>{documentTitle}</title>
+  {/if}
 </svelte:head>
 
 {#if $node}

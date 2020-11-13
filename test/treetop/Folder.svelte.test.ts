@@ -41,6 +41,17 @@ const setup = () => {
   });
 };
 
+/**
+ * Expect that the document title is the specified value.
+ */
+const expectDocumentTitle = (title: string) => {
+  const elems = document.getElementsByTagName('title');
+  expect(elems).toHaveLength(1);
+
+  const titleElem = elems[0];
+  expect(titleElem).toHaveTextContent(title);
+};
+
 // TODO: Consider writing custom matcher:
 // https://jestjs.io/docs/en/expect.html#expectextendmatchers
 /**
@@ -93,294 +104,352 @@ beforeEach(() => {
 });
 
 describe('rooted at bookmarks root', () => {
-  it('no children', () => {
-    // Create node tree:
-    // rootNode
-    rootNode = createFolderNode();
-    rootNode.id = BOOKMARKS_ROOT_GUID;
+  describe('no children', () => {
+    beforeEach(() => {
+      // Create node tree:
+      // rootNode
+      rootNode = createFolderNode();
+      rootNode.id = BOOKMARKS_ROOT_GUID;
 
-    nodeStoreMap.set(rootNode.id, writable(rootNode));
+      nodeStoreMap.set(rootNode.id, writable(rootNode));
 
-    nodeId = rootNode.id;
+      nodeId = rootNode.id;
 
-    mockBrowser.i18n.getMessage.expect('emptyFolder').andReturn('Empty folder');
+      mockBrowser.i18n.getMessage
+        .expect('emptyFolder')
+        .andReturn('Empty folder');
 
-    setup();
+      setup();
+    });
 
-    expect(
-      screen.getByRole('link', { name: rootNode.title })
-    ).toBeInTheDocument();
-    expect(screen.getByText(/^empty folder/i)).toBeInTheDocument();
+    it('renders', () => {
+      expect(
+        screen.getByRole('link', { name: rootNode.title })
+      ).toBeInTheDocument();
+      expect(screen.getByText(/^empty folder/i)).toBeInTheDocument();
 
-    const link = screen.getByRole('link', { name: rootNode.title });
-    expect(link.dataset.nodeId).toBe(rootNode.id);
-    expect(link).toHaveAttribute('href', `#${rootNode.id}`);
+      const link = screen.getByRole('link', { name: rootNode.title });
+      expect(link.dataset.nodeId).toBe(rootNode.id);
+      expect(link).toHaveAttribute('href', `#${rootNode.id}`);
 
-    const emptyFolder = screen.getByText(/^empty folder/i);
-    expectToBeInContentsOfFolder(emptyFolder, link);
+      const emptyFolder = screen.getByText(/^empty folder/i);
+      expectToBeInContentsOfFolder(emptyFolder, link);
+    });
+
+    it('sets document title', () => {
+      expectDocumentTitle(`Treetop: ${rootNode.title}`);
+    });
   });
 
-  it('uses fallback title', () => {
-    // Create node tree:
-    // rootNode
-    rootNode = createFolderNode();
-    rootNode.id = BOOKMARKS_ROOT_GUID;
-    rootNode.title = '';
+  describe('root node without title', () => {
+    let title: string;
 
-    nodeStoreMap.set(rootNode.id, writable(rootNode));
+    beforeEach(() => {
+      // Create node tree:
+      // rootNode
+      rootNode = createFolderNode();
+      rootNode.id = BOOKMARKS_ROOT_GUID;
+      rootNode.title = '';
 
-    nodeId = rootNode.id;
+      nodeStoreMap.set(rootNode.id, writable(rootNode));
 
-    const title = 'Bookmarks';
-    mockBrowser.i18n.getMessage.expect('bookmarks').andReturn(title);
-    mockBrowser.i18n.getMessage.expect('emptyFolder').andReturn('Empty folder');
+      nodeId = rootNode.id;
 
-    setup();
+      title = 'Bookmarks';
+      mockBrowser.i18n.getMessage.expect('bookmarks').andReturn(title);
+      mockBrowser.i18n.getMessage
+        .expect('emptyFolder')
+        .andReturn('Empty folder');
 
-    expect(screen.getByRole('link', { name: title })).toBeInTheDocument();
-    expect(screen.getByText(/^empty folder/i)).toBeInTheDocument();
+      setup();
+    });
 
-    const link = screen.getByRole('link', { name: title });
-    expect(link.dataset.nodeId).toBe(rootNode.id);
-    expect(link).toHaveAttribute('href', `#${rootNode.id}`);
+    it('uses fallback title', () => {
+      expect(screen.getByRole('link', { name: title })).toBeInTheDocument();
+      expect(screen.getByText(/^empty folder/i)).toBeInTheDocument();
+
+      const link = screen.getByRole('link', { name: title });
+      expect(link.dataset.nodeId).toBe(rootNode.id);
+      expect(link).toHaveAttribute('href', `#${rootNode.id}`);
+    });
+
+    it('uses default document title', () => {
+      expectDocumentTitle('Treetop');
+    });
   });
 
-  it('one empty child folder', () => {
-    // Create node tree:
-    // rootNode
-    //   └── folderNode
-    rootNode = createFolderNode();
-    rootNode.id = BOOKMARKS_ROOT_GUID;
+  describe('one empty child folder', () => {
+    let folderNode: Treetop.FolderNode;
 
-    const folderNode = createFolderNode();
-    folderNode.parentId = rootNode.id;
-    rootNode.children.push(folderNode);
+    beforeEach(() => {
+      // Create node tree:
+      // rootNode
+      //   └── folderNode
+      rootNode = createFolderNode();
+      rootNode.id = BOOKMARKS_ROOT_GUID;
 
-    nodeStoreMap.set(rootNode.id, writable(rootNode));
-    nodeStoreMap.set(folderNode.id, writable(folderNode));
+      folderNode = createFolderNode();
+      folderNode.parentId = rootNode.id;
+      rootNode.children.push(folderNode);
 
-    nodeId = rootNode.id;
+      nodeStoreMap.set(rootNode.id, writable(rootNode));
+      nodeStoreMap.set(folderNode.id, writable(folderNode));
 
-    mockBrowser.i18n.getMessage.expect('emptyFolder').andReturn('Empty folder');
+      nodeId = rootNode.id;
 
-    setup();
+      mockBrowser.i18n.getMessage
+        .expect('emptyFolder')
+        .andReturn('Empty folder');
 
-    expect(
-      screen.getByRole('link', { name: rootNode.title })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('link', { name: folderNode.title })
-    ).toBeInTheDocument();
-    expect(screen.getByText(/^empty folder/i)).toBeInTheDocument();
+      setup();
+    });
 
-    const rootNodeLink = screen.getByRole('link', { name: rootNode.title });
-    expect(rootNodeLink.dataset.nodeId).toBe(rootNode.id);
-    expect(rootNodeLink).toHaveAttribute('href', `#${rootNode.id}`);
+    it('renders', () => {
+      expect(
+        screen.getByRole('link', { name: rootNode.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: folderNode.title })
+      ).toBeInTheDocument();
+      expect(screen.getByText(/^empty folder/i)).toBeInTheDocument();
 
-    const folderNodeLink = screen.getByRole('link', { name: folderNode.title });
-    expect(folderNodeLink.dataset.nodeId).toBe(folderNode.id);
-    expect(folderNodeLink).toHaveAttribute('href', `#${folderNode.id}`);
+      const rootNodeLink = screen.getByRole('link', { name: rootNode.title });
+      expect(rootNodeLink.dataset.nodeId).toBe(rootNode.id);
+      expect(rootNodeLink).toHaveAttribute('href', `#${rootNode.id}`);
 
-    const emptyFolder = screen.getByText(/^empty folder/i);
-    expectToBeInContentsOfFolder(emptyFolder, folderNodeLink);
+      const folderNodeLink = screen.getByRole('link', {
+        name: folderNode.title,
+      });
+      expect(folderNodeLink.dataset.nodeId).toBe(folderNode.id);
+      expect(folderNodeLink).toHaveAttribute('href', `#${folderNode.id}`);
+
+      const emptyFolder = screen.getByText(/^empty folder/i);
+      expectToBeInContentsOfFolder(emptyFolder, folderNodeLink);
+    });
+
+    it('sets document title', () => {
+      expectDocumentTitle(`Treetop: ${rootNode.title}`);
+    });
   });
 
-  it('one child folder with children', () => {
-    // Create node tree:
-    // rootNode
-    //   └── folderNode1
-    //      ├── bookmarkNode
-    //      ├── bookmarkNode
-    //      └── folderNode2
-    //         └── bookmarkNode
-    rootNode = createFolderNode();
-    rootNode.id = BOOKMARKS_ROOT_GUID;
+  describe('one child folder with children', () => {
+    let folderNode1: Treetop.FolderNode;
+    let folderNode2: Treetop.FolderNode;
 
-    const folderNode1 = createFolderNode();
-    folderNode1.parentId = rootNode.id;
-    folderNode1.children.push(createBookmarkNode());
-    folderNode1.children.push(createBookmarkNode());
-    rootNode.children.push(folderNode1);
+    beforeEach(() => {
+      // Create node tree:
+      // rootNode
+      //   └── folderNode1
+      //      ├── bookmarkNode
+      //      ├── bookmarkNode
+      //      └── folderNode2
+      //         └── bookmarkNode
+      rootNode = createFolderNode();
+      rootNode.id = BOOKMARKS_ROOT_GUID;
 
-    const folderNode2 = createFolderNode();
-    folderNode2.parentId = folderNode1.id;
-    folderNode2.children.push(createBookmarkNode());
-    folderNode1.children.push(folderNode2);
+      folderNode1 = createFolderNode();
+      folderNode1.parentId = rootNode.id;
+      folderNode1.children.push(createBookmarkNode());
+      folderNode1.children.push(createBookmarkNode());
+      rootNode.children.push(folderNode1);
 
-    nodeStoreMap.set(rootNode.id, writable(rootNode));
-    nodeStoreMap.set(folderNode1.id, writable(folderNode1));
-    nodeStoreMap.set(folderNode2.id, writable(folderNode2));
+      folderNode2 = createFolderNode();
+      folderNode2.parentId = folderNode1.id;
+      folderNode2.children.push(createBookmarkNode());
+      folderNode1.children.push(folderNode2);
 
-    nodeId = rootNode.id;
+      nodeStoreMap.set(rootNode.id, writable(rootNode));
+      nodeStoreMap.set(folderNode1.id, writable(folderNode1));
+      nodeStoreMap.set(folderNode2.id, writable(folderNode2));
 
-    setup();
+      nodeId = rootNode.id;
 
-    expect(
-      screen.getByRole('link', { name: rootNode.title })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('link', { name: folderNode1.title })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('link', { name: folderNode2.title })
-    ).toBeInTheDocument();
-    expect(screen.queryByText(/^empty folder/i)).not.toBeInTheDocument();
-    expect(
-      screen.getByRole('link', {
+      setup();
+    });
+
+    it('renders', () => {
+      expect(
+        screen.getByRole('link', { name: rootNode.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: folderNode1.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: folderNode2.title })
+      ).toBeInTheDocument();
+      expect(screen.queryByText(/^empty folder/i)).not.toBeInTheDocument();
+      expect(
+        screen.getByRole('link', {
+          name: (folderNode1.children[0] as Treetop.BookmarkNode).title,
+        })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', {
+          name: (folderNode1.children[1] as Treetop.BookmarkNode).title,
+        })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', {
+          name: (folderNode2.children[0] as Treetop.BookmarkNode).title,
+        })
+      ).toBeInTheDocument();
+
+      const rootNodeLink = screen.getByRole('link', { name: rootNode.title });
+      expect(rootNodeLink.dataset.nodeId).toBe(rootNode.id);
+      expect(rootNodeLink).toHaveAttribute('href', `#${rootNode.id}`);
+
+      const folderNode1Link = screen.getByRole('link', {
+        name: folderNode1.title,
+      });
+      expect(folderNode1Link.dataset.nodeId).toBe(folderNode1.id);
+      expect(folderNode1Link).toHaveAttribute('href', `#${folderNode1.id}`);
+      expectFolderInFolder(folderNode1Link, rootNodeLink);
+
+      const bookmarkLink1 = screen.getByRole('link', {
         name: (folderNode1.children[0] as Treetop.BookmarkNode).title,
-      })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('link', {
+      });
+      const bookmarkLink2 = screen.getByRole('link', {
         name: (folderNode1.children[1] as Treetop.BookmarkNode).title,
-      })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('link', {
+      });
+      expect(bookmarkLink1.dataset.nodeId).toBe(folderNode1.children[0].id);
+      expect(bookmarkLink1).toHaveAttribute(
+        'href',
+        (folderNode1.children[0] as Treetop.BookmarkNode).url
+      );
+      expect(bookmarkLink2.dataset.nodeId).toBe(folderNode1.children[1].id);
+      expect(bookmarkLink2).toHaveAttribute(
+        'href',
+        (folderNode1.children[1] as Treetop.BookmarkNode).url
+      );
+      expectToBeInContentsOfFolder(bookmarkLink1, folderNode1Link);
+      expectToBeInContentsOfFolder(bookmarkLink2, folderNode1Link);
+
+      const folderNode2Link = screen.getByRole('link', {
+        name: folderNode2.title,
+      });
+      expect(folderNode2Link.dataset.nodeId).toBe(folderNode2.id);
+      expect(folderNode2Link).toHaveAttribute('href', `#${folderNode2.id}`);
+      expectFolderInFolder(folderNode2Link, folderNode1Link);
+
+      const bookmarkLink3 = screen.getByRole('link', {
         name: (folderNode2.children[0] as Treetop.BookmarkNode).title,
-      })
-    ).toBeInTheDocument();
-
-    const rootNodeLink = screen.getByRole('link', { name: rootNode.title });
-    expect(rootNodeLink.dataset.nodeId).toBe(rootNode.id);
-    expect(rootNodeLink).toHaveAttribute('href', `#${rootNode.id}`);
-
-    const folderNode1Link = screen.getByRole('link', {
-      name: folderNode1.title,
+      });
+      expect(bookmarkLink3.dataset.nodeId).toBe(folderNode2.children[0].id);
+      expect(bookmarkLink3).toHaveAttribute(
+        'href',
+        (folderNode2.children[0] as Treetop.BookmarkNode).url
+      );
+      expectToBeInContentsOfFolder(bookmarkLink3, folderNode2Link);
     });
-    expect(folderNode1Link.dataset.nodeId).toBe(folderNode1.id);
-    expect(folderNode1Link).toHaveAttribute('href', `#${folderNode1.id}`);
-    expectFolderInFolder(folderNode1Link, rootNodeLink);
 
-    const bookmarkLink1 = screen.getByRole('link', {
-      name: (folderNode1.children[0] as Treetop.BookmarkNode).title,
+    it('sets document title', () => {
+      expectDocumentTitle(`Treetop: ${rootNode.title}`);
     });
-    const bookmarkLink2 = screen.getByRole('link', {
-      name: (folderNode1.children[1] as Treetop.BookmarkNode).title,
-    });
-    expect(bookmarkLink1.dataset.nodeId).toBe(folderNode1.children[0].id);
-    expect(bookmarkLink1).toHaveAttribute(
-      'href',
-      (folderNode1.children[0] as Treetop.BookmarkNode).url
-    );
-    expect(bookmarkLink2.dataset.nodeId).toBe(folderNode1.children[1].id);
-    expect(bookmarkLink2).toHaveAttribute(
-      'href',
-      (folderNode1.children[1] as Treetop.BookmarkNode).url
-    );
-    expectToBeInContentsOfFolder(bookmarkLink1, folderNode1Link);
-    expectToBeInContentsOfFolder(bookmarkLink2, folderNode1Link);
-
-    const folderNode2Link = screen.getByRole('link', {
-      name: folderNode2.title,
-    });
-    expect(folderNode2Link.dataset.nodeId).toBe(folderNode2.id);
-    expect(folderNode2Link).toHaveAttribute('href', `#${folderNode2.id}`);
-    expectFolderInFolder(folderNode2Link, folderNode1Link);
-
-    const bookmarkLink3 = screen.getByRole('link', {
-      name: (folderNode2.children[0] as Treetop.BookmarkNode).title,
-    });
-    expect(bookmarkLink3.dataset.nodeId).toBe(folderNode2.children[0].id);
-    expect(bookmarkLink3).toHaveAttribute(
-      'href',
-      (folderNode2.children[0] as Treetop.BookmarkNode).url
-    );
-    expectToBeInContentsOfFolder(bookmarkLink3, folderNode2Link);
   });
 
-  it('two child folders with children', () => {
-    // Create node tree:
-    // rootNode
-    //   ├── folderNode1
-    //   │  └── bookmarkNode
-    //   └── folderNode2
-    //      ├── bookmarkNode
-    //      └── separatorNode
-    rootNode = createFolderNode();
-    rootNode.id = BOOKMARKS_ROOT_GUID;
+  describe('two child folders with children', () => {
+    let folderNode1: Treetop.FolderNode;
+    let folderNode2: Treetop.FolderNode;
 
-    const folderNode1 = createFolderNode();
-    folderNode1.parentId = rootNode.id;
-    folderNode1.children.push(createBookmarkNode());
-    rootNode.children.push(folderNode1);
+    beforeEach(() => {
+      // Create node tree:
+      // rootNode
+      //   ├── folderNode1
+      //   │  └── bookmarkNode
+      //   └── folderNode2
+      //      ├── bookmarkNode
+      //      └── separatorNode
+      rootNode = createFolderNode();
+      rootNode.id = BOOKMARKS_ROOT_GUID;
 
-    const folderNode2 = createFolderNode();
-    folderNode2.parentId = rootNode.id;
-    folderNode2.children.push(createBookmarkNode());
-    folderNode2.children.push(createSeparatorNode());
-    rootNode.children.push(folderNode2);
+      folderNode1 = createFolderNode();
+      folderNode1.parentId = rootNode.id;
+      folderNode1.children.push(createBookmarkNode());
+      rootNode.children.push(folderNode1);
 
-    nodeStoreMap.set(rootNode.id, writable(rootNode));
-    nodeStoreMap.set(folderNode1.id, writable(folderNode1));
-    nodeStoreMap.set(folderNode2.id, writable(folderNode2));
+      folderNode2 = createFolderNode();
+      folderNode2.parentId = rootNode.id;
+      folderNode2.children.push(createBookmarkNode());
+      folderNode2.children.push(createSeparatorNode());
+      rootNode.children.push(folderNode2);
 
-    nodeId = rootNode.id;
+      nodeStoreMap.set(rootNode.id, writable(rootNode));
+      nodeStoreMap.set(folderNode1.id, writable(folderNode1));
+      nodeStoreMap.set(folderNode2.id, writable(folderNode2));
 
-    setup();
+      nodeId = rootNode.id;
 
-    expect(
-      screen.getByRole('link', { name: rootNode.title })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('link', { name: folderNode1.title })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('link', { name: folderNode2.title })
-    ).toBeInTheDocument();
-    expect(screen.queryByText(/^empty folder/i)).not.toBeInTheDocument();
-    expect(
-      screen.getByRole('link', {
+      setup();
+    });
+
+    it('renders', () => {
+      expect(
+        screen.getByRole('link', { name: rootNode.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: folderNode1.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: folderNode2.title })
+      ).toBeInTheDocument();
+      expect(screen.queryByText(/^empty folder/i)).not.toBeInTheDocument();
+      expect(
+        screen.getByRole('link', {
+          name: (folderNode1.children[0] as Treetop.BookmarkNode).title,
+        })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', {
+          name: (folderNode2.children[0] as Treetop.BookmarkNode).title,
+        })
+      ).toBeInTheDocument();
+      expect(screen.getByRole('separator')).toBeInTheDocument();
+
+      const rootNodeLink = screen.getByRole('link', { name: rootNode.title });
+      expect(rootNodeLink.dataset.nodeId).toBe(rootNode.id);
+      expect(rootNodeLink).toHaveAttribute('href', `#${rootNode.id}`);
+
+      const folderNode1Link = screen.getByRole('link', {
+        name: folderNode1.title,
+      });
+      expect(folderNode1Link.dataset.nodeId).toBe(folderNode1.id);
+      expect(folderNode1Link).toHaveAttribute('href', `#${folderNode1.id}`);
+      expectFolderInFolder(folderNode1Link, rootNodeLink);
+
+      const bookmarkLink1 = screen.getByRole('link', {
         name: (folderNode1.children[0] as Treetop.BookmarkNode).title,
-      })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('link', {
+      });
+      expect(bookmarkLink1.dataset.nodeId).toBe(folderNode1.children[0].id);
+      expect(bookmarkLink1).toHaveAttribute(
+        'href',
+        (folderNode1.children[0] as Treetop.BookmarkNode).url
+      );
+      expectToBeInContentsOfFolder(bookmarkLink1, folderNode1Link);
+
+      const folderNode2Link = screen.getByRole('link', {
+        name: folderNode2.title,
+      });
+      expect(folderNode2Link.dataset.nodeId).toBe(folderNode2.id);
+      expect(folderNode2Link).toHaveAttribute('href', `#${folderNode2.id}`);
+      expectFolderInFolder(folderNode2Link, rootNodeLink);
+
+      const bookmarkLink2 = screen.getByRole('link', {
         name: (folderNode2.children[0] as Treetop.BookmarkNode).title,
-      })
-    ).toBeInTheDocument();
-    expect(screen.getByRole('separator')).toBeInTheDocument();
+      });
+      expect(bookmarkLink2.dataset.nodeId).toBe(folderNode2.children[0].id);
+      expect(bookmarkLink2).toHaveAttribute(
+        'href',
+        (folderNode2.children[0] as Treetop.BookmarkNode).url
+      );
+      expectToBeInContentsOfFolder(bookmarkLink2, folderNode2Link);
 
-    const rootNodeLink = screen.getByRole('link', { name: rootNode.title });
-    expect(rootNodeLink.dataset.nodeId).toBe(rootNode.id);
-    expect(rootNodeLink).toHaveAttribute('href', `#${rootNode.id}`);
-
-    const folderNode1Link = screen.getByRole('link', {
-      name: folderNode1.title,
+      const separator = screen.getByRole('separator');
+      expectToBeInContentsOfFolder(separator, folderNode2Link);
     });
-    expect(folderNode1Link.dataset.nodeId).toBe(folderNode1.id);
-    expect(folderNode1Link).toHaveAttribute('href', `#${folderNode1.id}`);
-    expectFolderInFolder(folderNode1Link, rootNodeLink);
 
-    const bookmarkLink1 = screen.getByRole('link', {
-      name: (folderNode1.children[0] as Treetop.BookmarkNode).title,
+    it('sets document title', () => {
+      expectDocumentTitle(`Treetop: ${rootNode.title}`);
     });
-    expect(bookmarkLink1.dataset.nodeId).toBe(folderNode1.children[0].id);
-    expect(bookmarkLink1).toHaveAttribute(
-      'href',
-      (folderNode1.children[0] as Treetop.BookmarkNode).url
-    );
-    expectToBeInContentsOfFolder(bookmarkLink1, folderNode1Link);
-
-    const folderNode2Link = screen.getByRole('link', {
-      name: folderNode2.title,
-    });
-    expect(folderNode2Link.dataset.nodeId).toBe(folderNode2.id);
-    expect(folderNode2Link).toHaveAttribute('href', `#${folderNode2.id}`);
-    expectFolderInFolder(folderNode2Link, rootNodeLink);
-
-    const bookmarkLink2 = screen.getByRole('link', {
-      name: (folderNode2.children[0] as Treetop.BookmarkNode).title,
-    });
-    expect(bookmarkLink2.dataset.nodeId).toBe(folderNode2.children[0].id);
-    expect(bookmarkLink2).toHaveAttribute(
-      'href',
-      (folderNode2.children[0] as Treetop.BookmarkNode).url
-    );
-    expectToBeInContentsOfFolder(bookmarkLink2, folderNode2Link);
-
-    const separator = screen.getByRole('separator');
-    expectToBeInContentsOfFolder(separator, folderNode2Link);
   });
 });
 
@@ -489,6 +558,10 @@ describe('rooted at subfolder', () => {
     expectToBeInContentsOfFolder(bookmarkLink2, folderNode3Link);
   });
 
+  it('sets document title', () => {
+    expectDocumentTitle(`Treetop: ${folderNode2.title}`);
+  });
+
   describe('breadcrumbs', () => {
     it('text and links', () => {
       const breadcrumbs = `${rootNode.title} / ${folderNode2.title}`;
@@ -520,5 +593,3 @@ describe('rooted at subfolder', () => {
     });
   });
 });
-
-// TODO: Figure out how to test svelte:head, i.e. document title
