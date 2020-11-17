@@ -31,7 +31,7 @@ module.exports = {
   ],
   rules: {
     '@typescript-eslint/no-non-null-assertion': 'off',
-    'simple-import-sort/sort': [
+    'simple-import-sort/imports': [
       'error',
       {
         groups: [
@@ -51,6 +51,7 @@ module.exports = {
         ]
       }
     ],
+    'simple-import-sort/exports': 'error',
     'prettier/prettier': 'error'
   }
 };
