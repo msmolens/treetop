@@ -8,7 +8,7 @@
   :global(body) {
     background-color: #fefefa;
     font-family: 'Open Sans', -apple-system, 'Segoe UI', 'Roboto', sans-serif;
-    font-size: 3rem;
+    font-size: 2rem;
     font-weight: 400;
     margin: 0;
   }

@@ -10,7 +10,7 @@
   }
 
   .detail {
-    font-size: 2rem;
+    font-size: smaller;
     padding: 1rem 0;
   }
 
