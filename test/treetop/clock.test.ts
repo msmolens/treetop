@@ -1,13 +1,16 @@
-import { MILLISECONDS_PER_HOUR } from '@Treetop/treetop/clock';
+import {
+  CLOCK_UPDATE_RATE_MS,
+  TIMER_UPDATE_RATE_MS,
+} from '@Treetop/treetop/clock';
 import type * as Treetop from '@Treetop/treetop/types';
-
-jest.useFakeTimers();
 
 describe('clock', () => {
   let clockValue: Date;
   let unsubscribe: Treetop.SvelteStoreUnsubscriber;
 
   beforeEach(() => {
+    jest.useFakeTimers('modern');
+
     // eslint-disable-next-line
     const { clock } = require('../../src/treetop/clock');
     // eslint-disable-next-line
@@ -18,6 +21,8 @@ describe('clock', () => {
 
   afterEach(() => {
     unsubscribe();
+
+    jest.useRealTimers();
   });
 
   it('initializes with current time', () => {
@@ -25,14 +30,26 @@ describe('clock', () => {
     expect(now.getTime()).toBeGreaterThanOrEqual(clockValue.getTime());
   });
 
-  it('updates every hour', () => {
-    const clockTime1 = clockValue;
-    jest.advanceTimersByTime(MILLISECONDS_PER_HOUR - 1000);
-    const clockTime2 = clockValue;
-    expect(clockTime2).toBe(clockTime1);
+  it('skips update if not enough wall-clock time has elapsed', () => {
+    const startTime = clockValue;
 
-    jest.advanceTimersByTime(1000);
-    const clockTime3 = clockValue;
-    expect(clockTime3.getTime()).toBeGreaterThan(clockTime2.getTime());
+    // Repeatedly run the clock timer and check that the store value doesn't
+    // update
+    for (let i = 0; i < 10; i++) {
+      jest.setSystemTime(+startTime + i * TIMER_UPDATE_RATE_MS);
+      jest.advanceTimersByTime(TIMER_UPDATE_RATE_MS);
+
+      expect(clockValue).toBe(startTime);
+    }
+  });
+
+  it('updates if enough wall-clock time has elapsed', () => {
+    // Mock the system time so the clock store updates its value
+    const now = +clockValue + CLOCK_UPDATE_RATE_MS;
+    jest.setSystemTime(now);
+
+    // Run the clock timer and check that the store value updates
+    jest.advanceTimersByTime(TIMER_UPDATE_RATE_MS);
+    expect(clockValue.getTime()).toBe(now + TIMER_UPDATE_RATE_MS);
   });
 });

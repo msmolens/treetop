@@ -3,7 +3,6 @@ import { render, screen } from '@testing-library/svelte';
 import faker from 'faker';
 
 import Bookmark from '@Treetop/treetop/Bookmark.svelte';
-import { MILLISECONDS_PER_HOUR } from '@Treetop/treetop/clock';
 import type * as Treetop from '@Treetop/treetop/types';
 
 import ContextWrapper from '../utils/ContextWrapper.svelte';
@@ -17,6 +16,12 @@ let url: string;
 
 // Maximum allowed length of titles and URLs before being truncated, sometimes
 const maxLength = 78;
+
+// Number of milliseconds in an hour
+const MILLISECONDS_PER_HOUR =
+  1000 * // ms per second
+  60 * // seconds per minute
+  60; // minutes per hour
 
 const setup = () => {
   render(ContextWrapper, {
