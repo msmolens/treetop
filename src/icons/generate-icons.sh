@@ -7,7 +7,7 @@ set PX 32 48 64 96 128 256
 
 for px in $PX
   inkscape \
-    --export-filename="generated/icon$px.png" \
+    --export-filename="generated/icons/icon$px.png" \
     --export-type="png" \
     --export-area-page \
     --export-width=$px  \
@@ -18,7 +18,7 @@ end
 # Generate social preview icon.
 
   inkscape \
-    --export-filename="generated/treetop-social.png" \
+    --export-filename="generated/misc/treetop-social.png" \
     --export-type="png" \
     --export-area-page \
     --export-width=1280  \
@@ -33,4 +33,4 @@ scour \
   --remove-metadata \
   --enable-id-stripping \
   -i treetop.svg \
-  -o generated/icon.svg
+  -o generated/icons/icon.svg

@@ -8,7 +8,7 @@
   import LinearProgress from '@smui/linear-progress';
   import Snackbar, { Label } from '@smui/snackbar';
 
-  import icon from '../icons/generated/icon.svg';
+  import icon from '../icons/generated/icons/icon.svg';
 
   import Folder from './Folder.svelte';
   import PageFooter from './PageFooter.svelte';

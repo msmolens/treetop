@@ -135,7 +135,7 @@ export default [{
         { src: '_locales', dest: 'dist/' },
         { src: 'fonts', dest: 'dist/' },
         { src: 'src/manifest.json', dest: 'dist/' },
-        { src: 'src/icons/generated/*', dest: 'dist/icons' },
+        { src: 'src/icons/generated/icons/*', dest: 'dist/icons' },
       ],
       verbose: true
     })

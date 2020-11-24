@@ -1,6 +1,6 @@
 [![CI](https://github.com/msmolens/treetop/workflows/CI/badge.svg)](https://github.com/msmolens/treetop/actions?query=workflow%3ACI)
 
-# ![Treetop logo](src/icons/generated/icon48.png) Treetop
+# ![Treetop logo](src/icons/generated/icons/icon48.png) Treetop
 
 Treetop is a Firefox extension that provides a high-level live view of your bookmarks:
 
