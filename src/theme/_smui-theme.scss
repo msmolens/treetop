@@ -1,5 +1,3 @@
-@import '@material/theme/color-palette';
-
 $mdc-theme-primary: #ff4088;
 
 $mdc-typography-font-family: 'Inter', sans-serif;
@@ -7,3 +5,23 @@ $mdc-typography-font-family: 'Inter', sans-serif;
 $mdc-dialog-min-width: 480px;
 
 $mdc-snackbar-viewport-margin-narrow: 24px;
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --mdc-theme-surface: #fff;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --mdc-theme-surface: #202023;
+  }
+}
+
+.colorSchemeLight {
+  --mdc-theme-surface: #fff;
+}
+
+.colorSchemeDark {
+  --mdc-theme-surface: #202023;
+}

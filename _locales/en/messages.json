@@ -60,6 +60,10 @@
     "message": "Bookmarks",
     "description": "Title of group for bookmark options."
   },
+  "optionHeadingAppearance": {
+    "message": "Appearance",
+    "description": "Title of group for appearance options."
+  },
   "optionShowBookmarksToolbar": {
     "message": "Show Bookmarks Toolbar",
     "description": "Title of option to show the Bookmarks Toolbar folder."
@@ -83,6 +87,22 @@
   "optionShowRecentlyVisited": {
     "message": "Increase font size if recently visited",
     "description": "Title of option to increase the font size of recently visited bookmarks."
+  },
+  "optionColorScheme": {
+    "message": "Color scheme:",
+    "description": "Title of option to choose a color scheme."
+  },
+  "optionColorSchemeSystem": {
+    "message": "System",
+    "description": "Title of color scheme option to follow the system color scheme."
+  },
+  "optionColorSchemeLight": {
+    "message": "Light",
+    "description": "Title of color scheme option to use a light color scheme."
+  },
+  "optionColorSchemeDark": {
+    "message": "Dark",
+    "description": "Title of color scheme option to use a dark color scheme."
   },
   "folderNoTitle": {
     "message": "(no title)",

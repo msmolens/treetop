@@ -10,13 +10,33 @@
 </script>
 
 <style>
+  @media (prefers-color-scheme: light) {
+    header {
+      --color: #24292e;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    header {
+      --color: #eeeeee;
+    }
+  }
+
   header {
+    color: var(--color);
     display: flex;
     margin: 0 1rem;
   }
 
+  :global(.colorSchemeLight) header {
+    --color: #24292e;
+  }
+
+  :global(.colorSchemeDark) header {
+    --color: #eeeeee;
+  }
+
   .treetop {
-    color: #24292e;
     flex: 1;
     font-family: 'News Cycle', sans-serif;
     font-size: 3rem;

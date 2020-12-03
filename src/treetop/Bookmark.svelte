@@ -80,19 +80,59 @@
 </script>
 
 <style>
-  a {
-    color: #212121;
-    margin-right: 1rem;
-    text-decoration: underline solid #9e9e9e 1px;
+  @media (prefers-color-scheme: light) {
+    a {
+      --text-decoration-color: #9e9e9e;
+    }
+
+    a:hover {
+      --color: #ff4088;
+      --text-decoration-color: #c0c0c0;
+    }
   }
 
-  a:visited {
-    color: #212121;
+  @media (prefers-color-scheme: dark) {
+    a {
+      --text-decoration-color: #6e6e6e;
+    }
+
+    a:hover {
+      --color: #ff4088;
+      --text-decoration-color: #c0c0c0;
+    }
+  }
+
+  a {
+    color: inherit;
+    margin-right: 1rem;
+    text-decoration-color: var(--text-decoration-color);
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-thickness: 1px;
   }
 
   a:hover {
-    color: #00f;
-    text-decoration-color: #424242;
+    color: var(--color);
+  }
+
+  a:visited {
+    color: inherit;
+  }
+
+  :global(.colorSchemeLight) a {
+    --text-decoration-color: #9e9e9e;
+  }
+  :global(.colorSchemeLight) a:hover {
+    --color: #ff4088;
+    --text-decoration-color: #c0c0c0;
+  }
+
+  :global(.colorSchemeDark) a {
+    --text-decoration-color: #6e6e6e;
+  }
+  :global(.colorSchemeDark) a:hover {
+    --color: #ff4088;
+    --text-decoration-color: #c0c0c0;
   }
 
   .visitedPastDay {

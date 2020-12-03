@@ -5,8 +5,25 @@
 </script>
 
 <style>
+  @media (prefers-color-scheme: light) {
+    :root {
+      --background-color: #fefefa;
+      --color: #212121;
+      --header-footer-background-color: #676778;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background-color: #202023;
+      --color: #e8e8e8;
+      --header-footer-background-color: #3e3e3e;
+    }
+  }
+
   :global(body) {
-    background-color: #fefefa;
+    background-color: var(--background-color);
+    color: var(--color);
     font-family: 'Open Sans', -apple-system, 'Segoe UI', 'Roboto', sans-serif;
     font-size: 2rem;
     font-weight: 400;
@@ -14,13 +31,13 @@
   }
 
   header {
-    background-color: #676778;
+    background-color: var(--header-footer-background-color);
     color: white;
     padding: 20px 0px;
   }
 
   footer {
-    background-color: #676778;
+    background-color: var(--header-footer-background-color);
     height: 3rem;
     padding: 20px 0px;
   }

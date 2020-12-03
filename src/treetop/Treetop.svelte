@@ -52,6 +52,7 @@
     'showRecentlyVisited',
     true
   );
+  const colorScheme = preferencesManager.createStore('colorScheme', 'system');
 
   // Make select preferences available to other components
   setContext('truncate', truncate);
@@ -116,6 +117,22 @@
   //
 
   let menuManager: MenuManager | null = null;
+
+  // Body element
+  let body: HTMLElement;
+
+  // Manually update class for body element
+  // See https://github.com/sveltejs/svelte/issues/3105
+  $: if (body) {
+    body.classList.remove('colorSchemeLight');
+    body.classList.remove('colorSchemeDark');
+
+    if ($colorScheme === 'light') {
+      body.classList.add('colorSchemeLight');
+    } else if ($colorScheme === 'dark') {
+      body.classList.add('colorSchemeDark');
+    }
+  }
 
   /**
    * Show an error notification.
@@ -382,6 +399,9 @@
   }
 
   onMount(() => {
+    // Get body element
+    body = document.body;
+
     // Register menu event handlers
     // @ts-expect-error: See https://github.com/jsmnbom/definitelytyped-firefox-webext-browser/pull/37
     browser.menus.onShown.addListener(onMenuShown);
@@ -424,6 +444,11 @@
 </script>
 
 <style>
+  :global(body) {
+    background-color: var(--treetop-background-color);
+    color: var(--treetop-color);
+  }
+
   .progressContainer {
     display: flex;
     justify-content: center;
