@@ -1,6 +1,7 @@
 import { Writable, writable } from 'svelte/store';
 import { render, screen } from '@testing-library/svelte';
 import faker from 'faker';
+import { escapeRegExp } from 'lodash';
 
 import Bookmark from '@Treetop/treetop/Bookmark.svelte';
 import type * as Treetop from '@Treetop/treetop/types';
@@ -97,7 +98,9 @@ describe('truncate option', () => {
 
     const link = screen.getByRole('link');
     const titleStart = title.substring(0, Math.floor(maxLength / 2));
-    expect(link).toHaveTextContent(new RegExp(`^${titleStart}.+\\S\\.{3}$`));
+    expect(link).toHaveTextContent(
+      new RegExp(`^${escapeRegExp(titleStart)}.+\\S\\.{3}$`)
+    );
   });
 
   it('truncates URL when title is empty', () => {
