@@ -7,7 +7,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import svelte from 'rollup-plugin-svelte';
 import typescript from '@rollup/plugin-typescript';
 import { terser } from 'rollup-plugin-terser';
-import autoProcess from 'svelte-preprocess';
+import sveltePreprocess from 'svelte-preprocess';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -21,10 +21,12 @@ export default [{
   },
   plugins: [
     svelte({
-      dev: !production,
-      css: false,
       emitCss: true,
-      preprocess: autoProcess()
+      preprocess: sveltePreprocess(),
+      compilerOptions: {
+        dev: !production,
+        css: false,
+      }
     }),
     typescript({ sourceMap: !production }),
     resolve({
@@ -62,10 +64,12 @@ export default [{
   },
   plugins: [
     svelte({
-      dev: !production,
-      css: false,
       emitCss: true,
-      preprocess: autoProcess()
+      preprocess: sveltePreprocess(),
+      compilerOptions: {
+        dev: !production,
+        css: false,
+      }
     }),
     typescript({ sourceMap: !production }),
     resolve({
@@ -93,10 +97,12 @@ export default [{
   },
   plugins: [
     svelte({
-      dev: !production,
-      css: false,
       emitCss: true,
-      preprocess: autoProcess()
+      preprocess: sveltePreprocess(),
+      compilerOptions: {
+        dev: !production,
+        css: false,
+      }
     }),
     typescript({ sourceMap: !production }),
     resolve({
