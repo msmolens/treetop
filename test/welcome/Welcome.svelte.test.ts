@@ -12,7 +12,7 @@ beforeEach(() => {
 
 it('renders welcome page', () => {
   expect(screen.getByRole('banner')).toBeInTheDocument();
-  expect(screen.getByText(/thanks for installing/i)).toBeInTheDocument();
+  expect(screen.getByText(/welcome to treetop/i)).toBeInTheDocument();
   expect(screen.getByText(/getting started/i)).toBeInTheDocument();
   expect(
     screen.getByText(/open treetop by clicking its icon/i)
