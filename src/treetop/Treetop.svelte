@@ -206,7 +206,7 @@
     const nodeStore = nodeStoreMap.get(nodeId);
     if (nodeStore !== undefined) {
       // Folder
-      const node = get(nodeStore) as Treetop.FolderNode;
+      const node = get(nodeStore);
       if (node.children.length === 0) {
         browser.bookmarks.remove(nodeId);
       } else {

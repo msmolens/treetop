@@ -393,7 +393,7 @@ describe('handleBookmarkCreated', () => {
       id: node.id,
       type: Treetop.NodeType.Bookmark,
       title: node.title,
-      url: node.url,
+      url: node.url!,
     });
   });
 
