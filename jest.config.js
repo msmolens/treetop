@@ -12,10 +12,10 @@ module.exports = {
     '^.+\\.ts$': 'ts-jest',
     "^.+\\.(js|jsx)$": 'babel-jest'
   },
-  // Allow transpiling SMUI modules.
+  // Allow transpiling SMUI and lodash-es modules.
   // https://jestjs.io/docs/en/configuration#transformignorepatterns-arraystring
   transformIgnorePatterns: [
-    "node_modules/(?!(@smui)/)"
+    "node_modules/(?!(@smui|lodash-es)/)"
   ],
   moduleFileExtensions: [
     'js',

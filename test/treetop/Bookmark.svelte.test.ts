@@ -1,7 +1,7 @@
 import { Writable, writable } from 'svelte/store';
 import { render, screen } from '@testing-library/svelte';
 import faker from 'faker';
-import { escapeRegExp } from 'lodash';
+import escapeRegExp from 'lodash-es/escapeRegExp';
 
 import Bookmark from '@Treetop/treetop/Bookmark.svelte';
 import type * as Treetop from '@Treetop/treetop/types';
