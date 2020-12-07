@@ -8,7 +8,7 @@
   import TextField from '@smui/textfield';
 
   import { createEventDispatcher } from 'svelte';
-  import truncate from 'lodash/truncate';
+  import truncate from 'lodash-es/truncate';
 
   const dispatch = createEventDispatcher();
 

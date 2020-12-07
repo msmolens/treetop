@@ -3,9 +3,7 @@
   import type { Writable } from 'svelte/store';
 
   import { getContext } from 'svelte';
-  // FIXME: truncate is unavailable in jest when imported directly
-  // import lodashTruncate from 'lodash/truncate';
-  import { truncate as lodashTruncate } from 'lodash';
+  import lodashTruncate from 'lodash-es/truncate';
 
   import { clock } from './clock';
   import { truncateMiddle } from './utils';
