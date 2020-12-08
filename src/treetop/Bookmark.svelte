@@ -79,28 +79,31 @@
 
 <style>
   @media (prefers-color-scheme: light) {
-    a {
+    a:link,
+    a:visited {
       --text-decoration-color: #9e9e9e;
     }
 
     a:hover {
-      --color: #ff4088;
+      --hover-color: #ff4088;
       --text-decoration-color: #c0c0c0;
     }
   }
 
   @media (prefers-color-scheme: dark) {
-    a {
+    a:link,
+    a:visited {
       --text-decoration-color: #6e6e6e;
     }
 
     a:hover {
-      --color: #ff4088;
+      --hover-color: #ff4088;
       --text-decoration-color: #c0c0c0;
     }
   }
 
-  a {
+  a:link,
+  a:visited {
     color: inherit;
     margin-right: 1rem;
     text-decoration-color: var(--text-decoration-color);
@@ -110,26 +113,24 @@
   }
 
   a:hover {
-    color: var(--color);
+    color: var(--hover-color);
   }
 
-  a:visited {
-    color: inherit;
-  }
-
-  :global(.colorSchemeLight) a {
+  :global(.colorSchemeLight) a:link,
+  :global(.colorSchemeLight) a:visited {
     --text-decoration-color: #9e9e9e;
   }
   :global(.colorSchemeLight) a:hover {
-    --color: #ff4088;
+    --hover-color: #ff4088;
     --text-decoration-color: #c0c0c0;
   }
 
-  :global(.colorSchemeDark) a {
+  :global(.colorSchemeDark) a:link,
+  :global(.colorSchemeDark) a:visited {
     --text-decoration-color: #6e6e6e;
   }
   :global(.colorSchemeDark) a:hover {
-    --color: #ff4088;
+    --hover-color: #ff4088;
     --text-decoration-color: #c0c0c0;
   }
 
