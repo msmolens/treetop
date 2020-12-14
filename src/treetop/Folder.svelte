@@ -28,7 +28,7 @@
 
   // Include selected root title in document title.
   // Don't use fallback title.
-  $: documentTitle = $node.title ? `Treetop: ${$node.title}`: 'Treetop';
+  $: documentTitle = $node.title ? `Treetop: ${$node.title}` : 'Treetop';
 
   /**
    * Get folder nodes from bookmarks root to the selected root.
