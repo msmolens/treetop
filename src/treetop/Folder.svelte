@@ -59,16 +59,6 @@
 
     return browser.i18n.getMessage(key);
   }
-
-  //
-  // Workarounds for issue using non-null assertion operator (!) in template
-  // https://github.com/sveltejs/svelte/issues/4701
-  //
-  $: children = $node.children;
-
-  function getUrl(child: Treetop.BookmarkNode): string {
-    return child.url;
-  }
 </script>
 
 <style>
@@ -144,9 +134,9 @@
       </div>
     </div>
     <div class="contents">
-      {#each children as child (child.id)}
+      {#each $node.children as child (child.id)}
         {#if child.type === Treetop.NodeType.Bookmark}
-          <Bookmark nodeId={child.id} title={child.title} url={getUrl(child)} />
+          <Bookmark nodeId={child.id} title={child.title} url={child.url} />
         {:else if child.type === Treetop.NodeType.Folder}
           <svelte:self nodeId={child.id} />
         {:else if child.type === Treetop.NodeType.Separator}
