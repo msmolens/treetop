@@ -35,7 +35,7 @@ export type Node = BookmarkNode | FolderNode | SeparatorNode;
 export type NodeStoreMap = Map<string, Writable<FolderNode>>;
 
 // Map from node ID to last visit time in milliseconds since the epoch.
-// Provides access to the last visist times of bookmarks.
+// Provides access to the last visit times of bookmarks.
 export type LastVisitTimeMap = Map<string, Writable<number>>;
 
 // Changes to a bookmark's properties
