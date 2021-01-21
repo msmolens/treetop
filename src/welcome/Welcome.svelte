@@ -89,7 +89,8 @@
         src={icon}
         alt="Treetop Icon" />) in the toolbar.
     </span>
-    <span slot="detail2">Treetop shows all your bookmarks on a single page.</span>
+    <span slot="detail2"
+      >Treetop shows all your bookmarks on a single page.</span>
   </InfoBox>
 
   <InfoBox>
