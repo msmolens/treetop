@@ -567,7 +567,7 @@ describe('rooted at subfolder', () => {
       const breadcrumbs = `${rootNode.title} / ${folderNode2.title}`;
 
       const node = screen.getByText((_content, node) => {
-        if (node.children.length !== 2) {
+        if (!node || node.children.length !== 2) {
           return false;
         }
 
