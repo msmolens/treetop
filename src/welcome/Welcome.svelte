@@ -111,6 +111,6 @@
     <span slot="detail1">
       Click the Preferences button to customize Treetop's display.
     </span>
-    <span slot="detail2">Click a folder to set Treetop's root.</span>
+    <span slot="detail2">Click on a folder to make it the root folder.</span>
   </InfoBox>
 </main>
