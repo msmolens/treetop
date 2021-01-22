@@ -19,6 +19,7 @@
     colorSchemeSystem: browser.i18n.getMessage('optionColorSchemeSystem'),
     colorSchemeLight: browser.i18n.getMessage('optionColorSchemeLight'),
     colorSchemeDark: browser.i18n.getMessage('optionColorSchemeDark'),
+    optionSourceAttributions: browser.i18n.getMessage('openSourceAttributions'),
   };
 
   async function handleCheckboxChange(event: Event) {
@@ -52,6 +53,11 @@
     margin-bottom: 1rem;
   }
 
+  a {
+    color: #0060df;
+    text-decoration: none;
+  }
+
   h3 {
     font-weight: normal;
     margin-bottom: 0.5rem;
@@ -75,10 +81,19 @@
     margin-left: 0.5rem;
   }
 
+  .attributions {
+    margin-top: 1rem;
+    margin-left: auto;
+  }
+
   @media (prefers-color-scheme: dark) {
     :global(body) {
       background-color: #202023;
       color: #fff;
+    }
+
+    a {
+      color: #809fff;
     }
 
     label {
@@ -188,5 +203,9 @@
         {strings.colorSchemeDark}
       </label>
     </div>
+  </div>
+  <div class="attributions">
+    <a href="attributions.txt" target="_blank"
+      >{strings.optionSourceAttributions}</a>
   </div>
 {/if}

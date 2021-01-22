@@ -131,5 +131,9 @@
   "errorLoadingHistory": {
     "message": "Error loading history.",
     "description": "Message shown when an error occurs when loading history."
+  },
+  "openSourceAttributions": {
+    "message": "Open Source Attributions",
+    "description": "Text for link to open source attributions."
   }
 }
