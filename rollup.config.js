@@ -1,3 +1,4 @@
+import url from 'postcss-url'
 import commonjs from '@rollup/plugin-commonjs';
 import copy from 'rollup-plugin-copy'
 import html from '@rollup/plugin-html';
@@ -36,8 +37,15 @@ export default [{
     commonjs(),
     production && terser(),
     postcss({
+      to: 'dist/treetop.bundle.css',
       extract: true,
       sourceMap: false,
+      plugins: [
+        url({
+          url: 'copy',
+          assetsPath: 'assets'
+        }),
+      ],
       use: [
         ['sass', {
           includePaths: [
@@ -139,7 +147,6 @@ export default [{
     copy({
       targets: [
         { src: '_locales', dest: 'dist/' },
-        { src: 'fonts', dest: 'dist/' },
         { src: 'src/manifest.json', dest: 'dist/' },
         { src: 'src/icons/generated/icons/*', dest: 'dist/icons' },
       ],

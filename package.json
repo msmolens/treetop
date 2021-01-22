@@ -16,6 +16,9 @@
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
+    "@fontsource/inter": "^4.1.0",
+    "@fontsource/material-icons": "^4.1.0",
+    "@fontsource/news-cycle": "^4.1.0",
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-html": "^0.2.0",
     "@rollup/plugin-image": "^2.0.6",
@@ -50,6 +53,7 @@
     "mockzilla-webextension": "^0.9.0",
     "normalize.css": "^8.0.1",
     "postcss": "^8.2.4",
+    "postcss-url": "^10.1.1",
     "prettier": "^2.2.1",
     "prettier-plugin-svelte": "^2.1.1",
     "rollup": "^2.37.1",

@@ -48,6 +48,7 @@
   }
 
   .preferences {
+    font-family: 'Material Icons';
     padding: 0.5rem;
   }
 </style>
@@ -62,7 +63,6 @@
     <div class="preferences">
       <IconButton
         aria-label={browser.i18n.getMessage('preferences')}
-        class="material-icons"
         on:click={openPreferences}>
         settings
       </IconButton>
