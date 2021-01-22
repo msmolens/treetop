@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [1.1.3] - 2021-01-22
+### Added
+- List of attributions for open source software distributed in releases.
+
+### Changed
+- Use fonts from Fontsource packages.
+
 ## [1.1.2] - 2020-12-08
 ### Changed
 - Fix visited bookmark styling.
@@ -26,7 +33,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - Initial release.
 
-[Unreleased]: https://github.com/msmolens/treetop/compare/v1.1.2...HEAD
+[Unreleased]: https://github.com/msmolens/treetop/compare/v1.1.3...HEAD
+[1.1.3]: https://github.com/msmolens/treetop/releases/tag/v1.1.3
 [1.1.2]: https://github.com/msmolens/treetop/releases/tag/v1.1.2
 [1.1.1]: https://github.com/msmolens/treetop/releases/tag/v1.1.1
 [1.1.0]: https://github.com/msmolens/treetop/releases/tag/v1.1.0
