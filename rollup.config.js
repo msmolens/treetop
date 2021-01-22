@@ -147,6 +147,7 @@ export default [{
     copy({
       targets: [
         { src: '_locales', dest: 'dist/' },
+        { src: 'attributions.txt', dest: 'dist/' },
         { src: 'src/manifest.json', dest: 'dist/' },
         { src: 'src/icons/generated/icons/*', dest: 'dist/icons' },
       ],

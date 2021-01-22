@@ -53,6 +53,9 @@ describe('Options', () => {
     mockBrowser.i18n.getMessage
       .expect('optionColorSchemeDark')
       .andReturn('dark');
+    mockBrowser.i18n.getMessage
+      .expect('openSourceAttributions')
+      .andReturn('attributions');
 
     mockBrowser.storage.local.get.expect.andResolve({
       showBookmarksToolbar: true,
@@ -89,6 +92,12 @@ describe('Options', () => {
       expect(screen.getByLabelText(/^system/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/^light/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/^dark/i)).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: /^attributions$/i })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: /^attributions$/i })
+      ).toHaveAttribute('href', expect.stringMatching(/^attributions\.txt$/));
     });
   });
 
