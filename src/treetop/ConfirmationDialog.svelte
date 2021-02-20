@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import type { MDCDialogCloseEvent } from '@material/dialog';
 
   import Button, { Label } from '@smui/button';

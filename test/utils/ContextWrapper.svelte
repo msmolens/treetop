@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   // Wrapper component to test Svelte components that use the Context API.
   // See https://github.com/svelte-society/recipes-mvp/blob/master/testing.md#testing-the-context-api
   import { setContext, SvelteComponent } from 'svelte';

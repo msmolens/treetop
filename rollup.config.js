@@ -10,6 +10,11 @@ import typescript from '@rollup/plugin-typescript';
 import { terser } from 'rollup-plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
 
+const preprocess = sveltePreprocess({
+  defaults: {
+    script: 'typescript',
+  },
+});
 const production = !process.env.ROLLUP_WATCH;
 
 export default [{
@@ -23,7 +28,7 @@ export default [{
   plugins: [
     svelte({
       emitCss: true,
-      preprocess: sveltePreprocess(),
+      preprocess,
       compilerOptions: {
         dev: !production,
         css: false,
@@ -73,7 +78,7 @@ export default [{
   plugins: [
     svelte({
       emitCss: true,
-      preprocess: sveltePreprocess(),
+      preprocess,
       compilerOptions: {
         dev: !production,
         css: false,
@@ -106,7 +111,7 @@ export default [{
   plugins: [
     svelte({
       emitCss: true,
-      preprocess: sveltePreprocess(),
+      preprocess,
       compilerOptions: {
         dev: !production,
         css: false,

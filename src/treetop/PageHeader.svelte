@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import IconButton from '@smui/icon-button';
   import { elasticOut } from 'svelte/easing';
   import { fly } from 'svelte/transition';

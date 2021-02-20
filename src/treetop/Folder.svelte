@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import * as Treetop from './types';
   import type { Writable } from 'svelte/store';
   import { browser } from 'webextension-polyfill-ts';

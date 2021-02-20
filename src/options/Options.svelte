@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import { browser } from 'webextension-polyfill-ts';
 
   import { onMount } from 'svelte';

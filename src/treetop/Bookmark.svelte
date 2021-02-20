@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import type * as Treetop from './types';
   import type { Writable } from 'svelte/store';
 

@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import type * as Treetop from './types';
   import { browser } from 'webextension-polyfill-ts';
   import type { MDCDialogCloseEvent } from '@material/dialog';

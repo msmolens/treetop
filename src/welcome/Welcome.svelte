@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import icon from '../icons/generated/icons/icon.svg';
   import { fade } from 'svelte/transition';
 
