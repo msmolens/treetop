@@ -2,8 +2,9 @@
   import { browser } from 'webextension-polyfill-ts';
 
   import { onMount } from 'svelte';
+  import type { Awaited } from 'treetop/types';
 
-  let options: { [key: string]: any };
+  let options: Awaited<ReturnType<typeof browser.storage.local.get>>;
 
   const strings = {
     general: browser.i18n.getMessage('optionHeadingGeneral'),
