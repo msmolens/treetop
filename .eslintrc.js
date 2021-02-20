@@ -14,13 +14,12 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
-    'plugin:prettier/recommended'
+    'prettier',
   ],
   plugins: [
     '@typescript-eslint',
     'simple-import-sort',
     'svelte3',
-    'prettier'
   ],
   overrides: [
     {
@@ -57,6 +56,5 @@ module.exports = {
       }
     ],
     'simple-import-sort/exports': 'error',
-    'prettier/prettier': 'error'
   }
 };
