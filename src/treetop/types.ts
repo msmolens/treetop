@@ -55,3 +55,12 @@ export type PreferenceValue =
 
 // Function to unsubscribe from a store's value updates
 export type SvelteStoreUnsubscriber = () => void;
+
+// Type to unwrap Promises. See:
+// - https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-1.html#recursive-conditional-types
+// - https://github.com/microsoft/TypeScript/pull/40002
+export type Awaited<T> = T extends null | undefined
+  ? T
+  : T extends PromiseLike<infer U>
+  ? Awaited<U>
+  : T;
