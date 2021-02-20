@@ -9,7 +9,6 @@ module.exports = {
     'ecmaVersion': 9,
     'sourceType': 'module',
     'tsconfigRootDir': __dirname,
-    'project': './tsconfig.json',
   },
   extends: [
     'eslint:recommended',
@@ -27,7 +26,13 @@ module.exports = {
     {
       files: ['*.svelte'],
       processor: 'svelte3/svelte3'
-    }
+    },
+    {
+      files: ['*.svelte', '*.ts'],
+      parserOptions: {
+        project: ['./tsconfig.json'],
+      },
+    },
   ],
   rules: {
     '@typescript-eslint/no-non-null-assertion': 'off',
