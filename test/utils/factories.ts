@@ -18,28 +18,37 @@ const TITLE_NUM_RANDOM_WORDS = 3;
 // Treetop node factories
 //
 
-export const createBookmarkNode = (): Treetop.BookmarkNode => {
+export const createBookmarkNode = (
+  withProperties?: Partial<Omit<Treetop.BookmarkNode, 'type'>>
+): Treetop.BookmarkNode => {
   return {
     id: faker.random.uuid(),
     type: Treetop.NodeType.Bookmark,
     title: faker.random.words(TITLE_NUM_RANDOM_WORDS),
     url: faker.internet.url(),
+    ...withProperties,
   };
 };
 
-export const createFolderNode = (): Treetop.FolderNode => {
+export const createFolderNode = (
+  withProperties?: Partial<Omit<Treetop.FolderNode, 'type'>>
+): Treetop.FolderNode => {
   return {
     id: faker.random.uuid(),
     type: Treetop.NodeType.Folder,
     title: faker.random.words(TITLE_NUM_RANDOM_WORDS),
     children: [],
+    ...withProperties,
   };
 };
 
-export const createSeparatorNode = (): Treetop.SeparatorNode => {
+export const createSeparatorNode = (
+  withProperties?: Partial<Omit<Treetop.SeparatorNode, 'type'>>
+): Treetop.SeparatorNode => {
   return {
     id: faker.random.uuid(),
     type: Treetop.NodeType.Separator,
+    ...withProperties,
   };
 };
 
