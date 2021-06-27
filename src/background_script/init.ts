@@ -8,7 +8,7 @@ import { setDefaultOptions } from './options';
  * Initialize Treetop.
  */
 export const init = async (): Promise<void> => {
-  // TODO
+  // Install handler to open the welcome page when the extension is installed
   browser.runtime.onInstalled.addListener(openWelcome);
 
   // Install handler to open Treetop when the browser action is clicked
