@@ -12,6 +12,8 @@ import {
 } from '@Treetop/treetop/constants';
 import * as Treetop from '@Treetop/treetop/types';
 
+const TITLE_NUM_RANDOM_WORDS = 3;
+
 //
 // Treetop node factories
 //
@@ -20,7 +22,7 @@ export const createBookmarkNode = (): Treetop.BookmarkNode => {
   return {
     id: faker.random.uuid(),
     type: Treetop.NodeType.Bookmark,
-    title: faker.random.words(),
+    title: faker.random.words(TITLE_NUM_RANDOM_WORDS),
     url: faker.internet.url(),
   };
 };
@@ -29,7 +31,7 @@ export const createFolderNode = (): Treetop.FolderNode => {
   return {
     id: faker.random.uuid(),
     type: Treetop.NodeType.Folder,
-    title: faker.random.words(),
+    title: faker.random.words(TITLE_NUM_RANDOM_WORDS),
     children: [],
   };
 };
@@ -51,7 +53,7 @@ export const createBrowserBookmarkNode = (
   const node: browser.bookmarks.BookmarkTreeNode = {
     id: faker.random.uuid(),
     parentId: parent.id,
-    title: faker.random.words(),
+    title: faker.random.words(TITLE_NUM_RANDOM_WORDS),
     type: BOOKMARK_TREE_NODE_TYPE_BOOKMARK,
     url: faker.internet.url(),
   };
@@ -65,7 +67,7 @@ export const createBrowserFolderNode = (
   const node: browser.bookmarks.BookmarkTreeNode = {
     id: faker.random.uuid(),
     parentId: parent.id,
-    title: faker.random.words(),
+    title: faker.random.words(TITLE_NUM_RANDOM_WORDS),
     type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
     children: [],
   };
