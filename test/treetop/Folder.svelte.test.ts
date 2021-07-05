@@ -1,6 +1,6 @@
 /* eslint no-irregular-whitespace: ["error", { "skipComments": true }] */
 
-import { Writable, writable } from 'svelte/store';
+import { get, Writable, writable } from 'svelte/store';
 import { render, screen } from '@testing-library/svelte';
 
 import { BOOKMARKS_ROOT_GUID } from '@Treetop/treetop/constants';
@@ -16,6 +16,8 @@ import {
 
 // Folder component requirements
 let nodeStoreMap: Treetop.NodeStoreMap;
+let filterActive: Writable<boolean>;
+let filterSet: Treetop.FilterSet;
 let nodeId: string;
 
 // Bookmark component requirements
@@ -35,6 +37,8 @@ const setup = () => {
     Context: {
       nodeStoreMap,
       lastVisitTimeMap,
+      filterActive,
+      filterSet,
       truncate,
       tooltips,
     },
@@ -99,6 +103,8 @@ const expectFolderInFolder = (child: HTMLElement, headerLink: HTMLElement) => {
 beforeEach(() => {
   nodeStoreMap = new Map() as Treetop.NodeStoreMap;
   lastVisitTimeMap = new Map() as Treetop.LastVisitTimeMap;
+  filterActive = writable(false);
+  filterSet = writable(new Set()) as Treetop.FilterSet;
   truncate = writable(false);
   tooltips = writable(false);
 });
@@ -590,6 +596,666 @@ describe('rooted at subfolder', () => {
 
       const node2 = node.children[1] as HTMLElement;
       expect(node2).toHaveAttribute('href', `#${folderNode2.id}`);
+    });
+  });
+});
+
+describe('filter active', () => {
+  let folderNode1: Treetop.FolderNode;
+  let folderNode2: Treetop.FolderNode;
+  let folderNode3: Treetop.FolderNode;
+  let bookmarkNode1: Treetop.BookmarkNode;
+  let bookmarkNode2: Treetop.BookmarkNode;
+  let bookmarkNode3: Treetop.BookmarkNode;
+  let bookmarkNode4: Treetop.BookmarkNode;
+  let bookmarkNode5: Treetop.BookmarkNode;
+  let bookmarkNode6: Treetop.BookmarkNode;
+
+  beforeEach(() => {
+    // Create node tree:
+    // rootNode
+    //   ├── folderNode1
+    //   │  ├── bookmarkNode1
+    //   │  └── bookmarkNode2
+    //   └── folderNode2
+    //      ├── bookmarkNode3
+    //      ├── bookmarkNode4
+    //      └── folderNode3
+    //         ├── bookmarkNode5
+    //         └── bookmarkNode6
+    rootNode = createFolderNode();
+    rootNode.id = BOOKMARKS_ROOT_GUID;
+
+    folderNode1 = createFolderNode();
+    folderNode1.parentId = rootNode.id;
+    bookmarkNode1 = createBookmarkNode();
+    bookmarkNode2 = createBookmarkNode();
+    folderNode1.children.push(bookmarkNode1);
+    folderNode1.children.push(bookmarkNode2);
+    rootNode.children.push(folderNode1);
+
+    folderNode2 = createFolderNode();
+    folderNode2.parentId = rootNode.id;
+    bookmarkNode3 = createBookmarkNode();
+    bookmarkNode4 = createBookmarkNode();
+    folderNode2.children.push(bookmarkNode3);
+    folderNode2.children.push(bookmarkNode4);
+    rootNode.children.push(folderNode2);
+
+    folderNode3 = createFolderNode();
+    folderNode3.parentId = folderNode2.id;
+    bookmarkNode5 = createBookmarkNode();
+    bookmarkNode6 = createBookmarkNode();
+    folderNode3.children.push(bookmarkNode5);
+    folderNode3.children.push(bookmarkNode6);
+    folderNode2.children.push(folderNode3);
+
+    nodeStoreMap.set(rootNode.id, writable(rootNode));
+    nodeStoreMap.set(folderNode1.id, writable(folderNode1));
+    nodeStoreMap.set(folderNode2.id, writable(folderNode2));
+    nodeStoreMap.set(folderNode3.id, writable(folderNode3));
+
+    // Enable filter
+    filterActive.set(true);
+  });
+
+  describe('rooted at bookmarks root', () => {
+    beforeEach(() => {
+      nodeId = rootNode.id;
+    });
+
+    it('no matches', () => {
+      mockBrowser.i18n.getMessage.expect('noResults').andReturn('No results');
+
+      expect(get(filterSet).size).toBe(0);
+
+      setup();
+
+      expect(screen.getByText(/^no results$/i)).toBeInTheDocument();
+    });
+
+    it('match in folderNode1', () => {
+      filterSet.update((fs) => {
+        fs.add(rootNode.id);
+        fs.add(folderNode1.id);
+        fs.add(bookmarkNode1.id);
+        return fs;
+      });
+
+      setup();
+
+      expect(
+        screen.getByRole('link', { name: folderNode1.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: bookmarkNode1.title })
+      ).toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: folderNode2.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: folderNode3.title })
+      ).not.toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode2.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode3.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode4.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode5.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode6.title })
+      ).not.toBeInTheDocument();
+    });
+
+    it('match in folderNode2', () => {
+      filterSet.update((fs) => {
+        fs.add(rootNode.id);
+        fs.add(folderNode2.id);
+        fs.add(bookmarkNode3.id);
+        return fs;
+      });
+
+      setup();
+
+      expect(
+        screen.getByRole('link', { name: folderNode2.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: bookmarkNode3.title })
+      ).toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: folderNode1.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: folderNode3.title })
+      ).not.toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode1.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode2.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode4.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode5.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode6.title })
+      ).not.toBeInTheDocument();
+    });
+
+    it('match in folderNode1 and folderNode2', () => {
+      filterSet.update((fs) => {
+        fs.add(rootNode.id);
+        fs.add(folderNode1.id);
+        fs.add(folderNode2.id);
+        fs.add(bookmarkNode1.id);
+        fs.add(bookmarkNode3.id);
+        return fs;
+      });
+
+      setup();
+
+      expect(
+        screen.getByRole('link', { name: folderNode1.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: folderNode2.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: bookmarkNode1.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: bookmarkNode3.title })
+      ).toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: folderNode3.title })
+      ).not.toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode2.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode4.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode5.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode6.title })
+      ).not.toBeInTheDocument();
+    });
+
+    it('match in folderNode3', () => {
+      filterSet.update((fs) => {
+        fs.add(rootNode.id);
+        fs.add(folderNode2.id);
+        fs.add(folderNode3.id);
+        fs.add(bookmarkNode5.id);
+        return fs;
+      });
+
+      setup();
+
+      expect(
+        screen.getByRole('link', { name: folderNode2.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: folderNode3.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: bookmarkNode5.title })
+      ).toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: folderNode1.title })
+      ).not.toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode1.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode2.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode3.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode4.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode6.title })
+      ).not.toBeInTheDocument();
+    });
+
+    it('match in folderNode1 and folderNode3', () => {
+      filterSet.update((fs) => {
+        fs.add(rootNode.id);
+        fs.add(folderNode1.id);
+        fs.add(folderNode2.id);
+        fs.add(folderNode3.id);
+        fs.add(bookmarkNode1.id);
+        fs.add(bookmarkNode5.id);
+        return fs;
+      });
+
+      setup();
+
+      expect(
+        screen.getByRole('link', { name: folderNode1.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: folderNode2.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: folderNode3.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: bookmarkNode1.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: bookmarkNode5.title })
+      ).toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode2.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode3.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode4.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode6.title })
+      ).not.toBeInTheDocument();
+    });
+
+    it('match in folderNode1, folderNode2, and folderNode3', () => {
+      filterSet.update((fs) => {
+        fs.add(rootNode.id);
+        fs.add(folderNode1.id);
+        fs.add(folderNode2.id);
+        fs.add(folderNode3.id);
+        fs.add(bookmarkNode1.id);
+        fs.add(bookmarkNode4.id);
+        fs.add(bookmarkNode5.id);
+        return fs;
+      });
+
+      setup();
+
+      expect(
+        screen.getByRole('link', { name: folderNode1.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: folderNode2.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: folderNode3.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: bookmarkNode1.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: bookmarkNode4.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: bookmarkNode5.title })
+      ).toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode2.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode3.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode6.title })
+      ).not.toBeInTheDocument();
+    });
+
+    it('multiple matches in folderNode1', () => {
+      filterSet.update((fs) => {
+        fs.add(rootNode.id);
+        fs.add(folderNode1.id);
+        fs.add(bookmarkNode1.id);
+        fs.add(bookmarkNode2.id);
+        return fs;
+      });
+
+      setup();
+
+      expect(
+        screen.getByRole('link', { name: folderNode1.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: bookmarkNode1.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: bookmarkNode2.title })
+      ).toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: folderNode2.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: folderNode3.title })
+      ).not.toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode3.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode4.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode5.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode6.title })
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  describe('rooted at subfolder', () => {
+    beforeEach(() => {
+      nodeId = folderNode2.id;
+    });
+
+    it('no matches', () => {
+      mockBrowser.i18n.getMessage.expect('noResults').andReturn('No results');
+
+      expect(get(filterSet).size).toBe(0);
+
+      setup();
+
+      expect(screen.getByText(/^no results$/i)).toBeInTheDocument();
+    });
+
+    it('match in folderNode1', () => {
+      filterSet.update((fs) => {
+        fs.add(rootNode.id);
+        fs.add(folderNode1.id);
+        fs.add(bookmarkNode1.id);
+        return fs;
+      });
+
+      mockBrowser.i18n.getMessage.expect('noResults').andReturn('No results');
+
+      setup();
+
+      expect(screen.getByText(/^no results$/i)).toBeInTheDocument();
+    });
+
+    it('match in folderNode2', () => {
+      filterSet.update((fs) => {
+        fs.add(rootNode.id);
+        fs.add(folderNode2.id);
+        fs.add(bookmarkNode3.id);
+        return fs;
+      });
+
+      setup();
+
+      expect(
+        screen.getByRole('link', { name: folderNode2.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: bookmarkNode3.title })
+      ).toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: folderNode1.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: folderNode3.title })
+      ).not.toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode1.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode2.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode4.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode5.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode6.title })
+      ).not.toBeInTheDocument();
+    });
+
+    it('match in folderNode1 and folderNode2', () => {
+      filterSet.update((fs) => {
+        fs.add(rootNode.id);
+        fs.add(folderNode1.id);
+        fs.add(folderNode2.id);
+        fs.add(bookmarkNode1.id);
+        fs.add(bookmarkNode3.id);
+        return fs;
+      });
+
+      setup();
+
+      expect(
+        screen.getByRole('link', { name: folderNode2.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: bookmarkNode3.title })
+      ).toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: folderNode1.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: folderNode3.title })
+      ).not.toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode1.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode2.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode4.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode5.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode6.title })
+      ).not.toBeInTheDocument();
+    });
+
+    it('match in folderNode3', () => {
+      filterSet.update((fs) => {
+        fs.add(rootNode.id);
+        fs.add(folderNode2.id);
+        fs.add(folderNode3.id);
+        fs.add(bookmarkNode5.id);
+        return fs;
+      });
+
+      setup();
+
+      expect(
+        screen.getByRole('link', { name: folderNode2.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: folderNode3.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: bookmarkNode5.title })
+      ).toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: folderNode1.title })
+      ).not.toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode1.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode2.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode3.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode4.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode6.title })
+      ).not.toBeInTheDocument();
+    });
+
+    it('match in folderNode1 and folderNode3', () => {
+      filterSet.update((fs) => {
+        fs.add(rootNode.id);
+        fs.add(folderNode1.id);
+        fs.add(folderNode2.id);
+        fs.add(folderNode3.id);
+        fs.add(bookmarkNode1.id);
+        fs.add(bookmarkNode5.id);
+        return fs;
+      });
+
+      setup();
+
+      expect(
+        screen.getByRole('link', { name: folderNode2.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: folderNode3.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: bookmarkNode5.title })
+      ).toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: folderNode1.title })
+      ).not.toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode1.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode2.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode3.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode4.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode6.title })
+      ).not.toBeInTheDocument();
+    });
+
+    it('match in folderNode1, folderNode2, and folderNode3', () => {
+      filterSet.update((fs) => {
+        fs.add(rootNode.id);
+        fs.add(folderNode1.id);
+        fs.add(folderNode2.id);
+        fs.add(folderNode3.id);
+        fs.add(bookmarkNode1.id);
+        fs.add(bookmarkNode4.id);
+        fs.add(bookmarkNode5.id);
+        return fs;
+      });
+
+      setup();
+
+      expect(
+        screen.getByRole('link', { name: folderNode2.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: folderNode3.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: bookmarkNode4.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: bookmarkNode5.title })
+      ).toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: folderNode1.title })
+      ).not.toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode1.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode2.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode3.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode6.title })
+      ).not.toBeInTheDocument();
+    });
+
+    it('multiple matches in folderNode2', () => {
+      filterSet.update((fs) => {
+        fs.add(rootNode.id);
+        fs.add(folderNode2.id);
+        fs.add(bookmarkNode3.id);
+        fs.add(bookmarkNode4.id);
+        return fs;
+      });
+
+      setup();
+
+      expect(
+        screen.getByRole('link', { name: folderNode2.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: bookmarkNode3.title })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: bookmarkNode4.title })
+      ).toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: folderNode1.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: folderNode3.title })
+      ).not.toBeInTheDocument();
+
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode1.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode2.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode5.title })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: bookmarkNode6.title })
+      ).not.toBeInTheDocument();
     });
   });
 });

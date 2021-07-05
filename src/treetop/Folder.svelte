@@ -13,6 +13,8 @@
   export let root: boolean = false;
 
   const nodeStoreMap: Treetop.NodeStoreMap = getContext('nodeStoreMap');
+  const filterActive = getContext<Writable<boolean>>('filterActive');
+  const filterSet = getContext<Treetop.FilterSet>('filterSet');
 
   let node: Writable<Treetop.FolderNode> = nodeStoreMap.get(nodeId)!;
 
@@ -121,7 +123,7 @@
   {/if}
 </svelte:head>
 
-{#if $node}
+{#if $node && (root || !$filterActive || $filterSet.has($node.id))}
   <div class="folder" class:root>
     <div class="heading">
       <div class="title">
@@ -134,9 +136,14 @@
       </div>
     </div>
     <div class="contents">
+      {#if root && $filterActive && !$filterSet.has(nodeId)}
+        <em>{browser.i18n.getMessage('noResults')}</em>
+      {/if}
       {#each $node.children as child (child.id)}
         {#if child.type === Treetop.NodeType.Bookmark}
-          <Bookmark nodeId={child.id} title={child.title} url={child.url} />
+          {#if !$filterActive || $filterSet.has(child.id)}
+            <Bookmark nodeId={child.id} title={child.title} url={child.url} />
+          {/if}
         {:else if child.type === Treetop.NodeType.Folder}
           <svelte:self nodeId={child.id} />
         {:else if child.type === Treetop.NodeType.Separator}

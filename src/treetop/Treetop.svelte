@@ -3,7 +3,7 @@
   import { browser } from 'webextension-polyfill-ts';
 
   import { onMount, onDestroy, setContext } from 'svelte';
-  import { get } from 'svelte/store';
+  import { get, writable } from 'svelte/store';
   import { fade } from 'svelte/transition';
   import LinearProgress from '@smui/linear-progress';
   import Snackbar, { Label } from '@smui/snackbar';
@@ -16,6 +16,8 @@
 
   import { BookmarksManager } from './BookmarksManager';
   import ConfirmationDialog from './ConfirmationDialog.svelte';
+  import FilterInput from './FilterInput.svelte';
+  import { FilterManager } from './FilterManager';
   import { HistoryManager } from './HistoryManager';
   import { PreferencesManager } from './PreferencesManager';
   import PropertiesDialog from './PropertiesDialog.svelte';
@@ -73,15 +75,26 @@
   // Populated with a store for each bookmark.
   const lastVisitTimeMap: Treetop.LastVisitTimeMap = new Map();
 
+  // Set of node IDs that match the active filter.
+  const filterSet: Treetop.FilterSet = writable(new Set());
+
   // Bookmarks manager
   const bookmarksManager = new BookmarksManager(nodeStoreMap);
 
   // History manager
   const historyManager = new HistoryManager(lastVisitTimeMap);
 
-  // Make bookmark node and history data available to other components
+  // Filter manager
+  const filterManager = new FilterManager(filterSet, nodeStoreMap);
+
+  // Store for whether filter is active.
+  const filterActive = writable(false);
+
+  // Make bookmark data available to other components
   setContext('nodeStoreMap', nodeStoreMap);
   setContext('lastVisitTimeMap', lastVisitTimeMap);
+  setContext('filterActive', filterActive);
+  setContext('filterSet', filterSet);
 
   //
   // Error notification
@@ -256,6 +269,8 @@
     if ($showRecentlyVisited) {
       historyManager.handleBookmarkCreated(id, bookmark);
     }
+
+    filterManager.handleBookmarkCreated(id, bookmark);
   }
 
   async function onBookmarkRemoved(
@@ -267,6 +282,12 @@
       removeInfo
     );
 
+    filterManager.beginBatchRemove();
+    removedNodeIds.forEach((nodeId) =>
+      filterManager.handleBookmarkRemoved(nodeId)
+    );
+    filterManager.endBatchRemove();
+
     if ($showRecentlyVisited) {
       removedNodeIds.forEach((nodeId) =>
         historyManager.handleBookmarkRemoved(nodeId)
@@ -274,22 +295,26 @@
     }
   }
 
-  function onBookmarkChanged(
+  async function onBookmarkChanged(
     id: string,
     changeInfo: browser.bookmarks._OnChangedChangeInfo
   ) {
-    bookmarksManager.handleBookmarkChanged(id, changeInfo);
+    await bookmarksManager.handleBookmarkChanged(id, changeInfo);
+
+    filterManager.handleBookmarkChanged(id, changeInfo);
 
     if ($showRecentlyVisited) {
       historyManager.handleBookmarkChanged(id, changeInfo);
     }
   }
 
-  function onBookmarkMoved(
+  async function onBookmarkMoved(
     id: string,
     moveInfo: browser.bookmarks._OnMovedMoveInfo
   ) {
-    bookmarksManager.handleBookmarkMoved(id, moveInfo);
+    await bookmarksManager.handleBookmarkMoved(id, moveInfo);
+
+    filterManager.handleBookmarkMoved(id, moveInfo);
   }
 
   //
@@ -328,6 +353,26 @@
     tab?: browser.tabs.Tab
   ) {
     return menuManager?.handleMenuClicked(info, tab);
+  }
+
+  //
+  // Filter input event handler
+  //
+
+  /**
+   * Apply the current filter string.
+   */
+  function applyFilter(event: CustomEvent<{ filter: string }>) {
+    // Clear any previous filtering
+    filterManager.clearFilter();
+    filterActive.set(false);
+
+    // Set the current filter if the string is not empty
+    const value = event.detail.filter.trim();
+    if (value && value.length > 0) {
+      filterManager.setFilter(value);
+      filterActive.set(true);
+    }
   }
 
   /**
@@ -481,7 +526,9 @@
     </div>
   </div>
 {:then rootNodeId}
-  <PageHeader />
+  <PageHeader>
+    <FilterInput on:input={applyFilter} />
+  </PageHeader>
   <main
     class="treetopContainer"
     transition:fade={{ delay: 100, duration: 250 }}>

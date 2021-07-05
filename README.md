@@ -20,7 +20,9 @@ Treetop is a Firefox extension that provides a high-level live view of your book
 
 - Recently visited bookmarks have a larger font.
 
-### Edit your bookmarks
+### Find and edit your bookmarks
+
+- Search for bookmarks by name or URL.
 
 - Right-click to edit or delete bookmarks and folders.
 
@@ -28,7 +30,7 @@ Treetop is a Firefox extension that provides a high-level live view of your book
 
 - Click the Preferences button to customize Treetop's display.
 
-- Click a folder to set Treetop's root.
+- Click on a folder to make it the root folder.
 
 ## Development
 

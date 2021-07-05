@@ -38,6 +38,9 @@ export type NodeStoreMap = Map<string, Writable<FolderNode>>;
 // Provides access to the last visit times of bookmarks.
 export type LastVisitTimeMap = Map<string, Writable<number>>;
 
+// Set of node IDs that match the active filter.
+export type FilterSet = Writable<Set<string>>;
+
 // Changes to a bookmark's properties
 export interface PropertiesChanges {
   title: string;

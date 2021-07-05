@@ -37,7 +37,6 @@
   }
 
   .treetop {
-    flex: 1;
     font-family: 'News Cycle', sans-serif;
     font-size: 3rem;
     font-weight: 400;
@@ -45,6 +44,12 @@
     text-decoration: solid #ff4088 underline 3px;
     text-underline-offset: 3px;
     user-select: none;
+  }
+
+  .slot {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
   }
 
   .preferences {
@@ -58,6 +63,9 @@
     class="treetop"
     transition:fly={{ y: -72, duration: 1200, easing: elasticOut, opacity: 1 }}>
     Treetop
+  </div>
+  <div class="slot">
+    <slot />
   </div>
   <div>
     <div class="preferences">
