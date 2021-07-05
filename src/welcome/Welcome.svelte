@@ -100,8 +100,9 @@
   </InfoBox>
 
   <InfoBox>
-    <span slot="title">Edit your bookmarks</span>
-    <span slot="detail1">
+    <span slot="title">Find and edit your bookmarks</span>
+    <span slot="detail1">Search for bookmarks by name or URL.</span>
+    <span slot="detail2">
       Right-click to edit or delete bookmarks and folders.
     </span>
   </InfoBox>

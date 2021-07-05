@@ -31,6 +31,7 @@ describe('Treetop', () => {
     mockBrowser.i18n.getMessage.expect('dialogButtonDelete');
 
     // Page header
+    mockBrowser.i18n.getMessage.expect('search');
     mockBrowser.i18n.getMessage.expect('preferences');
 
     // Properties dialog

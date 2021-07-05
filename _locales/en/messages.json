@@ -11,6 +11,14 @@
     "message": "Preferences",
     "description": "Label on button to open preferences."
   },
+  "search": {
+    "message": "Search",
+    "description": "Label for search input."
+  },
+  "noResults": {
+    "message": "No results",
+    "description": "Display text when there are no matches for a search."
+  },
   "menuItemOpenAllInTabs": {
     "message": "&Open All in Tabs",
     "description": "Title of context menu item that opens all of a folder's bookmarks in new tabs."
