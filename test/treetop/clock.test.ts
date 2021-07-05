@@ -1,12 +1,13 @@
+import type { Unsubscriber } from 'svelte/store';
+
 import {
   CLOCK_UPDATE_RATE_MS,
   TIMER_UPDATE_RATE_MS,
 } from '@Treetop/treetop/clock';
-import type * as Treetop from '@Treetop/treetop/types';
 
 describe('clock', () => {
   let clockValue: Date;
-  let unsubscribe: Treetop.SvelteStoreUnsubscriber;
+  let unsubscribe: Unsubscriber;
 
   beforeEach(() => {
     jest.useFakeTimers('modern');

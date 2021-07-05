@@ -3,6 +3,7 @@
   import { browser } from 'webextension-polyfill-ts';
 
   import { onMount, onDestroy, setContext } from 'svelte';
+  import type { Unsubscriber } from 'svelte/store';
   import { get, writable } from 'svelte/store';
   import { fade } from 'svelte/transition';
   import LinearProgress from '@smui/linear-progress';
@@ -61,7 +62,7 @@
   setContext('tooltips', tooltips);
 
   // Function to unsubscribe from the 'showRecentlyVisited' preference
-  let unsubscribeShowRecentlyVisited: Treetop.SvelteStoreUnsubscriber;
+  let unsubscribeShowRecentlyVisited: Unsubscriber;
 
   //
   // Create bookmarks data and manager
