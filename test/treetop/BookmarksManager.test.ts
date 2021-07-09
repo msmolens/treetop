@@ -660,12 +660,16 @@ describe('handleBookmarkChanged', () => {
       getFolderNode(nodeStoreMap.get(folderNode1.id)).children.length
     ).toBe(2);
     expect(
-      (getFolderNode(nodeStoreMap.get(folderNode1.id))
-        .children[0] as Treetop.BookmarkNode).title
+      (
+        getFolderNode(nodeStoreMap.get(folderNode1.id))
+          .children[0] as Treetop.BookmarkNode
+      ).title
     ).toBe(bookmarkNode1.title);
     expect(
-      (getFolderNode(nodeStoreMap.get(folderNode1.id))
-        .children[0] as Treetop.BookmarkNode).url
+      (
+        getFolderNode(nodeStoreMap.get(folderNode1.id))
+          .children[0] as Treetop.BookmarkNode
+      ).url
     ).toBe(bookmarkNode1.url);
     const initialNodeStoreMapSize = nodeStoreMap.size;
 
@@ -692,12 +696,16 @@ describe('handleBookmarkChanged', () => {
       getFolderNode(nodeStoreMap.get(folderNode1.id)).children.length
     ).toBe(2);
     expect(
-      (getFolderNode(nodeStoreMap.get(folderNode1.id))
-        .children[0] as Treetop.BookmarkNode).title
+      (
+        getFolderNode(nodeStoreMap.get(folderNode1.id))
+          .children[0] as Treetop.BookmarkNode
+      ).title
     ).toBe(bookmarkNode1.title);
     expect(
-      (getFolderNode(nodeStoreMap.get(folderNode1.id))
-        .children[0] as Treetop.BookmarkNode).url
+      (
+        getFolderNode(nodeStoreMap.get(folderNode1.id))
+          .children[0] as Treetop.BookmarkNode
+      ).url
     ).toBe(bookmarkNode1.url);
   });
 

@@ -11,9 +11,8 @@
   export let title: string;
   export let url: string;
 
-  const lastVisitTimeMap: Treetop.LastVisitTimeMap = getContext(
-    'lastVisitTimeMap'
-  );
+  const lastVisitTimeMap: Treetop.LastVisitTimeMap =
+    getContext('lastVisitTimeMap');
   const truncate = getContext<Writable<boolean>>('truncate');
   const tooltips = getContext<Writable<boolean>>('tooltips');
 

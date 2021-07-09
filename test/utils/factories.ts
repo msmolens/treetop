@@ -98,66 +98,72 @@ export const createBrowserSeparatorNode = (
   return node;
 };
 
-export const createBookmarksMenuNode = (): browser.bookmarks.BookmarkTreeNode => {
-  return {
-    id: BOOKMARKS_MENU_GUID,
-    parentId: BOOKMARKS_ROOT_GUID,
-    title: 'Bookmarks Menu',
-    type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
-    children: [],
+export const createBookmarksMenuNode =
+  (): browser.bookmarks.BookmarkTreeNode => {
+    return {
+      id: BOOKMARKS_MENU_GUID,
+      parentId: BOOKMARKS_ROOT_GUID,
+      title: 'Bookmarks Menu',
+      type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
+      children: [],
+    };
   };
-};
 
-export const createBookmarksToolbarNode = (): browser.bookmarks.BookmarkTreeNode => {
-  return {
-    id: BOOKMARKS_TOOLBAR_GUID,
-    parentId: BOOKMARKS_ROOT_GUID,
-    title: 'Bookmarks Toolbar',
-    type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
-    children: [],
+export const createBookmarksToolbarNode =
+  (): browser.bookmarks.BookmarkTreeNode => {
+    return {
+      id: BOOKMARKS_TOOLBAR_GUID,
+      parentId: BOOKMARKS_ROOT_GUID,
+      title: 'Bookmarks Toolbar',
+      type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
+      children: [],
+    };
   };
-};
 
-export const createOtherBookmarksNode = (): browser.bookmarks.BookmarkTreeNode => {
-  return {
-    id: OTHER_BOOKMARKS_GUID,
-    parentId: BOOKMARKS_ROOT_GUID,
-    title: 'Other Bookmarks',
-    type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
-    children: [],
+export const createOtherBookmarksNode =
+  (): browser.bookmarks.BookmarkTreeNode => {
+    return {
+      id: OTHER_BOOKMARKS_GUID,
+      parentId: BOOKMARKS_ROOT_GUID,
+      title: 'Other Bookmarks',
+      type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
+      children: [],
+    };
   };
-};
 
-export const createMobileBookmarksNode = (): browser.bookmarks.BookmarkTreeNode => {
-  return {
-    id: MOBILE_BOOKMARKS_GUID,
-    parentId: BOOKMARKS_ROOT_GUID,
-    title: 'Mobile Bookmarks',
-    type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
-    children: [],
+export const createMobileBookmarksNode =
+  (): browser.bookmarks.BookmarkTreeNode => {
+    return {
+      id: MOBILE_BOOKMARKS_GUID,
+      parentId: BOOKMARKS_ROOT_GUID,
+      title: 'Mobile Bookmarks',
+      type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
+      children: [],
+    };
   };
-};
 
-export const createBookmarksRootNode = (): browser.bookmarks.BookmarkTreeNode => {
-  return {
-    id: BOOKMARKS_ROOT_GUID,
-    parentId: undefined,
-    url: undefined,
-    type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
-    title: '',
-    children: [
-      createBookmarksMenuNode(),
-      createBookmarksToolbarNode(),
-      createOtherBookmarksNode(),
-      createMobileBookmarksNode(),
-    ],
+export const createBookmarksRootNode =
+  (): browser.bookmarks.BookmarkTreeNode => {
+    return {
+      id: BOOKMARKS_ROOT_GUID,
+      parentId: undefined,
+      url: undefined,
+      type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
+      title: '',
+      children: [
+        createBookmarksMenuNode(),
+        createBookmarksToolbarNode(),
+        createOtherBookmarksNode(),
+        createMobileBookmarksNode(),
+      ],
+    };
   };
-};
 
-export const createBrowserBookmarksTree = (): browser.bookmarks.BookmarkTreeNode[] => {
-  const rootNode = createBookmarksRootNode();
-  return [rootNode];
-};
+export const createBrowserBookmarksTree =
+  (): browser.bookmarks.BookmarkTreeNode[] => {
+    const rootNode = createBookmarksRootNode();
+    return [rootNode];
+  };
 
 //
 // Browser history factories

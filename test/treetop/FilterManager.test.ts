@@ -155,14 +155,10 @@ describe('setFilter', () => {
 
   it('multiple matches in root folder', () => {
     const filter = faker.random.words(NUM_RANDOM_WORDS);
-    (folderNode1
-      .children[0] as Treetop.BookmarkNode).title = randomStringContaining(
-      filter
-    );
-    (folderNode1
-      .children[1] as Treetop.BookmarkNode).title = randomStringContaining(
-      filter
-    );
+    (folderNode1.children[0] as Treetop.BookmarkNode).title =
+      randomStringContaining(filter);
+    (folderNode1.children[1] as Treetop.BookmarkNode).title =
+      randomStringContaining(filter);
     filterManager.setFilter(filter);
 
     const filterSet = get(fs);
@@ -174,14 +170,10 @@ describe('setFilter', () => {
 
   it('match in root folder and in nested folder', () => {
     const filter = faker.random.words(NUM_RANDOM_WORDS);
-    (folderNode1
-      .children[1] as Treetop.BookmarkNode).title = randomStringContaining(
-      filter
-    );
-    (folderNode2
-      .children[1] as Treetop.BookmarkNode).title = randomStringContaining(
-      filter
-    );
+    (folderNode1.children[1] as Treetop.BookmarkNode).title =
+      randomStringContaining(filter);
+    (folderNode2.children[1] as Treetop.BookmarkNode).title =
+      randomStringContaining(filter);
     filterManager.setFilter(filter);
 
     const filterSet = get(fs);
@@ -205,14 +197,10 @@ describe('setFilter', () => {
 
   it('multiple matches in nested folder', () => {
     const filter = faker.random.words(NUM_RANDOM_WORDS);
-    (folderNode2
-      .children[0] as Treetop.BookmarkNode).title = randomStringContaining(
-      filter
-    );
-    (folderNode2
-      .children[1] as Treetop.BookmarkNode).title = randomStringContaining(
-      filter
-    );
+    (folderNode2.children[0] as Treetop.BookmarkNode).title =
+      randomStringContaining(filter);
+    (folderNode2.children[1] as Treetop.BookmarkNode).title =
+      randomStringContaining(filter);
     filterManager.setFilter(filter);
 
     const filterSet = get(fs);
@@ -237,14 +225,10 @@ describe('setFilter', () => {
 
   it('multiple matches in deeply nested folder', () => {
     const filter = faker.random.words(NUM_RANDOM_WORDS);
-    (folderNode4
-      .children[0] as Treetop.BookmarkNode).title = randomStringContaining(
-      filter
-    );
-    (folderNode4
-      .children[2] as Treetop.BookmarkNode).title = randomStringContaining(
-      filter
-    );
+    (folderNode4.children[0] as Treetop.BookmarkNode).title =
+      randomStringContaining(filter);
+    (folderNode4.children[2] as Treetop.BookmarkNode).title =
+      randomStringContaining(filter);
     filterManager.setFilter(filter);
 
     const filterSet = get(fs);
@@ -258,14 +242,10 @@ describe('setFilter', () => {
 
   it('matches in multiple nested folders', () => {
     const filter = faker.random.words(NUM_RANDOM_WORDS);
-    (folderNode2
-      .children[0] as Treetop.BookmarkNode).title = randomStringContaining(
-      filter
-    );
-    (folderNode6
-      .children[0] as Treetop.BookmarkNode).title = randomStringContaining(
-      filter
-    );
+    (folderNode2.children[0] as Treetop.BookmarkNode).title =
+      randomStringContaining(filter);
+    (folderNode6.children[0] as Treetop.BookmarkNode).title =
+      randomStringContaining(filter);
     filterManager.setFilter(filter);
 
     const filterSet = get(fs);

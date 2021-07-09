@@ -60,40 +60,38 @@ export class BookmarksManager {
       parentId: node.parentId,
       type: Treetop.NodeType.Folder,
       title: node.title,
-      children: node.children!.map(
-        (child): Treetop.Node => {
-          let newChild: Treetop.Node;
-          const type = BookmarkTypeMap.get(child.type!)!;
-          switch (type) {
-            case Treetop.NodeType.Bookmark:
-              newChild = {
-                type,
-                id: child.id,
-                title: child.title,
-                url: child.url!,
-              };
-              break;
-            case Treetop.NodeType.Folder:
-              newChild = {
-                type,
-                id: child.id,
-                title: child.title,
-                children: [],
-              };
-              break;
-            case Treetop.NodeType.Separator:
-              newChild = {
-                type,
-                id: child.id,
-              };
-              break;
-            default:
-              throw new TypeError();
-          }
-
-          return newChild;
+      children: node.children!.map((child): Treetop.Node => {
+        let newChild: Treetop.Node;
+        const type = BookmarkTypeMap.get(child.type!)!;
+        switch (type) {
+          case Treetop.NodeType.Bookmark:
+            newChild = {
+              type,
+              id: child.id,
+              title: child.title,
+              url: child.url!,
+            };
+            break;
+          case Treetop.NodeType.Folder:
+            newChild = {
+              type,
+              id: child.id,
+              title: child.title,
+              children: [],
+            };
+            break;
+          case Treetop.NodeType.Separator:
+            newChild = {
+              type,
+              id: child.id,
+            };
+            break;
+          default:
+            throw new TypeError();
         }
-      ),
+
+        return newChild;
+      }),
     };
 
     return newNode;

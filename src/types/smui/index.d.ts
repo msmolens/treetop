@@ -21,9 +21,7 @@ declare module '@smui/dialog' {
     };
   }
 
-  let InitialFocus: (
-    node: HTMLElement
-  ) => {
+  let InitialFocus: (node: HTMLElement) => {
     destroy: () => void;
   };
 
