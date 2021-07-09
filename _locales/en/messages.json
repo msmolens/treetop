@@ -120,6 +120,14 @@
     "message": "Empty folder",
     "description": "Display text for the contents of an empty folder."
   },
+  "errorDeletingBookmark": {
+    "message": "Error deleting bookmark.",
+    "description": "Message shown when an error occurs when deleting a bookmark."
+  },
+  "errorDeletingFolder": {
+    "message": "Error deleting folder.",
+    "description": "Message shown when an error occurs when deleting a folder."
+  },
   "errorRetrievingBookmark": {
     "message": "Error retrieving bookmark.",
     "description": "Message shown when an error occurs when showing the properties dialog."
@@ -127,6 +135,38 @@
   "errorSavingBookmark": {
     "message": "Error saving bookmark.",
     "description": "Message shown when an error occurs when saving a bookmark's properties."
+  },
+  "errorHandlingBookmarkChange": {
+    "message": "Error handling bookmark change.",
+    "description": "Message shown when an error occurs when handling a bookmark change."
+  },
+  "errorHandlingBookmarkCreation": {
+    "message": "Error handling bookmark creation.",
+    "description": "Message shown when an error occurs when handling bookmark creation."
+  },
+  "errorHandlingBookmarkMove": {
+    "message": "Error handling bookmark move.",
+    "description": "Message shown when an error occurs when handling a bookmark move."
+  },
+  "errorHandlingBookmarkRemoval": {
+    "message": "Error handling bookmark removal.",
+    "description": "Message shown when an error occurs when handling bookmark removal."
+  },
+  "errorHandlingHistoryVisit": {
+    "message": "Error handling history visit.",
+    "description": "Message shown when an error occurs when handling a history visit event."
+  },
+  "errorHandlingHistoryVisitRemoval": {
+    "message": "Error handling history removal.",
+    "description": "Message shown when an error occurs when handling a history visit removed event."
+  },
+  "errorHandlingMenuClick": {
+    "message": "Error handling menu click.",
+    "description": "Message shown when an error occurs when handling a menu click event."
+  },
+  "errorHandlingMenuShown": {
+    "message": "Error handling menu shown.",
+    "description": "Message shown when an error occurs when handling a menu shown event."
   },
   "errorLoadingPreferences": {
     "message": "Error loading preferences.",
@@ -139,6 +179,10 @@
   "errorLoadingHistory": {
     "message": "Error loading history.",
     "description": "Message shown when an error occurs when loading history."
+  },
+  "errorOpeningTab": {
+    "message": "Error opening tab.",
+    "description": "Message shown when an error occurs when opening a tab."
   },
   "openSourceAttributions": {
     "message": "Open Source Attributions",

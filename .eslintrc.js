@@ -6,9 +6,11 @@ module.exports = {
   },
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    'ecmaVersion': 9,
+    'ecmaVersion': 2019,
     'sourceType': 'module',
     'tsconfigRootDir': __dirname,
+    'project': ['./tsconfig.json'],
+    'extraFileExtensions': ['.svelte'],
   },
   extends: [
     'eslint:recommended',
@@ -24,15 +26,17 @@ module.exports = {
   overrides: [
     {
       files: ['*.svelte'],
-      processor: 'svelte3/svelte3'
-    },
-    {
-      files: ['*.svelte', '*.ts'],
-      parserOptions: {
-        project: ['./tsconfig.json'],
-      },
+      processor: 'svelte3/svelte3',
+      rules: {
+        // Disable rule that gives false positives for store subscriptions
+        // https://github.com/sveltejs/eslint-plugin-svelte3/issues/104
+        '@typescript-eslint/no-unsafe-call': 'off',
+      }
     },
   ],
+  settings: {
+    'svelte3/typescript': () => require('typescript'),
+  },
   rules: {
     '@typescript-eslint/no-non-null-assertion': 'off',
     'simple-import-sort/imports': [

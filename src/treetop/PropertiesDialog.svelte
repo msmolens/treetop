@@ -1,18 +1,17 @@
 <script>
-  import type * as Treetop from './types';
-  import { browser } from 'webextension-polyfill-ts';
-  import type { MDCDialogCloseEvent } from '@material/dialog';
-
-  import Button, { Label } from '@smui/button';
-  import Dialog, { Title, Content, Actions } from '@smui/dialog';
-  import TextField from '@smui/textfield';
-
   import { createEventDispatcher } from 'svelte';
+  import type { MDCDialogCloseEvent } from '@material/dialog';
+  import Button, { Label } from '@smui/button';
+  import Dialog, { Actions, Content, Title } from '@smui/dialog';
+  import TextField from '@smui/textfield';
   import truncate from 'lodash-es/truncate';
+  import { browser } from 'webextension-polyfill-ts';
+
+  import type * as Treetop from './types';
 
   const dispatch = createEventDispatcher();
 
-  export let shown: boolean = false;
+  export let shown = false;
   export let title: string;
   export let url: string | undefined;
 
@@ -61,7 +60,10 @@
   // Bookmark properties
   //
 
+  let editTitle: string;
   $: editTitle = title;
+
+  let editUrl: string | undefined;
   $: editUrl = url;
 
   // Dispatch event to save changes

@@ -1,11 +1,10 @@
 <script>
-  import type * as Treetop from './types';
-  import type { Writable } from 'svelte/store';
-
   import { getContext } from 'svelte';
+  import type { Writable } from 'svelte/store';
   import lodashTruncate from 'lodash-es/truncate';
 
   import { clock } from './clock';
+  import type * as Treetop from './types';
   import { truncateMiddle } from './utils';
 
   export let nodeId: string;
@@ -15,8 +14,8 @@
   const lastVisitTimeMap: Treetop.LastVisitTimeMap = getContext(
     'lastVisitTimeMap'
   );
-  const truncate = getContext('truncate') as Writable<boolean>;
-  const tooltips = getContext('tooltips') as Writable<boolean>;
+  const truncate = getContext<Writable<boolean>>('truncate');
+  const tooltips = getContext<Writable<boolean>>('tooltips');
 
   let lastVisitTime = lastVisitTimeMap.get(nodeId) as Writable<number>;
 

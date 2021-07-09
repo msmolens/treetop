@@ -1,16 +1,15 @@
 <script>
-  import * as Treetop from './types';
-  import type { Writable } from 'svelte/store';
-  import { browser } from 'webextension-polyfill-ts';
-
   import { getContext } from 'svelte';
+  import type { Writable } from 'svelte/store';
   import { get } from 'svelte/store';
+  import { browser } from 'webextension-polyfill-ts';
 
   import Bookmark from './Bookmark.svelte';
   import { BOOKMARKS_ROOT_GUID } from './constants';
+  import * as Treetop from './types';
 
   export let nodeId: string;
-  export let root: boolean = false;
+  export let root = false;
 
   const nodeStoreMap: Treetop.NodeStoreMap = getContext('nodeStoreMap');
   const filterActive = getContext<Writable<boolean>>('filterActive');
@@ -30,6 +29,7 @@
 
   // Include selected root title in document title.
   // Don't use fallback title.
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   $: documentTitle = $node.title ? `Treetop: ${$node.title}` : 'Treetop';
 
   /**
