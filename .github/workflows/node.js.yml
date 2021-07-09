@@ -16,6 +16,7 @@ jobs:
       with:
         node-version: '14.x'
     - run: npm ci
+    - run: npm run prettier
     - run: npm run lint
     - run: npm run validate
     - run: npm test
