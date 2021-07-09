@@ -5,9 +5,11 @@
 
   // Component
   export let Component: SvelteComponent;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   export let Props: Record<string, any>;
 
   // Context
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   export let Context: Record<string, any>;
   for (const [key, value] of Object.entries(Context)) {
     setContext(key, value);

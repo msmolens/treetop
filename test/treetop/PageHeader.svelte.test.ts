@@ -32,7 +32,7 @@ it('preferences button', () => {
   const button = screen.getByRole('button', { hidden: true });
   expect(button).toHaveTextContent('settings');
 
-  mockBrowser.runtime.openOptionsPage.expect();
+  mockBrowser.runtime.openOptionsPage.expect().andResolve();
 
   userEvent.click(button);
 });

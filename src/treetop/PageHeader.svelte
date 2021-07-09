@@ -1,11 +1,16 @@
 <script>
-  import IconButton from '@smui/icon-button';
+  import { createEventDispatcher } from 'svelte';
   import { elasticOut } from 'svelte/easing';
   import { fly } from 'svelte/transition';
+  import IconButton from '@smui/icon-button';
   import { browser } from 'webextension-polyfill-ts';
 
+  const dispatch = createEventDispatcher();
+
   function openPreferences() {
-    browser.runtime.openOptionsPage();
+    browser.runtime.openOptionsPage().catch(() => {
+      dispatch('error');
+    });
   }
 </script>
 

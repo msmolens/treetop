@@ -1,8 +1,7 @@
 <script>
-  import { browser } from 'webextension-polyfill-ts';
-
   import { onMount } from 'svelte';
   import type { Awaited } from 'treetop/types';
+  import { browser } from 'webextension-polyfill-ts';
 
   let options: Awaited<ReturnType<typeof browser.storage.local.get>>;
 
@@ -42,7 +41,9 @@
       options = await browser.storage.local.get();
     }
 
-    getOptions();
+    getOptions().catch((err) => {
+      console.error(err);
+    });
   });
 </script>
 

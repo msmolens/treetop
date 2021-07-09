@@ -1,14 +1,12 @@
 <script>
-  import type { MDCDialogCloseEvent } from '@material/dialog';
-
-  import Button, { Label } from '@smui/button';
-  import Dialog, { Title, Content, Actions, InitialFocus } from '@smui/dialog';
-
   import { createEventDispatcher } from 'svelte';
+  import type { MDCDialogCloseEvent } from '@material/dialog';
+  import Button, { Label } from '@smui/button';
+  import Dialog, { Actions, Content, InitialFocus, Title } from '@smui/dialog';
 
   const dispatch = createEventDispatcher();
 
-  export let shown: boolean = false;
+  export let shown = false;
   export let title: string;
   export let message: string;
   export let cancelLabel: string;

@@ -1,34 +1,30 @@
 <script>
-  import * as Treetop from './types';
-  import { browser } from 'webextension-polyfill-ts';
-
-  import { onMount, onDestroy, setContext } from 'svelte';
-  import type { Unsubscriber } from 'svelte/store';
+  import { onDestroy, onMount, setContext } from 'svelte';
+  import type { Unsubscriber, Writable } from 'svelte/store';
   import { get, writable } from 'svelte/store';
   import { fade } from 'svelte/transition';
   import LinearProgress from '@smui/linear-progress';
   import Snackbar, { Label } from '@smui/snackbar';
+  import { browser, Tabs } from 'webextension-polyfill-ts';
 
   import icon from '../icons/generated/icons/icon.svg';
 
-  import Folder from './Folder.svelte';
-  import PageFooter from './PageFooter.svelte';
-  import PageHeader from './PageHeader.svelte';
-
-  import { BookmarksManager } from './BookmarksManager';
-  import ConfirmationDialog from './ConfirmationDialog.svelte';
-  import FilterInput from './FilterInput.svelte';
-  import { FilterManager } from './FilterManager';
-  import { HistoryManager } from './HistoryManager';
-  import { PreferencesManager } from './PreferencesManager';
-  import PropertiesDialog from './PropertiesDialog.svelte';
-
-  import { MenuManager } from './menus/MenuManager';
   import { DeleteMenuItem } from './menus/DeleteMenuItem';
+  import { MenuManager } from './menus/MenuManager';
   import { OpenAllInTabsMenuItem } from './menus/OpenAllInTabsMenuItem';
   import { PropertiesMenuItem } from './menus/PropertiesMenuItem';
-
+  import { BookmarksManager } from './BookmarksManager';
+  import ConfirmationDialog from './ConfirmationDialog.svelte';
   import { BOOKMARKS_ROOT_GUID } from './constants';
+  import FilterInput from './FilterInput.svelte';
+  import { FilterManager } from './FilterManager';
+  import Folder from './Folder.svelte';
+  import { HistoryManager } from './HistoryManager';
+  import PageFooter from './PageFooter.svelte';
+  import PageHeader from './PageHeader.svelte';
+  import { PreferencesManager } from './PreferencesManager';
+  import PropertiesDialog from './PropertiesDialog.svelte';
+  import * as Treetop from './types';
 
   export let rootBookmarkId: string | null;
 
@@ -70,11 +66,17 @@
 
   // ID to node store map.
   // Populated with a store for each folder.
-  const nodeStoreMap: Treetop.NodeStoreMap = new Map();
+  const nodeStoreMap: Treetop.NodeStoreMap = new Map<
+    string,
+    Writable<Treetop.FolderNode>
+  >();
 
   // ID to last visit time map.
   // Populated with a store for each bookmark.
-  const lastVisitTimeMap: Treetop.LastVisitTimeMap = new Map();
+  const lastVisitTimeMap: Treetop.LastVisitTimeMap = new Map<
+    string,
+    Writable<number>
+  >();
 
   // Set of node IDs that match the active filter.
   const filterSet: Treetop.FilterSet = writable(new Set());
@@ -163,27 +165,38 @@
     const nodeStore = nodeStoreMap.get(nodeId)!;
     const node: Treetop.FolderNode = get(nodeStore);
 
+    const promises: Promise<Tabs.Tab>[] = [];
+
     node.children.forEach((child) => {
       if (child.type === Treetop.NodeType.Bookmark) {
-        browser.tabs.create({
-          url: child.url,
-        });
+        promises.push(
+          browser.tabs.create({
+            url: child.url,
+          })
+        );
       }
     });
+
+    Promise.all(promises).catch((err) => {
+      console.error(err);
+      handleError(browser.i18n.getMessage('errorOpeningTab'));
+    });
+  }
+
+  async function asyncShowPropertiesDialog(nodeId: string) {
+    [propertiesNode] = await browser.bookmarks.get(nodeId);
+
+    propertiesDialogInfo.shown = true;
   }
 
   /**
    * Show the properties dialog for a bookmark or folder.
    */
-  async function showPropertiesDialog(nodeId: string) {
-    try {
-      [propertiesNode] = await browser.bookmarks.get(nodeId);
-    } catch (err) {
+  function showPropertiesDialog(nodeId: string) {
+    asyncShowPropertiesDialog(nodeId).catch((err) => {
       console.error(err);
       handleError(browser.i18n.getMessage('errorRetrievingBookmark'));
-    }
-
-    propertiesDialogInfo.shown = true;
+    });
   }
 
   /**
@@ -222,14 +235,20 @@
       // Folder
       const node = get(nodeStore);
       if (node.children.length === 0) {
-        browser.bookmarks.remove(nodeId);
+        browser.bookmarks.remove(nodeId).catch((err) => {
+          console.error(err);
+          handleError(browser.i18n.getMessage('errorDeletingFolder'));
+        });
       } else {
         deleteFolderId = nodeId;
         deleteFolderDialogInfo.shown = true;
       }
     } else {
       // Bookmark
-      browser.bookmarks.remove(nodeId);
+      browser.bookmarks.remove(nodeId).catch((err) => {
+        console.error(err);
+        handleError(browser.i18n.getMessage('errorDeletingBookmark'));
+      });
     }
   }
 
@@ -246,7 +265,10 @@
    */
   function confirmDeleteBookmark() {
     deleteFolderDialogInfo.shown = false;
-    browser.bookmarks.removeTree(deleteFolderId!);
+    browser.bookmarks.removeTree(deleteFolderId!).catch((err) => {
+      console.error(err);
+      handleError(browser.i18n.getMessage('errorDeletingFolder'));
+    });
     deleteFolderId = null;
   }
 
@@ -261,20 +283,34 @@
   // Bookmark event handlers
   //
 
-  function onBookmarkCreated(
+  async function asyncOnBookmarkCreated(
     id: string,
     bookmark: browser.bookmarks.BookmarkTreeNode
   ) {
-    bookmarksManager.handleBookmarkCreated(id, bookmark);
+    const promises: Promise<void>[] = [];
+
+    promises.push(bookmarksManager.handleBookmarkCreated(id, bookmark));
 
     if ($showRecentlyVisited) {
-      historyManager.handleBookmarkCreated(id, bookmark);
+      promises.push(historyManager.handleBookmarkCreated(id, bookmark));
     }
+
+    await Promise.all(promises);
 
     filterManager.handleBookmarkCreated(id, bookmark);
   }
 
-  async function onBookmarkRemoved(
+  function onBookmarkCreated(
+    id: string,
+    bookmark: browser.bookmarks.BookmarkTreeNode
+  ) {
+    asyncOnBookmarkCreated(id, bookmark).catch((err) => {
+      console.error(err);
+      handleError(browser.i18n.getMessage('errorHandlingBookmarkCreation'));
+    });
+  }
+
+  async function asyncOnBookmarkRemoved(
     id: string,
     removeInfo: browser.bookmarks._OnRemovedRemoveInfo
   ) {
@@ -296,7 +332,17 @@
     }
   }
 
-  async function onBookmarkChanged(
+  function onBookmarkRemoved(
+    id: string,
+    removeInfo: browser.bookmarks._OnRemovedRemoveInfo
+  ) {
+    asyncOnBookmarkRemoved(id, removeInfo).catch((err) => {
+      console.error(err);
+      handleError(browser.i18n.getMessage('errorHandlingBookmarkRemoval'));
+    });
+  }
+
+  async function asyncOnBookmarkChanged(
     id: string,
     changeInfo: browser.bookmarks._OnChangedChangeInfo
   ) {
@@ -305,11 +351,21 @@
     filterManager.handleBookmarkChanged(id, changeInfo);
 
     if ($showRecentlyVisited) {
-      historyManager.handleBookmarkChanged(id, changeInfo);
+      await historyManager.handleBookmarkChanged(id, changeInfo);
     }
   }
 
-  async function onBookmarkMoved(
+  function onBookmarkChanged(
+    id: string,
+    changeInfo: browser.bookmarks._OnChangedChangeInfo
+  ) {
+    asyncOnBookmarkChanged(id, changeInfo).catch((err) => {
+      console.error(err);
+      handleError(browser.i18n.getMessage('errorHandlingBookmarkChange'));
+    });
+  }
+
+  async function asyncOnBookmarkMoved(
     id: string,
     moveInfo: browser.bookmarks._OnMovedMoveInfo
   ) {
@@ -318,42 +374,88 @@
     filterManager.handleBookmarkMoved(id, moveInfo);
   }
 
+  function onBookmarkMoved(
+    id: string,
+    moveInfo: browser.bookmarks._OnMovedMoveInfo
+  ) {
+    asyncOnBookmarkMoved(id, moveInfo).catch((err) => {
+      console.error(err);
+      handleError(browser.i18n.getMessage('errorHandlingBookmarkMove'));
+    });
+  }
+
   //
   // History event handlers
   //
 
-  function onVisited(result: browser.history.HistoryItem) {
+  async function asyncOnVisited(result: browser.history.HistoryItem) {
     if ($showRecentlyVisited) {
-      historyManager.handleVisited(result);
+      await historyManager.handleVisited(result);
+    }
+  }
+
+  function onVisited(result: browser.history.HistoryItem) {
+    asyncOnVisited(result).catch((err) => {
+      console.error(err);
+      handleError(browser.i18n.getMessage('errorHandlingHistoryVisit'));
+    });
+  }
+
+  async function asyncOnVisitRemoved(
+    removed: browser.history._OnVisitRemovedRemoved
+  ) {
+    if ($showRecentlyVisited) {
+      await historyManager.handleVisitRemoved(removed);
     }
   }
 
   function onVisitRemoved(removed: browser.history._OnVisitRemovedRemoved) {
-    if ($showRecentlyVisited) {
-      historyManager.handleVisitRemoved(removed);
-    }
+    asyncOnVisitRemoved(removed).catch((err) => {
+      console.error(err);
+      handleError(browser.i18n.getMessage('errorHandlingHistoryVisitRemoval'));
+    });
   }
 
   //
   // Menu event handlers
   //
 
-  async function onMenuShown(
+  async function asyncOnMenuShown(
     info: browser.menus._OnShownInfo,
     tab: browser.tabs.Tab
   ) {
-    return menuManager?.handleMenuShown(info, tab);
+    await menuManager?.handleMenuShown(info, tab);
+  }
+
+  function onMenuShown(
+    info: browser.menus._OnShownInfo,
+    tab: browser.tabs.Tab
+  ) {
+    asyncOnMenuShown(info, tab).catch((err) => {
+      console.error(err);
+      handleError(browser.i18n.getMessage('errorHandlingMenuShown'));
+    });
   }
 
   function onMenuHidden() {
     menuManager?.handleMenuHidden();
   }
 
-  async function onMenuClicked(
+  async function asyncOnMenuClicked(
     info: browser.menus.OnClickData,
     tab?: browser.tabs.Tab
   ) {
-    return menuManager?.handleMenuClicked(info, tab);
+    await menuManager?.handleMenuClicked(info, tab);
+  }
+
+  function onMenuClicked(
+    info: browser.menus.OnClickData,
+    tab?: browser.tabs.Tab
+  ) {
+    asyncOnMenuClicked(info, tab).catch((err) => {
+      console.error(err);
+      handleError(browser.i18n.getMessage('errorHandlingMenuClick'));
+    });
   }
 
   //
@@ -425,12 +527,10 @@
     // Initialize or reset history manager when 'showRecentlyVisited' preference changes
     unsubscribeShowRecentlyVisited = showRecentlyVisited.subscribe((value) => {
       if (value) {
-        try {
-          historyManager.loadHistory(nodeStoreMap);
-        } catch (err) {
+        historyManager.loadHistory(nodeStoreMap).catch((err) => {
           console.error(err);
           handleError(browser.i18n.getMessage('errorLoadingHistory'));
-        }
+        });
       } else {
         historyManager.unloadHistory();
       }
@@ -527,7 +627,10 @@
     </div>
   </div>
 {:then rootNodeId}
-  <PageHeader>
+  <PageHeader
+    on:error={() => {
+      handleError(browser.i18n.getMessage('errorLoadingPreferences'));
+    }}>
     <FilterInput on:input={applyFilter} />
   </PageHeader>
   <main

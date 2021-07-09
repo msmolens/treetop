@@ -1,6 +1,7 @@
 <script>
-  import icon from '../icons/generated/icons/icon.svg';
   import { fade } from 'svelte/transition';
+
+  import icon from '../icons/generated/icons/icon.svg';
 
   import InfoBox from './InfoBox.svelte';
 </script>

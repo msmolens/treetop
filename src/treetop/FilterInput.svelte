@@ -1,8 +1,6 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-
   import TextField from '@smui/textfield';
-
   import debounce from 'lodash-es/debounce';
   import { browser } from 'webextension-polyfill-ts';
 
