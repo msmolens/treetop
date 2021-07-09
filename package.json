@@ -17,9 +17,9 @@
   "devDependencies": {
     "@babel/core": "^7.12.17",
     "@babel/preset-env": "^7.12.17",
-    "@fontsource/inter": "^4.2.1",
-    "@fontsource/material-icons": "^4.2.1",
-    "@fontsource/news-cycle": "^4.2.1",
+    "@fontsource/inter": "^4.5.0",
+    "@fontsource/material-icons": "^4.5.0",
+    "@fontsource/news-cycle": "^4.5.0",
     "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-html": "^0.2.3",
     "@rollup/plugin-image": "^2.0.6",
