@@ -9,7 +9,7 @@ const setup = () => {
 };
 
 beforeEach(() => {
-  jest.useFakeTimers('modern');
+  jest.useFakeTimers();
 
   mockBrowser.i18n.getMessage.expect('search').andReturn('Search');
 });

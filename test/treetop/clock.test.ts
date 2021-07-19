@@ -10,7 +10,7 @@ describe('clock', () => {
   let unsubscribe: Unsubscriber;
 
   beforeEach(() => {
-    jest.useFakeTimers('modern');
+    jest.useFakeTimers();
 
     // eslint-disable-next-line
     const { clock } = require('../../src/treetop/clock');
