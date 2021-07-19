@@ -24,12 +24,12 @@ class TestMenuItem extends MenuItem {
 const createOnShownInfo = (origin: string): browser.menus._OnShownInfo => {
   return {
     // @ts-expect-error: See https://github.com/jsmnbom/definitelytyped-firefox-webext-browser/pull/37
-    menuIds: [faker.random.number()],
+    menuIds: [faker.datatype.number()],
     contexts: ['link'],
     viewType: 'tab',
     editable: true,
     pageUrl: `${origin}/${faker.random.word()}`,
-    targetElementId: faker.random.number(),
+    targetElementId: faker.datatype.number(),
   };
 };
 
@@ -40,14 +40,14 @@ const createOnClickData = (menuItemId: string): browser.menus.OnClickData => {
     editable: true,
     bookmarkId: '',
     modifiers: [],
-    targetElementId: faker.random.number(),
+    targetElementId: faker.datatype.number(),
   };
 };
 
 const createTab = (): browser.tabs.Tab => {
   return {
-    id: faker.random.number(),
-    index: faker.random.number(),
+    id: faker.datatype.number(),
+    index: faker.datatype.number(),
     highlighted: false,
     active: false,
     pinned: false,

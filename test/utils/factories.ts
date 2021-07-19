@@ -22,7 +22,7 @@ export const createBookmarkNode = (
   withProperties?: Partial<Omit<Treetop.BookmarkNode, 'type'>>
 ): Treetop.BookmarkNode => {
   return {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     type: Treetop.NodeType.Bookmark,
     title: faker.random.words(TITLE_NUM_RANDOM_WORDS),
     url: faker.internet.url(),
@@ -34,7 +34,7 @@ export const createFolderNode = (
   withProperties?: Partial<Omit<Treetop.FolderNode, 'type'>>
 ): Treetop.FolderNode => {
   return {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     type: Treetop.NodeType.Folder,
     title: faker.random.words(TITLE_NUM_RANDOM_WORDS),
     children: [],
@@ -46,7 +46,7 @@ export const createSeparatorNode = (
   withProperties?: Partial<Omit<Treetop.SeparatorNode, 'type'>>
 ): Treetop.SeparatorNode => {
   return {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     type: Treetop.NodeType.Separator,
     ...withProperties,
   };
@@ -60,7 +60,7 @@ export const createBrowserBookmarkNode = (
   parent: browser.bookmarks.BookmarkTreeNode
 ): browser.bookmarks.BookmarkTreeNode => {
   const node: browser.bookmarks.BookmarkTreeNode = {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     parentId: parent.id,
     title: faker.random.words(TITLE_NUM_RANDOM_WORDS),
     type: BOOKMARK_TREE_NODE_TYPE_BOOKMARK,
@@ -74,7 +74,7 @@ export const createBrowserFolderNode = (
   parent: browser.bookmarks.BookmarkTreeNode
 ): browser.bookmarks.BookmarkTreeNode => {
   const node: browser.bookmarks.BookmarkTreeNode = {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     parentId: parent.id,
     title: faker.random.words(TITLE_NUM_RANDOM_WORDS),
     type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
@@ -88,7 +88,7 @@ export const createBrowserSeparatorNode = (
   parent: browser.bookmarks.BookmarkTreeNode
 ): browser.bookmarks.BookmarkTreeNode => {
   const node: browser.bookmarks.BookmarkTreeNode = {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     parentId: parent.id,
     title: '',
     type: BOOKMARK_TREE_NODE_TYPE_SEPARATOR,
@@ -171,18 +171,18 @@ export const createBrowserBookmarksTree =
 
 export const createHistoryItem = (): browser.history.HistoryItem => {
   return {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     url: faker.internet.url(),
-    lastVisitTime: faker.random.number(),
+    lastVisitTime: faker.datatype.number(),
   };
 };
 
 export const createVisitItem = (): browser.history.VisitItem => {
   return {
-    id: faker.random.uuid(),
-    visitId: faker.random.uuid(),
-    visitTime: faker.random.number(),
-    referringVisitId: faker.random.uuid(),
+    id: faker.datatype.uuid(),
+    visitId: faker.datatype.uuid(),
+    visitTime: faker.datatype.number(),
+    referringVisitId: faker.datatype.uuid(),
     transition: 'link',
   };
 };

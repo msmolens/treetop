@@ -135,13 +135,13 @@ describe('loadHistory', () => {
 describe('unloadHistory', () => {
   it('resets all last visit times', () => {
     const nodeIds = [
-      faker.random.uuid(),
-      faker.random.uuid(),
-      faker.random.uuid(),
+      faker.datatype.uuid(),
+      faker.datatype.uuid(),
+      faker.datatype.uuid(),
     ];
 
     for (const nodeId of nodeIds) {
-      lastVisitTimeMap.set(nodeId, writable(faker.random.number()));
+      lastVisitTimeMap.set(nodeId, writable(faker.datatype.number()));
     }
 
     historyManager.unloadHistory();
@@ -372,8 +372,8 @@ describe('handleVisitRemoved', () => {
     const baseNode = createOtherBookmarksNode();
     const bookmarkNode1 = createBrowserBookmarkNode(baseNode);
     const bookmarkNode2 = createBrowserBookmarkNode(baseNode);
-    lastVisitTimeMap.set(bookmarkNode1.id, writable(faker.random.number()));
-    lastVisitTimeMap.set(bookmarkNode2.id, writable(faker.random.number()));
+    lastVisitTimeMap.set(bookmarkNode1.id, writable(faker.datatype.number()));
+    lastVisitTimeMap.set(bookmarkNode2.id, writable(faker.datatype.number()));
 
     const removeInfo: browser.history._OnVisitRemovedRemoved = {
       allHistory: true,

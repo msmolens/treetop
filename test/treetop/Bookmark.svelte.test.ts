@@ -37,7 +37,7 @@ const setup = () => {
 };
 
 beforeEach(() => {
-  nodeId = faker.random.uuid();
+  nodeId = faker.datatype.uuid();
   title = faker.random.words();
   url = faker.internet.url();
 
