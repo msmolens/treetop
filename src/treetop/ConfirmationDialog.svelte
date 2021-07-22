@@ -1,25 +1,23 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import type { MDCDialogCloseEvent } from '@material/dialog';
-  import Button, { Label } from '@smui/button';
-  import Dialog, { Actions, Content, InitialFocus, Title } from '@smui/dialog';
+  import Button, { Label } from '@smui/button/styled';
+  import Dialog, {
+    Actions,
+    Content,
+    InitialFocus,
+    Title,
+  } from '@smui/dialog/styled';
 
   const dispatch = createEventDispatcher();
 
-  export let shown = false;
+  export let open = false;
   export let title: string;
   export let message: string;
   export let cancelLabel: string;
   export let confirmLabel: string;
 
   let dialog: Dialog;
-  $: if (dialog) {
-    if (shown) {
-      dialog.open();
-    } else {
-      dialog.close();
-    }
-  }
 
   function handleClosed(e: MDCDialogCloseEvent) {
     const message = e.detail.action === 'confirm' ? 'confirm' : 'cancel';
@@ -29,6 +27,7 @@
 
 <Dialog
   bind:this={dialog}
+  bind:open
   aria-labelledby="dialog-title"
   aria-describedby="dialog-content"
   on:MDCDialog:closed={handleClosed}>
