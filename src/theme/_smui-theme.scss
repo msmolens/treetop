@@ -1,14 +1,76 @@
-$mdc-theme-primary: #ff4088;
+$treetop-primary: #ff4088;
 
-$mdc-typography-font-family: 'Inter', sans-serif;
+@use '@material/theme/index' as theme with (
+  $primary: $treetop-primary,
+);
 
-$mdc-dialog-min-width: 480px;
+@use "@material/typography" with (
+  $font-family: unquote('Inter, sans-serif')
+);
 
-$mdc-snackbar-viewport-margin-narrow: 24px;
+@use "@material/button";
+@use '@material/dialog';
+@use '@material/floating-label';
+@use '@material/textfield';
+
+// FIXME(snackbar)
+// @use '@material/snackbar';
+
+@include dialog.core-styles;
+@include floating-label.core-styles;
+
+.mdc-dialog {
+  @include dialog.min-width(480px);
+}
+
+// FIXME(snackbar)
+//
+// [!] (plugin postcss) Error: This module was already loaded, so it can't be configured using "with".
+//    ┌──> node_modules/@smui/snackbar/_style.scss
+// 2  │ ┌ @use '@material/snackbar/index' as snackbar with (
+// 3  │ │   $action-ink-color: theme-color.prop-value(primary)
+// 4  │ │ );
+//    │ └─^ new load
+//
+// .mdc-snackbar {
+//   @include snackbar.viewport-margin(24px);
+// }
+
+$mdc-dialog-title-color-light: rgba(0, 0, 0, 0.87);
+$mdc-dialog-title-color-dark: rgba(255, 255, 255, 0.87);
+$mdc-dialog-content-color-light: rgba(0, 0, 0, 0.6);
+$mdc-dialog-content-color-dark: rgba(255, 255, 255, 0.87);
+
+$mdc-textfield-ink-color-light: rgba(0, 0, 0, 0.87);
+$mdc-textfield-ink-color-dark: rgba(255, 255, 255, 0.87);
+$mdc-textfield-bottom-line-color-light: rgba(0, 0, 0, 0.42);
+$mdc-textfield-bottom-line-color-dark: rgba(255, 255, 255, 0.42);
+$mdc-textfield-bottom-line-color-light-hover: rgba(0, 0, 0, 0.87);
+$mdc-textfield-bottom-line-color-dark-hover: rgba(255, 255, 255, 0.87);
 
 @media (prefers-color-scheme: light) {
   :root {
     --mdc-theme-surface: #fff;
+  }
+
+  .mdc-dialog {
+    @include dialog.title-ink-color($mdc-dialog-title-color-light);
+    @include dialog.content-ink-color($mdc-dialog-content-color-light);
+  }
+
+  .mdc-text-field {
+    --mdc-floating-label-color: rgba(0, 0, 0, 0.6);
+
+    @include textfield.ink-color($mdc-textfield-ink-color-light);
+    @include textfield.bottom-line-color(
+      $mdc-textfield-bottom-line-color-light
+    );
+
+    &:hover {
+      @include textfield.bottom-line-color(
+        $mdc-textfield-bottom-line-color-light-hover
+      );
+    }
   }
 }
 
@@ -16,12 +78,85 @@ $mdc-snackbar-viewport-margin-narrow: 24px;
   :root {
     --mdc-theme-surface: #202023;
   }
+
+  .mdc-dialog {
+    @include dialog.title-ink-color($mdc-dialog-title-color-dark);
+    @include dialog.content-ink-color($mdc-dialog-content-color-dark);
+  }
+
+  .mdc-text-field {
+    --mdc-floating-label-color: rgba(255, 255, 255, 0.6);
+
+    @include textfield.ink-color($mdc-textfield-ink-color-dark);
+    @include textfield.bottom-line-color($mdc-textfield-bottom-line-color-dark);
+
+    &:hover {
+      @include textfield.bottom-line-color(
+        $mdc-textfield-bottom-line-color-dark-hover
+      );
+    }
+  }
+
+  .mdc-text-field:not(.mdc-text-field--disabled) .mdc-floating-label {
+    --mdc-floating-label-color: rgba(255, 255, 255, 0.6);
+  }
 }
 
 .colorSchemeLight {
   --mdc-theme-surface: #fff;
+
+  .mdc-dialog {
+    @include dialog.title-ink-color($mdc-dialog-title-color-light);
+    @include dialog.content-ink-color($mdc-dialog-content-color-light);
+  }
+
+  .mdc-text-field {
+    @include textfield.ink-color($mdc-textfield-ink-color-light);
+    @include textfield.bottom-line-color(
+      $mdc-textfield-bottom-line-color-light
+    );
+
+    &:hover {
+      @include textfield.bottom-line-color(
+        $mdc-textfield-bottom-line-color-light-hover
+      );
+    }
+  }
 }
 
 .colorSchemeDark {
   --mdc-theme-surface: #202023;
+
+  .mdc-dialog {
+    @include dialog.title-ink-color($mdc-dialog-title-color-dark);
+    @include dialog.content-ink-color($mdc-dialog-content-color-dark);
+  }
+
+  .mdc-text-field {
+    @include textfield.ink-color($mdc-textfield-ink-color-dark);
+    @include textfield.bottom-line-color($mdc-textfield-bottom-line-color-dark);
+
+    &:hover {
+      @include textfield.bottom-line-color(
+        $mdc-textfield-bottom-line-color-dark-hover
+      );
+    }
+  }
+}
+
+.mdc-text-field:not(.mdc-text-field--disabled) .mdc-floating-label {
+  color: var(--mdc-floating-label-color);
+}
+.mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
+  color: $treetop-primary;
+}
+.colorSchemeLight
+  .mdc-text-field:not(.mdc-text-field--disabled)
+  .mdc-floating-label {
+  --mdc-floating-label-color: rgba(0, 0, 0, 0.6);
+}
+.colorSchemeDark
+  .mdc-text-field:not(.mdc-text-field--disabled)
+  .mdc-floating-label {
+  --mdc-floating-label-color: rgba(255, 255, 255, 0.6);
 }

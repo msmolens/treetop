@@ -3,8 +3,8 @@
   import type { Unsubscriber, Writable } from 'svelte/store';
   import { get, writable } from 'svelte/store';
   import { fade } from 'svelte/transition';
-  import LinearProgress from '@smui/linear-progress';
-  import Snackbar, { Label } from '@smui/snackbar';
+  import LinearProgress from '@smui/linear-progress/styled';
+  import Snackbar, { Label } from '@smui/snackbar/styled';
   import { browser, Tabs } from 'webextension-polyfill-ts';
 
   import icon from '../icons/generated/icons/icon.svg';
@@ -111,7 +111,7 @@
   //
 
   const deleteFolderDialogInfo = {
-    shown: false,
+    open: false,
     title: browser.i18n.getMessage('dialogHeadingDeleteFolder'),
     message: browser.i18n.getMessage('dialogMessageDeleteFolder'),
     cancelLabel: browser.i18n.getMessage('dialogButtonCancel'),
@@ -124,7 +124,7 @@
   //
 
   const propertiesDialogInfo = {
-    shown: false,
+    open: false,
   };
   let propertiesNode: browser.bookmarks.BookmarkTreeNode | null = null;
 
@@ -186,7 +186,7 @@
   async function asyncShowPropertiesDialog(nodeId: string) {
     [propertiesNode] = await browser.bookmarks.get(nodeId);
 
-    propertiesDialogInfo.shown = true;
+    propertiesDialogInfo.open = true;
   }
 
   /**
@@ -203,7 +203,7 @@
    * Properties dialog cancel handler.
    */
   function cancelProperties() {
-    propertiesDialogInfo.shown = false;
+    propertiesDialogInfo.open = false;
     propertiesNode = null;
   }
 
@@ -211,7 +211,7 @@
    * Properties dialog save handler.
    */
   async function saveProperties(event: CustomEvent<Treetop.PropertiesChanges>) {
-    propertiesDialogInfo.shown = false;
+    propertiesDialogInfo.open = false;
 
     const changes = event.detail;
 
@@ -241,7 +241,7 @@
         });
       } else {
         deleteFolderId = nodeId;
-        deleteFolderDialogInfo.shown = true;
+        deleteFolderDialogInfo.open = true;
       }
     } else {
       // Bookmark
@@ -256,7 +256,7 @@
    * Delete folder confirmation dialog cancel handler.
    */
   function cancelDeleteBookmark() {
-    deleteFolderDialogInfo.shown = false;
+    deleteFolderDialogInfo.open = false;
     deleteFolderId = null;
   }
 
@@ -264,7 +264,7 @@
    * Delete folder confirmation dialog confirm handler.
    */
   function confirmDeleteBookmark() {
-    deleteFolderDialogInfo.shown = false;
+    deleteFolderDialogInfo.open = false;
     browser.bookmarks.removeTree(deleteFolderId!).catch((err) => {
       console.error(err);
       handleError(browser.i18n.getMessage('errorDeletingFolder'));

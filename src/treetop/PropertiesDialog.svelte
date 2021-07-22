@@ -1,9 +1,9 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import type { MDCDialogCloseEvent } from '@material/dialog';
-  import Button, { Label } from '@smui/button';
-  import Dialog, { Actions, Content, Title } from '@smui/dialog';
-  import TextField from '@smui/textfield';
+  import Button, { Label } from '@smui/button/styled';
+  import Dialog, { Actions, Content, Title } from '@smui/dialog/styled';
+  import TextField from '@smui/textfield/styled';
   import truncate from 'lodash-es/truncate';
   import { browser } from 'webextension-polyfill-ts';
 
@@ -11,20 +11,15 @@
 
   const dispatch = createEventDispatcher();
 
-  export let shown = false;
+  export let open = false;
   export let title: string;
   export let url: string | undefined;
 
   let dialog: Dialog;
   let nameLabel: TextField;
-  $: if (dialog) {
-    if (shown) {
-      dialog.open();
-      nameLabel.focus();
-      // TODO: Select all text in name label
-    } else {
-      dialog.close();
-    }
+
+  function handleOpened() {
+    nameLabel.focus();
   }
 
   function handleClosed(e: MDCDialogCloseEvent) {
@@ -33,6 +28,11 @@
     } else {
       dispatch('cancel');
     }
+  }
+
+  function handleTextFieldFocus(e: FocusEvent) {
+    const inputElement = e.currentTarget as HTMLInputElement;
+    inputElement.select();
   }
 
   const maxHeaderTitleLength = 58;
@@ -83,8 +83,10 @@
 
 <Dialog
   bind:this={dialog}
+  bind:open
   aria-labelledby="dialog-title"
   aria-describedby="dialog-content"
+  on:MDCDialog:opened={handleOpened}
   on:MDCDialog:closed={handleClosed}>
   <Title id="dialog-title">{header}</Title>
   <Content id="dialog-content">
@@ -92,12 +94,17 @@
       <TextField
         bind:this={nameLabel}
         bind:value={editTitle}
+        on:focus={handleTextFieldFocus}
         label="Name"
         style="width: 100%;" />
     </div>
     {#if url !== undefined}
       <div>
-        <TextField bind:value={editUrl} label="Location" style="width: 100%;" />
+        <TextField
+          bind:value={editUrl}
+          on:focus={handleTextFieldFocus}
+          label="Location"
+          style="width: 100%;" />
       </div>
     {/if}
   </Content>

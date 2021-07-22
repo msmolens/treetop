@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-declare module '@smui/dialog' {
+declare module '@smui/dialog/styled' {
   import type { SvelteComponent } from 'svelte';
 
   class Dialog extends SvelteComponent {
@@ -29,7 +29,7 @@ declare module '@smui/dialog' {
   export { Actions, Content, InitialFocus, Title };
 }
 
-declare module '@smui/button' {
+declare module '@smui/button/styled' {
   import type { SvelteComponent } from 'svelte';
 
   class Button extends SvelteComponent {
@@ -48,7 +48,7 @@ declare module '@smui/button' {
   export { Label };
 }
 
-declare module '@smui/icon-button' {
+declare module '@smui/icon-button/styled' {
   import type { SvelteComponent } from 'svelte';
 
   class IconButton extends SvelteComponent {
@@ -61,7 +61,7 @@ declare module '@smui/icon-button' {
   export default IconButton;
 }
 
-declare module '@smui/linear-progress' {
+declare module '@smui/linear-progress/styled' {
   import type { SvelteComponent } from 'svelte';
 
   class LinearProgress extends SvelteComponent {
@@ -73,7 +73,7 @@ declare module '@smui/linear-progress' {
   export default LinearProgress;
 }
 
-declare module '@smui/snackbar' {
+declare module '@smui/snackbar/styled' {
   import type { SvelteComponent } from 'svelte';
 
   class Snackbar extends SvelteComponent {
@@ -90,7 +90,7 @@ declare module '@smui/snackbar' {
   export { Label };
 }
 
-declare module '@smui/textfield' {
+declare module '@smui/textfield/styled' {
   import type { SvelteComponent } from 'svelte';
 
   class TextField extends SvelteComponent {
