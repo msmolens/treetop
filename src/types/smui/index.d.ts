@@ -55,6 +55,7 @@ declare module '@smui/icon-button/styled' {
     $$prop_def: {
       use?: any[];
       class?: string;
+      style?: string;
     };
   }
 

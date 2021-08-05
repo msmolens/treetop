@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/svelte';
+import { render, screen, waitFor } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import faker from 'faker';
 
@@ -22,6 +22,7 @@ it('renders filter input', () => {
   setup();
 
   expect(screen.getByLabelText(/^search$/i)).toBeInTheDocument();
+  expect(screen.queryByRole('button')).not.toBeInTheDocument();
 });
 
 it('dispatches input event when text is typed after debouncing', () => {
@@ -55,7 +56,7 @@ it('dispatches input event when text is typed after debouncing', () => {
   expect(callback).toHaveBeenCalledTimes(3);
 });
 
-it('dispatches input event when enter is pressed', () => {
+it('dispatches input event when enter is pressed', async () => {
   const { component } = setup();
 
   const callback = jest.fn();
@@ -64,7 +65,9 @@ it('dispatches input event when enter is pressed', () => {
   const input = screen.getByLabelText(/^search$/i);
 
   const words = faker.random.words();
-  userEvent.type(input, `${words}{enter}`);
+  // eslint-disable-next-line @typescript-eslint/await-thenable
+  await userEvent.type(input, words);
+  userEvent.keyboard('[Enter]');
 
   // Check that the event fired immediately
   // FIXME: Check event properties
@@ -75,4 +78,51 @@ it('dispatches input event when enter is pressed', () => {
   // time
   jest.runAllTimers();
   expect(callback).toHaveBeenCalledTimes(1);
+});
+
+it('shows the clear button when text is entered', async () => {
+  setup();
+
+  const input = screen.getByLabelText(/^search$/i);
+
+  const words = faker.random.words();
+  // eslint-disable-next-line @typescript-eslint/await-thenable
+  await userEvent.type(input, words);
+
+  jest.runAllTimers();
+
+  await waitFor(() => {
+    expect(screen.getByRole('button')).toBeInTheDocument();
+  });
+
+  expect(input).toHaveValue(words);
+});
+
+it('clears the input when the clear button is pressed', async () => {
+  const { component } = setup();
+
+  const callback = jest.fn();
+  component.$on('input', callback);
+
+  const input = screen.getByLabelText(/^search$/i);
+
+  const words = faker.random.words();
+  // eslint-disable-next-line @typescript-eslint/await-thenable
+  await userEvent.type(input, words);
+  userEvent.keyboard('[Enter]');
+
+  await waitFor(() => {
+    expect(screen.getByRole('button')).toBeInTheDocument();
+  });
+
+  expect(callback).toHaveBeenCalledTimes(1);
+
+  screen.getByRole('button').click();
+
+  await waitFor(() => {
+    expect(callback).toHaveBeenCalledTimes(2);
+
+    // FIXME
+    // expect(screen.queryByRole('button')).not.toBeInTheDocument();
+  });
 });

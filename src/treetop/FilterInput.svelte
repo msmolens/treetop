@@ -1,6 +1,11 @@
 <script>
+  /* eslint-disable simple-import-sort/imports */
+
   import { createEventDispatcher } from 'svelte';
   import TextField from '@smui/textfield/styled';
+  // FIXME: IconButton must appear after TextField, otherwise custom
+  // TextField styles aren't applied correctly
+  import IconButton from '@smui/icon-button/styled';
   import debounce from 'lodash-es/debounce';
   import { browser } from 'webextension-polyfill-ts';
 
@@ -11,6 +16,10 @@
   const FILTER_DEBOUNCE_MS = 275;
 
   const dispatch = createEventDispatcher<{ input: { filter: string } }>();
+
+  // CSS 'visibility' value for the clear button.
+  // The button is visible only when text is entered.
+  $: clearIconButtonVisibility = filter.length > 0 ? 'visible' : 'hidden';
 
   /**
    * Dispatch an input event with the current filter string.
@@ -42,6 +51,13 @@
   }
 
   /**
+   * Clear the filter input element.
+   */
+  function clearFilterInput() {
+    filter = '';
+  }
+
+  /**
    * Debounced filter input handler.
    */
   const debounceFilterInput = debounce((event: Event) => {
@@ -60,6 +76,12 @@
     <TextField
       bind:value={filter}
       on:input={debounceFilterInput}
-      label={browser.i18n.getMessage('search')} />
+      label={browser.i18n.getMessage('search')}>
+      <IconButton
+        class="material-icons"
+        slot="trailingIcon"
+        style="visibility: {clearIconButtonVisibility}"
+        on:click={clearFilterInput}>clear</IconButton>
+    </TextField>
   </form>
 </div>

@@ -11,6 +11,7 @@ $treetop-primary: #ff4088;
 @use "@material/button";
 @use '@material/dialog';
 @use '@material/floating-label';
+@use '@material/icon-button';
 @use '@material/textfield';
 
 // FIXME(snackbar)
@@ -18,6 +19,7 @@ $treetop-primary: #ff4088;
 
 @include dialog.core-styles;
 @include floating-label.core-styles;
+@include icon-button.core-styles;
 
 .mdc-dialog {
   @include dialog.min-width(480px);
@@ -48,6 +50,11 @@ $mdc-textfield-bottom-line-color-dark: rgba(255, 255, 255, 0.42);
 $mdc-textfield-bottom-line-color-light-hover: rgba(0, 0, 0, 0.87);
 $mdc-textfield-bottom-line-color-dark-hover: rgba(255, 255, 255, 0.87);
 
+$search-box-icon-button-color-light: rgba(0, 0, 0, 0.6);
+$search-box-icon-button-color-dark: rgba(255, 255, 255, 0.6);
+$search-box-icon-button-color-light-hover: rgba(0, 0, 0, 0.87);
+$search-box-icon-button-color-dark-hover: rgba(255, 255, 255, 0.87);
+
 @media (prefers-color-scheme: light) {
   :root {
     --mdc-theme-surface: #fff;
@@ -70,6 +77,14 @@ $mdc-textfield-bottom-line-color-dark-hover: rgba(255, 255, 255, 0.87);
       @include textfield.bottom-line-color(
         $mdc-textfield-bottom-line-color-light-hover
       );
+    }
+  }
+
+  .searchBox .mdc-icon-button {
+    @include icon-button.ink-color($search-box-icon-button-color-light);
+
+    &:hover {
+      @include icon-button.ink-color($search-box-icon-button-color-light-hover);
     }
   }
 }
@@ -97,8 +112,12 @@ $mdc-textfield-bottom-line-color-dark-hover: rgba(255, 255, 255, 0.87);
     }
   }
 
-  .mdc-text-field:not(.mdc-text-field--disabled) .mdc-floating-label {
-    --mdc-floating-label-color: rgba(255, 255, 255, 0.6);
+  .searchBox .mdc-icon-button {
+    @include icon-button.ink-color($search-box-icon-button-color-dark);
+
+    &:hover {
+      @include icon-button.ink-color($search-box-icon-button-color-dark-hover);
+    }
   }
 }
 
@@ -122,6 +141,14 @@ $mdc-textfield-bottom-line-color-dark-hover: rgba(255, 255, 255, 0.87);
       );
     }
   }
+
+  .searchBox .mdc-icon-button {
+    @include icon-button.ink-color($search-box-icon-button-color-light);
+
+    &:hover {
+      @include icon-button.ink-color($search-box-icon-button-color-light-hover);
+    }
+  }
 }
 
 .colorSchemeDark {
@@ -140,6 +167,14 @@ $mdc-textfield-bottom-line-color-dark-hover: rgba(255, 255, 255, 0.87);
       @include textfield.bottom-line-color(
         $mdc-textfield-bottom-line-color-dark-hover
       );
+    }
+  }
+
+  .searchBox .mdc-icon-button {
+    @include icon-button.ink-color($search-box-icon-button-color-dark);
+
+    &:hover {
+      @include icon-button.ink-color($search-box-icon-button-color-dark-hover);
     }
   }
 }
