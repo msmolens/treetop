@@ -57,6 +57,7 @@ declare module '@smui/icon-button/styled' {
       class?: string;
       style?: string;
     };
+    getElement: () => HTMLButtonElement;
   }
 
   export default IconButton;

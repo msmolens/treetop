@@ -121,8 +121,9 @@ it('clears the input when the clear button is pressed', async () => {
 
   await waitFor(() => {
     expect(callback).toHaveBeenCalledTimes(2);
+  });
 
-    // FIXME
-    // expect(screen.queryByRole('button')).not.toBeInTheDocument();
+  await waitFor(() => {
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
 });

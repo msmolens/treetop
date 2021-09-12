@@ -1,7 +1,7 @@
 <script>
   /* eslint-disable simple-import-sort/imports */
 
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, onMount } from 'svelte';
   import TextField from '@smui/textfield/styled';
   // FIXME: IconButton must appear after TextField, otherwise custom
   // TextField styles aren't applied correctly
@@ -12,6 +12,9 @@
   // Filter string
   let filter = '';
 
+  // Icon button
+  let iconButton: IconButton;
+
   // Debounce duration for typing in filter input (ms)
   const FILTER_DEBOUNCE_MS = 275;
 
@@ -20,6 +23,13 @@
   // CSS 'visibility' value for the clear button.
   // The button is visible only when text is entered.
   $: clearIconButtonVisibility = filter.length > 0 ? 'visible' : 'hidden';
+
+  onMount(() => {
+    // Override button's type to disconnect it from the form. Otherwise,
+    // pressing enter in the text field to submit the form causes a button
+    // click, which clears the form.
+    iconButton.getElement().type = 'button';
+  });
 
   /**
    * Dispatch an input event with the current filter string.
@@ -55,6 +65,8 @@
    */
   function clearFilterInput() {
     filter = '';
+
+    dispatchInputEvent();
   }
 
   /**
@@ -78,6 +90,7 @@
       on:input={debounceFilterInput}
       label={browser.i18n.getMessage('search')}>
       <IconButton
+        bind:this={iconButton}
         class="material-icons"
         slot="trailingIcon"
         style="visibility: {clearIconButtonVisibility}"
