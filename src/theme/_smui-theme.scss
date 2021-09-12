@@ -1,14 +1,10 @@
 $treetop-primary: #ff4088;
 
-@use '@material/theme/index' as theme with (
-  $primary: $treetop-primary,
-);
+@use '@material/theme/index' as theme with ($primary: $treetop-primary);
 
-@use "@material/typography" with (
-  $font-family: unquote('Inter, sans-serif')
-);
+@use '@material/typography' with ($font-family: unquote('Inter, sans-serif'));
 
-@use "@material/button";
+@use '@material/button';
 @use '@material/dialog';
 @use '@material/floating-label';
 @use '@material/icon-button';
