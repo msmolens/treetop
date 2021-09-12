@@ -562,7 +562,10 @@
 
     // Initialize menu manager
     menuManager = new MenuManager();
-    menuManager.registerMenuItem('delete', new DeleteMenuItem(deleteBookmark));
+    menuManager.registerMenuItem(
+      'delete',
+      new DeleteMenuItem(nodeStoreMap, filterActive, deleteBookmark)
+    );
     menuManager.registerMenuItem(
       'openAllInTabs',
       new OpenAllInTabsMenuItem(nodeStoreMap, openAllInTabs)
