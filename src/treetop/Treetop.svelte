@@ -160,20 +160,26 @@
 
   /**
    * Open a folder's immediate children in tabs.
+   *
+   * If a filter is active, open only the children that match the filter.
    */
   function openAllInTabs(nodeId: string) {
     const nodeStore = nodeStoreMap.get(nodeId)!;
     const node: Treetop.FolderNode = get(nodeStore);
 
+    const activeFilterSet = get(filterActive) ? get(filterSet) : undefined;
+
     const promises: Promise<Tabs.Tab>[] = [];
 
     node.children.forEach((child) => {
       if (child.type === Treetop.NodeType.Bookmark) {
-        promises.push(
-          browser.tabs.create({
-            url: child.url,
-          })
-        );
+        if (!activeFilterSet || activeFilterSet.has(child.id)) {
+          promises.push(
+            browser.tabs.create({
+              url: child.url,
+            })
+          );
+        }
       }
     });
 
