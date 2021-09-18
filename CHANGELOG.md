@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [1.2.0] - 2021-09-18
+### Added
+- Add a search input to search for bookmarks by name or URL.
+
+### Changed
+- Update Svelte Material UI to 4.2.0.
+
 ## [1.1.3] - 2021-01-22
 ### Added
 - List of attributions for open source software distributed in releases.
@@ -33,7 +40,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - Initial release.
 
-[Unreleased]: https://github.com/msmolens/treetop/compare/v1.1.3...HEAD
+[Unreleased]: https://github.com/msmolens/treetop/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/msmolens/treetop/releases/tag/v1.2.0
 [1.1.3]: https://github.com/msmolens/treetop/releases/tag/v1.1.3
 [1.1.2]: https://github.com/msmolens/treetop/releases/tag/v1.1.2
 [1.1.1]: https://github.com/msmolens/treetop/releases/tag/v1.1.1
