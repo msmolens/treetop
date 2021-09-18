@@ -1,4 +1,5 @@
 import { get } from 'svelte/store';
+import type { Bookmarks } from 'webextension-polyfill';
 
 import { BOOKMARK_TREE_NODE_TYPE_BOOKMARK } from './constants';
 import * as Treetop from './types';
@@ -85,7 +86,7 @@ export class FilterManager {
    */
   handleBookmarkCreated(
     _id: string,
-    bookmark: browser.bookmarks.BookmarkTreeNode
+    bookmark: Bookmarks.BookmarkTreeNode
   ): void {
     if (this.filter === null) {
       return;
@@ -155,7 +156,7 @@ export class FilterManager {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _id: string,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _changeInfo: browser.bookmarks._OnChangedChangeInfo
+    _changeInfo: Bookmarks.OnChangedChangeInfoType
   ): void {
     this.refreshFilter();
   }
@@ -168,7 +169,7 @@ export class FilterManager {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _id: string,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _moveInfo: browser.bookmarks._OnMovedMoveInfo
+    _moveInfo: Bookmarks.OnMovedMoveInfoType
   ): void {
     this.refreshFilter();
   }

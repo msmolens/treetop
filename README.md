@@ -71,6 +71,7 @@ npm install
 - [ESLint](https://eslint.org/): Static analyzer.
 - [Prettier](https://prettier.io/): Code formatter.
 - [web-ext](https://github.com/mozilla/web-ext): Command line tool for web extensions.
+- [webextension-polyfill](https://github.com/mozilla/webextension-polyfill): WebExtension `browser` API polyfill.
 
 #### Testing
 - [Jest](https://jestjs.io/): Testing framework.

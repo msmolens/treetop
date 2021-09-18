@@ -1,9 +1,10 @@
 import faker from 'faker';
+import type { Action, Tabs } from 'webextension-polyfill';
 
 import { openTreetop } from '@Treetop/background_script/open';
 
-let tab: browser.tabs.Tab;
-let info: browser.browserAction.OnClickData;
+let tab: Tabs.Tab;
+let info: Action.OnClickData;
 let url: string;
 
 beforeEach(() => {

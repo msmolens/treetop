@@ -5,7 +5,8 @@
   import { fade } from 'svelte/transition';
   import LinearProgress from '@smui/linear-progress/styled';
   import Snackbar, { Label } from '@smui/snackbar/styled';
-  import { browser, Tabs } from 'webextension-polyfill-ts';
+  import type { Bookmarks, History, Menus, Tabs } from 'webextension-polyfill';
+  import * as browser from 'webextension-polyfill';
 
   import icon from '../icons/generated/icons/icon.svg';
 
@@ -126,7 +127,7 @@
   const propertiesDialogInfo = {
     open: false,
   };
-  let propertiesNode: browser.bookmarks.BookmarkTreeNode | null = null;
+  let propertiesNode: Bookmarks.BookmarkTreeNode | null = null;
 
   //
   // Menu manager
@@ -291,7 +292,7 @@
 
   async function asyncOnBookmarkCreated(
     id: string,
-    bookmark: browser.bookmarks.BookmarkTreeNode
+    bookmark: Bookmarks.BookmarkTreeNode
   ) {
     const promises: Promise<void>[] = [];
 
@@ -306,10 +307,7 @@
     filterManager.handleBookmarkCreated(id, bookmark);
   }
 
-  function onBookmarkCreated(
-    id: string,
-    bookmark: browser.bookmarks.BookmarkTreeNode
-  ) {
+  function onBookmarkCreated(id: string, bookmark: Bookmarks.BookmarkTreeNode) {
     asyncOnBookmarkCreated(id, bookmark).catch((err) => {
       console.error(err);
       handleError(browser.i18n.getMessage('errorHandlingBookmarkCreation'));
@@ -318,7 +316,7 @@
 
   async function asyncOnBookmarkRemoved(
     id: string,
-    removeInfo: browser.bookmarks._OnRemovedRemoveInfo
+    removeInfo: Bookmarks.OnRemovedRemoveInfoType
   ) {
     const removedNodeIds = await bookmarksManager.handleBookmarkRemoved(
       id,
@@ -340,7 +338,7 @@
 
   function onBookmarkRemoved(
     id: string,
-    removeInfo: browser.bookmarks._OnRemovedRemoveInfo
+    removeInfo: Bookmarks.OnRemovedRemoveInfoType
   ) {
     asyncOnBookmarkRemoved(id, removeInfo).catch((err) => {
       console.error(err);
@@ -350,7 +348,7 @@
 
   async function asyncOnBookmarkChanged(
     id: string,
-    changeInfo: browser.bookmarks._OnChangedChangeInfo
+    changeInfo: Bookmarks.OnChangedChangeInfoType
   ) {
     await bookmarksManager.handleBookmarkChanged(id, changeInfo);
 
@@ -363,7 +361,7 @@
 
   function onBookmarkChanged(
     id: string,
-    changeInfo: browser.bookmarks._OnChangedChangeInfo
+    changeInfo: Bookmarks.OnChangedChangeInfoType
   ) {
     asyncOnBookmarkChanged(id, changeInfo).catch((err) => {
       console.error(err);
@@ -373,7 +371,7 @@
 
   async function asyncOnBookmarkMoved(
     id: string,
-    moveInfo: browser.bookmarks._OnMovedMoveInfo
+    moveInfo: Bookmarks.OnMovedMoveInfoType
   ) {
     await bookmarksManager.handleBookmarkMoved(id, moveInfo);
 
@@ -382,7 +380,7 @@
 
   function onBookmarkMoved(
     id: string,
-    moveInfo: browser.bookmarks._OnMovedMoveInfo
+    moveInfo: Bookmarks.OnMovedMoveInfoType
   ) {
     asyncOnBookmarkMoved(id, moveInfo).catch((err) => {
       console.error(err);
@@ -394,13 +392,13 @@
   // History event handlers
   //
 
-  async function asyncOnVisited(result: browser.history.HistoryItem) {
+  async function asyncOnVisited(result: History.HistoryItem) {
     if ($showRecentlyVisited) {
       await historyManager.handleVisited(result);
     }
   }
 
-  function onVisited(result: browser.history.HistoryItem) {
+  function onVisited(result: History.HistoryItem) {
     asyncOnVisited(result).catch((err) => {
       console.error(err);
       handleError(browser.i18n.getMessage('errorHandlingHistoryVisit'));
@@ -408,14 +406,14 @@
   }
 
   async function asyncOnVisitRemoved(
-    removed: browser.history._OnVisitRemovedRemoved
+    removed: History.OnVisitRemovedRemovedType
   ) {
     if ($showRecentlyVisited) {
       await historyManager.handleVisitRemoved(removed);
     }
   }
 
-  function onVisitRemoved(removed: browser.history._OnVisitRemovedRemoved) {
+  function onVisitRemoved(removed: History.OnVisitRemovedRemovedType) {
     asyncOnVisitRemoved(removed).catch((err) => {
       console.error(err);
       handleError(browser.i18n.getMessage('errorHandlingHistoryVisitRemoval'));
@@ -426,17 +424,11 @@
   // Menu event handlers
   //
 
-  async function asyncOnMenuShown(
-    info: browser.menus._OnShownInfo,
-    tab: browser.tabs.Tab
-  ) {
+  async function asyncOnMenuShown(info: Menus.OnShownInfoType, tab: Tabs.Tab) {
     await menuManager?.handleMenuShown(info, tab);
   }
 
-  function onMenuShown(
-    info: browser.menus._OnShownInfo,
-    tab: browser.tabs.Tab
-  ) {
+  function onMenuShown(info: Menus.OnShownInfoType, tab: Tabs.Tab) {
     asyncOnMenuShown(info, tab).catch((err) => {
       console.error(err);
       handleError(browser.i18n.getMessage('errorHandlingMenuShown'));
@@ -447,17 +439,11 @@
     menuManager?.handleMenuHidden();
   }
 
-  async function asyncOnMenuClicked(
-    info: browser.menus.OnClickData,
-    tab?: browser.tabs.Tab
-  ) {
+  async function asyncOnMenuClicked(info: Menus.OnClickData, tab?: Tabs.Tab) {
     await menuManager?.handleMenuClicked(info, tab);
   }
 
-  function onMenuClicked(
-    info: browser.menus.OnClickData,
-    tab?: browser.tabs.Tab
-  ) {
+  function onMenuClicked(info: Menus.OnClickData, tab?: Tabs.Tab) {
     asyncOnMenuClicked(info, tab).catch((err) => {
       console.error(err);
       handleError(browser.i18n.getMessage('errorHandlingMenuClick'));
@@ -555,7 +541,6 @@
     body = document.body;
 
     // Register menu event handlers
-    // @ts-expect-error: See https://github.com/jsmnbom/definitelytyped-firefox-webext-browser/pull/37
     browser.menus.onShown.addListener(onMenuShown);
     browser.menus.onHidden.addListener(onMenuHidden);
     browser.menus.onClicked.addListener(onMenuClicked);
@@ -583,7 +568,6 @@
     unsubscribeShowRecentlyVisited();
 
     // Unregister menu event handlers
-    // @ts-expect-error: See https://github.com/jsmnbom/definitelytyped-firefox-webext-browser/pull/37
     browser.menus.onShown.removeListener(onMenuShown);
     browser.menus.onHidden.removeListener(onMenuHidden);
     browser.menus.onClicked.removeListener(onMenuClicked);

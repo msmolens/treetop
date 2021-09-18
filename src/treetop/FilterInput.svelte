@@ -7,7 +7,7 @@
   // TextField styles aren't applied correctly
   import IconButton from '@smui/icon-button/styled';
   import debounce from 'lodash-es/debounce';
-  import { browser } from 'webextension-polyfill-ts';
+  import * as browser from 'webextension-polyfill';
 
   // Filter string
   let filter = '';

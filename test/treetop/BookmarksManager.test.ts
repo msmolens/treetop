@@ -2,6 +2,7 @@
 
 import { get, Writable } from 'svelte/store';
 import faker from 'faker';
+import type { Bookmarks } from 'webextension-polyfill';
 
 import { BookmarksManager } from '@Treetop/treetop/BookmarksManager';
 import {
@@ -32,8 +33,8 @@ const getFolderNode = (
 
 let nodeStoreMap: Treetop.NodeStoreMap;
 let bookmarksManager: BookmarksManager;
-let bookmarksTree: browser.bookmarks.BookmarkTreeNode[];
-let bookmarksRoot: browser.bookmarks.BookmarkTreeNode;
+let bookmarksTree: Bookmarks.BookmarkTreeNode[];
+let bookmarksRoot: Bookmarks.BookmarkTreeNode;
 
 const NUM_BOOKMARK_ROOTS = 4;
 
@@ -342,7 +343,7 @@ describe('loadBookmarks', () => {
 });
 
 describe('handleBookmarkCreated', () => {
-  let folderNode: browser.bookmarks.BookmarkTreeNode;
+  let folderNode: Bookmarks.BookmarkTreeNode;
 
   beforeEach(async () => {
     // Create bookmarks tree:
@@ -470,14 +471,14 @@ describe('handleBookmarkCreated', () => {
 });
 
 describe('handleBookmarkRemoved', () => {
-  let baseNode: browser.bookmarks.BookmarkTreeNode;
-  let folderNode1: browser.bookmarks.BookmarkTreeNode;
-  let folderNode2: browser.bookmarks.BookmarkTreeNode;
-  let bookmarkNode1: browser.bookmarks.BookmarkTreeNode;
-  let bookmarkNode2: browser.bookmarks.BookmarkTreeNode;
-  let bookmarkNode3: browser.bookmarks.BookmarkTreeNode;
-  let bookmarkNode4: browser.bookmarks.BookmarkTreeNode;
-  let separatorNode: browser.bookmarks.BookmarkTreeNode;
+  let baseNode: Bookmarks.BookmarkTreeNode;
+  let folderNode1: Bookmarks.BookmarkTreeNode;
+  let folderNode2: Bookmarks.BookmarkTreeNode;
+  let bookmarkNode1: Bookmarks.BookmarkTreeNode;
+  let bookmarkNode2: Bookmarks.BookmarkTreeNode;
+  let bookmarkNode3: Bookmarks.BookmarkTreeNode;
+  let bookmarkNode4: Bookmarks.BookmarkTreeNode;
+  let separatorNode: Bookmarks.BookmarkTreeNode;
 
   beforeEach(async () => {
     // Create bookmarks tree:
@@ -532,7 +533,7 @@ describe('handleBookmarkRemoved', () => {
     const initialNodeStoreMapSize = nodeStoreMap.size;
 
     // Call bookmark removed handler
-    const removeInfo: browser.bookmarks._OnRemovedRemoveInfo = {
+    const removeInfo: Bookmarks.OnRemovedRemoveInfoType = {
       parentId: bookmarkNode4.parentId!,
       index: 0,
       node: bookmarkNode4,
@@ -565,7 +566,7 @@ describe('handleBookmarkRemoved', () => {
     const initialNodeStoreMapSize = nodeStoreMap.size;
 
     // Call bookmark removed handler
-    const removeInfo: browser.bookmarks._OnRemovedRemoveInfo = {
+    const removeInfo: Bookmarks.OnRemovedRemoveInfoType = {
       parentId: separatorNode.parentId!,
       index: 1,
       node: separatorNode,
@@ -601,7 +602,7 @@ describe('handleBookmarkRemoved', () => {
     const initialNodeStoreMapSize = nodeStoreMap.size;
 
     // Call bookmark removed handler
-    const removeInfo: browser.bookmarks._OnRemovedRemoveInfo = {
+    const removeInfo: Bookmarks.OnRemovedRemoveInfoType = {
       parentId: folderNode1.parentId!,
       index: 1,
       node: folderNode1,
@@ -626,10 +627,10 @@ describe('handleBookmarkRemoved', () => {
 });
 
 describe('handleBookmarkChanged', () => {
-  let baseNode: browser.bookmarks.BookmarkTreeNode;
-  let folderNode1: browser.bookmarks.BookmarkTreeNode;
-  let bookmarkNode1: browser.bookmarks.BookmarkTreeNode;
-  let bookmarkNode2: browser.bookmarks.BookmarkTreeNode;
+  let baseNode: Bookmarks.BookmarkTreeNode;
+  let folderNode1: Bookmarks.BookmarkTreeNode;
+  let bookmarkNode1: Bookmarks.BookmarkTreeNode;
+  let bookmarkNode2: Bookmarks.BookmarkTreeNode;
 
   beforeEach(async () => {
     // Create bookmarks tree:
@@ -685,7 +686,7 @@ describe('handleBookmarkChanged', () => {
       .andResolve(folderNode1.children!);
 
     // Call bookmark changed handler
-    const changeInfo: browser.bookmarks._OnChangedChangeInfo = {
+    const changeInfo: Bookmarks.OnChangedChangeInfoType = {
       title: bookmarkNode1.title,
       url: bookmarkNode1.url,
     };
@@ -728,7 +729,7 @@ describe('handleBookmarkChanged', () => {
       .andResolve(folderNode1.children!);
 
     // Call bookmark changed handler
-    const changeInfo: browser.bookmarks._OnChangedChangeInfo = {
+    const changeInfo: Bookmarks.OnChangedChangeInfoType = {
       title: folderNode1.title,
     };
     await bookmarksManager.handleBookmarkChanged(folderNode1.id, changeInfo);
@@ -750,11 +751,11 @@ describe('handleBookmarkChanged', () => {
 });
 
 describe('handleBookmarkMoved', () => {
-  let baseNode: browser.bookmarks.BookmarkTreeNode;
-  let folderNode1: browser.bookmarks.BookmarkTreeNode;
-  let bookmarkNode1: browser.bookmarks.BookmarkTreeNode;
-  let bookmarkNode2: browser.bookmarks.BookmarkTreeNode;
-  let bookmarkNode3: browser.bookmarks.BookmarkTreeNode;
+  let baseNode: Bookmarks.BookmarkTreeNode;
+  let folderNode1: Bookmarks.BookmarkTreeNode;
+  let bookmarkNode1: Bookmarks.BookmarkTreeNode;
+  let bookmarkNode2: Bookmarks.BookmarkTreeNode;
+  let bookmarkNode3: Bookmarks.BookmarkTreeNode;
 
   beforeEach(async () => {
     // Create bookmarks tree:
@@ -797,7 +798,7 @@ describe('handleBookmarkMoved', () => {
 
     // Move bookmarkNode3 to index 0
     const children = folderNode1.children!;
-    const moveInfo: browser.bookmarks._OnMovedMoveInfo = {
+    const moveInfo: Bookmarks.OnMovedMoveInfoType = {
       parentId: bookmarkNode3.parentId!,
       index: 0,
       oldParentId: bookmarkNode3.parentId!,
@@ -845,7 +846,7 @@ describe('handleBookmarkMoved', () => {
 
     // Move bookmarkNode3 to base folder
     baseNode.children!.unshift(folderNode1.children!.pop()!);
-    const moveInfo: browser.bookmarks._OnMovedMoveInfo = {
+    const moveInfo: Bookmarks.OnMovedMoveInfoType = {
       parentId: baseNode.id,
       index: 0,
       oldParentId: folderNode1.id,
@@ -905,7 +906,7 @@ describe('handleBookmarkMoved', () => {
 
     // Move bookmarkNode1 to folderNode1
     folderNode1.children!.unshift(baseNode.children!.shift()!);
-    const moveInfo: browser.bookmarks._OnMovedMoveInfo = {
+    const moveInfo: Bookmarks.OnMovedMoveInfoType = {
       parentId: folderNode1.id,
       index: 0,
       oldParentId: baseNode.id,

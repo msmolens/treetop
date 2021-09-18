@@ -3,7 +3,7 @@
   import { elasticOut } from 'svelte/easing';
   import { fly } from 'svelte/transition';
   import IconButton from '@smui/icon-button/styled';
-  import { browser } from 'webextension-polyfill-ts';
+  import * as browser from 'webextension-polyfill';
 
   const dispatch = createEventDispatcher();
 

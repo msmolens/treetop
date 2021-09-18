@@ -1,5 +1,5 @@
 import { get, writable } from 'svelte/store';
-import { browser } from 'webextension-polyfill-ts';
+import browser, { Bookmarks } from 'webextension-polyfill';
 
 import {
   BOOKMARK_TREE_NODE_TYPE_BOOKMARK,
@@ -12,14 +12,12 @@ import {
 import * as Treetop from './types';
 
 // Map bookmarks.BookmarkTreeNodeType to Treetop.NodeType
-const BookmarkTypeMap: Map<
-  browser.bookmarks.BookmarkTreeNodeType,
-  Treetop.NodeType
-> = new Map([
-  [BOOKMARK_TREE_NODE_TYPE_BOOKMARK, Treetop.NodeType.Bookmark],
-  [BOOKMARK_TREE_NODE_TYPE_FOLDER, Treetop.NodeType.Folder],
-  [BOOKMARK_TREE_NODE_TYPE_SEPARATOR, Treetop.NodeType.Separator],
-]);
+const BookmarkTypeMap: Map<Bookmarks.BookmarkTreeNodeType, Treetop.NodeType> =
+  new Map([
+    [BOOKMARK_TREE_NODE_TYPE_BOOKMARK, Treetop.NodeType.Bookmark],
+    [BOOKMARK_TREE_NODE_TYPE_FOLDER, Treetop.NodeType.Folder],
+    [BOOKMARK_TREE_NODE_TYPE_SEPARATOR, Treetop.NodeType.Separator],
+  ]);
 
 /**
  * Class to initialize and manage updating bookmark node stores.
@@ -52,9 +50,7 @@ export class BookmarksManager {
    * Convert a BookmarkTreeNode into a Treetop folder node. Retain the only
    * necessary properties from the original node and its children.
    */
-  private convertNode(
-    node: browser.bookmarks.BookmarkTreeNode
-  ): Treetop.FolderNode {
+  private convertNode(node: Bookmarks.BookmarkTreeNode): Treetop.FolderNode {
     const newNode: Treetop.FolderNode = {
       id: node.id,
       parentId: node.parentId,
@@ -100,7 +96,7 @@ export class BookmarksManager {
   /**
    * Create and record a node store for the specified bookmark node.
    */
-  private buildNodeStore(node: browser.bookmarks.BookmarkTreeNode): void {
+  private buildNodeStore(node: Bookmarks.BookmarkTreeNode): void {
     if (node.type !== BOOKMARK_TREE_NODE_TYPE_FOLDER) {
       throw new TypeError();
     }
@@ -132,7 +128,7 @@ export class BookmarksManager {
    */
   async handleBookmarkCreated(
     id: string,
-    bookmark: browser.bookmarks.BookmarkTreeNode
+    bookmark: Bookmarks.BookmarkTreeNode
   ): Promise<void> {
     if (bookmark.type === BOOKMARK_TREE_NODE_TYPE_FOLDER) {
       // Add node store for the new folder
@@ -153,7 +149,7 @@ export class BookmarksManager {
    */
   async handleBookmarkRemoved(
     id: string,
-    removeInfo: browser.bookmarks._OnRemovedRemoveInfo
+    removeInfo: Bookmarks.OnRemovedRemoveInfoType
   ): Promise<string[]> {
     const removedNodeIds = [];
 
@@ -197,7 +193,7 @@ export class BookmarksManager {
   async handleBookmarkChanged(
     id: string,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _changeInfo: browser.bookmarks._OnChangedChangeInfo
+    _changeInfo: Bookmarks.OnChangedChangeInfoType
   ): Promise<void> {
     if (this.nodeStoreMap.has(id)) {
       // Folder changed. Update its node.
@@ -215,7 +211,7 @@ export class BookmarksManager {
    */
   async handleBookmarkMoved(
     _id: string,
-    moveInfo: browser.bookmarks._OnMovedMoveInfo
+    moveInfo: Bookmarks.OnMovedMoveInfoType
   ): Promise<void> {
     const parentId = moveInfo.parentId;
     const oldParentId = moveInfo.oldParentId;
@@ -239,10 +235,8 @@ export class BookmarksManager {
    *
    * Omit Mobile Bookmarks.
    */
-  private orderBookmarksRootChildren(
-    node: browser.bookmarks.BookmarkTreeNode
-  ): void {
-    const children: browser.bookmarks.BookmarkTreeNode[] = [];
+  private orderBookmarksRootChildren(node: Bookmarks.BookmarkTreeNode): void {
+    const children: Bookmarks.BookmarkTreeNode[] = [];
 
     if (this.showBookmarksToolbar) {
       const bookmarksToolbarNode = node.children!.find(

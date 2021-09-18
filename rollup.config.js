@@ -66,7 +66,6 @@ export default [{
       title: 'Treetop'
     }),
   ],
-  external: ['firefox-webext-browser']
 }, {
   input: 'src/options/main.ts',
   output: {
@@ -159,5 +158,4 @@ export default [{
       verbose: true
     })
   ],
-  external: ['firefox-webext-browser']
 }];
