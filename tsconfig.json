@@ -24,8 +24,6 @@
     ],
     "types": [
       "jest",
-      "firefox-webext-browser",
-      "mockzilla-webextension",
       "@testing-library/jest-dom",
     ]
   },

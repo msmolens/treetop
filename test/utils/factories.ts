@@ -1,4 +1,5 @@
 import faker from 'faker';
+import type { Bookmarks, History } from 'webextension-polyfill';
 
 import {
   BOOKMARK_TREE_NODE_TYPE_BOOKMARK,
@@ -57,9 +58,9 @@ export const createSeparatorNode = (
 //
 
 export const createBrowserBookmarkNode = (
-  parent: browser.bookmarks.BookmarkTreeNode
-): browser.bookmarks.BookmarkTreeNode => {
-  const node: browser.bookmarks.BookmarkTreeNode = {
+  parent: Bookmarks.BookmarkTreeNode
+): Bookmarks.BookmarkTreeNode => {
+  const node: Bookmarks.BookmarkTreeNode = {
     id: faker.datatype.uuid(),
     parentId: parent.id,
     title: faker.random.words(TITLE_NUM_RANDOM_WORDS),
@@ -71,9 +72,9 @@ export const createBrowserBookmarkNode = (
 };
 
 export const createBrowserFolderNode = (
-  parent: browser.bookmarks.BookmarkTreeNode
-): browser.bookmarks.BookmarkTreeNode => {
-  const node: browser.bookmarks.BookmarkTreeNode = {
+  parent: Bookmarks.BookmarkTreeNode
+): Bookmarks.BookmarkTreeNode => {
+  const node: Bookmarks.BookmarkTreeNode = {
     id: faker.datatype.uuid(),
     parentId: parent.id,
     title: faker.random.words(TITLE_NUM_RANDOM_WORDS),
@@ -85,9 +86,9 @@ export const createBrowserFolderNode = (
 };
 
 export const createBrowserSeparatorNode = (
-  parent: browser.bookmarks.BookmarkTreeNode
-): browser.bookmarks.BookmarkTreeNode => {
-  const node: browser.bookmarks.BookmarkTreeNode = {
+  parent: Bookmarks.BookmarkTreeNode
+): Bookmarks.BookmarkTreeNode => {
+  const node: Bookmarks.BookmarkTreeNode = {
     id: faker.datatype.uuid(),
     parentId: parent.id,
     title: '',
@@ -98,78 +99,72 @@ export const createBrowserSeparatorNode = (
   return node;
 };
 
-export const createBookmarksMenuNode =
-  (): browser.bookmarks.BookmarkTreeNode => {
-    return {
-      id: BOOKMARKS_MENU_GUID,
-      parentId: BOOKMARKS_ROOT_GUID,
-      title: 'Bookmarks Menu',
-      type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
-      children: [],
-    };
+export const createBookmarksMenuNode = (): Bookmarks.BookmarkTreeNode => {
+  return {
+    id: BOOKMARKS_MENU_GUID,
+    parentId: BOOKMARKS_ROOT_GUID,
+    title: 'Bookmarks Menu',
+    type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
+    children: [],
   };
+};
 
-export const createBookmarksToolbarNode =
-  (): browser.bookmarks.BookmarkTreeNode => {
-    return {
-      id: BOOKMARKS_TOOLBAR_GUID,
-      parentId: BOOKMARKS_ROOT_GUID,
-      title: 'Bookmarks Toolbar',
-      type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
-      children: [],
-    };
+export const createBookmarksToolbarNode = (): Bookmarks.BookmarkTreeNode => {
+  return {
+    id: BOOKMARKS_TOOLBAR_GUID,
+    parentId: BOOKMARKS_ROOT_GUID,
+    title: 'Bookmarks Toolbar',
+    type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
+    children: [],
   };
+};
 
-export const createOtherBookmarksNode =
-  (): browser.bookmarks.BookmarkTreeNode => {
-    return {
-      id: OTHER_BOOKMARKS_GUID,
-      parentId: BOOKMARKS_ROOT_GUID,
-      title: 'Other Bookmarks',
-      type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
-      children: [],
-    };
+export const createOtherBookmarksNode = (): Bookmarks.BookmarkTreeNode => {
+  return {
+    id: OTHER_BOOKMARKS_GUID,
+    parentId: BOOKMARKS_ROOT_GUID,
+    title: 'Other Bookmarks',
+    type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
+    children: [],
   };
+};
 
-export const createMobileBookmarksNode =
-  (): browser.bookmarks.BookmarkTreeNode => {
-    return {
-      id: MOBILE_BOOKMARKS_GUID,
-      parentId: BOOKMARKS_ROOT_GUID,
-      title: 'Mobile Bookmarks',
-      type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
-      children: [],
-    };
+export const createMobileBookmarksNode = (): Bookmarks.BookmarkTreeNode => {
+  return {
+    id: MOBILE_BOOKMARKS_GUID,
+    parentId: BOOKMARKS_ROOT_GUID,
+    title: 'Mobile Bookmarks',
+    type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
+    children: [],
   };
+};
 
-export const createBookmarksRootNode =
-  (): browser.bookmarks.BookmarkTreeNode => {
-    return {
-      id: BOOKMARKS_ROOT_GUID,
-      parentId: undefined,
-      url: undefined,
-      type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
-      title: '',
-      children: [
-        createBookmarksMenuNode(),
-        createBookmarksToolbarNode(),
-        createOtherBookmarksNode(),
-        createMobileBookmarksNode(),
-      ],
-    };
+export const createBookmarksRootNode = (): Bookmarks.BookmarkTreeNode => {
+  return {
+    id: BOOKMARKS_ROOT_GUID,
+    parentId: undefined,
+    url: undefined,
+    type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
+    title: '',
+    children: [
+      createBookmarksMenuNode(),
+      createBookmarksToolbarNode(),
+      createOtherBookmarksNode(),
+      createMobileBookmarksNode(),
+    ],
   };
+};
 
-export const createBrowserBookmarksTree =
-  (): browser.bookmarks.BookmarkTreeNode[] => {
-    const rootNode = createBookmarksRootNode();
-    return [rootNode];
-  };
+export const createBrowserBookmarksTree = (): Bookmarks.BookmarkTreeNode[] => {
+  const rootNode = createBookmarksRootNode();
+  return [rootNode];
+};
 
 //
 // Browser history factories
 //
 
-export const createHistoryItem = (): browser.history.HistoryItem => {
+export const createHistoryItem = (): History.HistoryItem => {
   return {
     id: faker.datatype.uuid(),
     url: faker.internet.url(),
@@ -177,7 +172,7 @@ export const createHistoryItem = (): browser.history.HistoryItem => {
   };
 };
 
-export const createVisitItem = (): browser.history.VisitItem => {
+export const createVisitItem = (): History.VisitItem => {
   return {
     id: faker.datatype.uuid(),
     visitId: faker.datatype.uuid(),

@@ -5,7 +5,7 @@
   import Dialog, { Actions, Content, Title } from '@smui/dialog/styled';
   import TextField from '@smui/textfield/styled';
   import truncate from 'lodash-es/truncate';
-  import { browser } from 'webextension-polyfill-ts';
+  import * as browser from 'webextension-polyfill';
 
   import type * as Treetop from './types';
 

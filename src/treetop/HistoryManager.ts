@@ -1,5 +1,5 @@
 import { get, writable } from 'svelte/store';
-import { browser } from 'webextension-polyfill-ts';
+import browser, { Bookmarks, History } from 'webextension-polyfill';
 
 import { BOOKMARK_TREE_NODE_TYPE_BOOKMARK } from './constants';
 import * as Treetop from './types';
@@ -36,7 +36,7 @@ export class HistoryManager {
 
     // Parallel arrays
     const nodeIds: string[] = [];
-    const promises: Promise<browser.history.VisitItem[]>[] = [];
+    const promises: Promise<History.VisitItem[]>[] = [];
 
     //
     // Get last visit time of bookmarked URLs
@@ -83,7 +83,7 @@ export class HistoryManager {
    */
   async handleBookmarkCreated(
     _id: string,
-    bookmark: browser.bookmarks.BookmarkTreeNode
+    bookmark: Bookmarks.BookmarkTreeNode
   ): Promise<void> {
     if (bookmark.type !== BOOKMARK_TREE_NODE_TYPE_BOOKMARK) {
       return;
@@ -110,7 +110,7 @@ export class HistoryManager {
    */
   async handleBookmarkChanged(
     id: string,
-    changeInfo: browser.bookmarks._OnChangedChangeInfo
+    changeInfo: Bookmarks.OnChangedChangeInfoType
   ): Promise<void> {
     // Ignore changed folders
     if (changeInfo.url === undefined) {
@@ -129,7 +129,7 @@ export class HistoryManager {
   /**
    * Update the last visit time store when the user visits a bookmarked URL.
    */
-  async handleVisited(result: browser.history.HistoryItem): Promise<void> {
+  async handleVisited(result: History.HistoryItem): Promise<void> {
     // Update bookmark nodes that match the visited URL
     const nodes = await browser.bookmarks.search({
       url: result.url,
@@ -146,7 +146,7 @@ export class HistoryManager {
    * history.
    */
   async handleVisitRemoved(
-    removed: browser.history._OnVisitRemovedRemoved
+    removed: History.OnVisitRemovedRemovedType
   ): Promise<void> {
     if (removed.allHistory) {
       // All history was removed

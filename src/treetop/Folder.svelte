@@ -2,7 +2,7 @@
   import { getContext } from 'svelte';
   import type { Writable } from 'svelte/store';
   import { get } from 'svelte/store';
-  import { browser } from 'webextension-polyfill-ts';
+  import * as browser from 'webextension-polyfill';
 
   import Bookmark from './Bookmark.svelte';
   import { BOOKMARKS_ROOT_GUID } from './constants';

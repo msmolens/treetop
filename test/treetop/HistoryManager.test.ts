@@ -1,6 +1,7 @@
 /* eslint no-irregular-whitespace: ["error", { "skipComments": true }] */
 import { get, writable } from 'svelte/store';
 import faker from 'faker';
+import type { Bookmarks, History } from 'webextension-polyfill';
 
 import { HistoryManager } from '@Treetop/treetop/HistoryManager';
 import * as Treetop from '@Treetop/treetop/types';
@@ -240,7 +241,7 @@ describe('handleBookmarkChanged', () => {
     lastVisitTimeMap.set(bookmarkNode.id, writable(0));
 
     const newUrl = faker.internet.url();
-    const changeInfo: browser.bookmarks._OnChangedChangeInfo = {
+    const changeInfo: Bookmarks.OnChangedChangeInfoType = {
       title: bookmarkNode.title,
       url: newUrl,
     };
@@ -263,7 +264,7 @@ describe('handleBookmarkChanged', () => {
     lastVisitTimeMap.set(bookmarkNode.id, writable(0));
 
     const newUrl = faker.internet.url();
-    const changeInfo: browser.bookmarks._OnChangedChangeInfo = {
+    const changeInfo: Bookmarks.OnChangedChangeInfoType = {
       title: bookmarkNode.title,
       url: newUrl,
     };
@@ -278,7 +279,7 @@ describe('handleBookmarkChanged', () => {
   it('ignores folders', async () => {
     const baseNode = createOtherBookmarksNode();
     const folderNode = createBrowserFolderNode(baseNode);
-    const changeInfo: browser.bookmarks._OnChangedChangeInfo = {
+    const changeInfo: Bookmarks.OnChangedChangeInfoType = {
       title: faker.random.words(),
     };
 
@@ -340,7 +341,7 @@ describe('handleVisitRemoved', () => {
       .expect({ url: bookmarkNode.url! })
       .andResolve([bookmarkNode]);
 
-    const removeInfo: browser.history._OnVisitRemovedRemoved = {
+    const removeInfo: History.OnVisitRemovedRemovedType = {
       allHistory: false,
       urls: [bookmarkNode.url!],
     };
@@ -358,7 +359,7 @@ describe('handleVisitRemoved', () => {
     const url = faker.internet.url();
     mockBrowser.bookmarks.search.expect({ url }).andResolve([]);
 
-    const removeInfo: browser.history._OnVisitRemovedRemoved = {
+    const removeInfo: History.OnVisitRemovedRemovedType = {
       allHistory: false,
       urls: [url],
     };
@@ -375,7 +376,7 @@ describe('handleVisitRemoved', () => {
     lastVisitTimeMap.set(bookmarkNode1.id, writable(faker.datatype.number()));
     lastVisitTimeMap.set(bookmarkNode2.id, writable(faker.datatype.number()));
 
-    const removeInfo: browser.history._OnVisitRemovedRemoved = {
+    const removeInfo: History.OnVisitRemovedRemovedType = {
       allHistory: true,
       urls: [],
     };

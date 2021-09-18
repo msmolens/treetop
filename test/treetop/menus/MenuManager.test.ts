@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
 import faker from 'faker';
+import type { Menus, Tabs } from 'webextension-polyfill';
 
 import { MenuItem, OnClickedCallback } from '@Treetop/treetop/menus/MenuItem';
 import { MenuManager } from '@Treetop/treetop/menus/MenuManager';
@@ -21,9 +22,8 @@ class TestMenuItem extends MenuItem {
   }
 }
 
-const createOnShownInfo = (origin: string): browser.menus._OnShownInfo => {
+const createOnShownInfo = (origin: string): Menus.OnShownInfoType => {
   return {
-    // @ts-expect-error: See https://github.com/jsmnbom/definitelytyped-firefox-webext-browser/pull/37
     menuIds: [faker.datatype.number()],
     contexts: ['link'],
     viewType: 'tab',
@@ -33,7 +33,7 @@ const createOnShownInfo = (origin: string): browser.menus._OnShownInfo => {
   };
 };
 
-const createOnClickData = (menuItemId: string): browser.menus.OnClickData => {
+const createOnClickData = (menuItemId: string): Menus.OnClickData => {
   return {
     menuItemId,
     viewType: 'tab',
@@ -44,7 +44,7 @@ const createOnClickData = (menuItemId: string): browser.menus.OnClickData => {
   };
 };
 
-const createTab = (): browser.tabs.Tab => {
+const createTab = (): Tabs.Tab => {
   return {
     id: faker.datatype.number(),
     index: faker.datatype.number(),
@@ -69,8 +69,8 @@ beforeEach(() => {
 
 describe('handleMenuShown', () => {
   let origin: string;
-  let info: browser.menus._OnShownInfo;
-  let tab: browser.tabs.Tab;
+  let info: Menus.OnShownInfoType;
+  let tab: Tabs.Tab;
 
   beforeEach(() => {
     const callback: OnClickedCallback = (nodeId) => {
@@ -167,8 +167,8 @@ describe('handleMenuShown', () => {
 });
 
 describe('handleMenuClicked', () => {
-  let info: browser.menus.OnClickData;
-  let tab: browser.tabs.Tab;
+  let info: Menus.OnClickData;
+  let tab: Tabs.Tab;
   let test1Clicked: boolean;
   let test2Clicked: boolean;
   let clickedNodeId: string | null;

@@ -2,6 +2,7 @@
 
 import { get, writable } from 'svelte/store';
 import faker from 'faker';
+import type { Bookmarks } from 'webextension-polyfill';
 
 import { FilterManager } from '@Treetop/treetop/FilterManager';
 import type * as Treetop from '@Treetop/treetop/types';
@@ -702,7 +703,7 @@ describe('handleBookmarkChanged', () => {
       const bookmarkNode = folderNode2.children[0] as Treetop.BookmarkNode;
       bookmarkNode.title += filter;
 
-      const changeInfo: browser.bookmarks._OnChangedChangeInfo = {
+      const changeInfo: Bookmarks.OnChangedChangeInfoType = {
         title: bookmarkNode.title,
       };
       filterManager.handleBookmarkChanged(bookmarkNode.id, changeInfo);
@@ -723,7 +724,7 @@ describe('handleBookmarkChanged', () => {
       const bookmarkNode = folderNode2.children[0] as Treetop.BookmarkNode;
       bookmarkNode.url += filter;
 
-      const changeInfo: browser.bookmarks._OnChangedChangeInfo = {
+      const changeInfo: Bookmarks.OnChangedChangeInfoType = {
         title: bookmarkNode.title,
         url: bookmarkNode.url,
       };
@@ -751,7 +752,7 @@ describe('handleBookmarkChanged', () => {
 
       bookmarkNode1.title += filter;
 
-      const changeInfo: browser.bookmarks._OnChangedChangeInfo = {
+      const changeInfo: Bookmarks.OnChangedChangeInfoType = {
         title: bookmarkNode1.title,
       };
       filterManager.handleBookmarkChanged(bookmarkNode1.id, changeInfo);
@@ -780,7 +781,7 @@ describe('handleBookmarkChanged', () => {
 
       bookmarkNode1.title += filter;
 
-      const changeInfo: browser.bookmarks._OnChangedChangeInfo = {
+      const changeInfo: Bookmarks.OnChangedChangeInfoType = {
         title: bookmarkNode1.title,
       };
       filterManager.handleBookmarkChanged(bookmarkNode1.id, changeInfo);
@@ -810,7 +811,7 @@ describe('handleBookmarkChanged', () => {
         faker.random.word()
       );
 
-      const changeInfo: browser.bookmarks._OnChangedChangeInfo = {
+      const changeInfo: Bookmarks.OnChangedChangeInfoType = {
         title: bookmarkNode.title,
       };
       filterManager.handleBookmarkChanged(bookmarkNode.id, changeInfo);
@@ -832,7 +833,7 @@ describe('handleBookmarkChanged', () => {
 
       bookmarkNode.url = bookmarkNode.url.replace(filter, faker.random.word());
 
-      const changeInfo: browser.bookmarks._OnChangedChangeInfo = {
+      const changeInfo: Bookmarks.OnChangedChangeInfoType = {
         title: bookmarkNode.title,
         url: bookmarkNode.url,
       };
@@ -861,7 +862,7 @@ describe('handleBookmarkChanged', () => {
         faker.random.word()
       );
 
-      const changeInfo: browser.bookmarks._OnChangedChangeInfo = {
+      const changeInfo: Bookmarks.OnChangedChangeInfoType = {
         title: bookmarkNode1.title,
       };
       filterManager.handleBookmarkChanged(bookmarkNode1.id, changeInfo);
@@ -894,7 +895,7 @@ describe('handleBookmarkChanged', () => {
         faker.random.word()
       );
 
-      const changeInfo: browser.bookmarks._OnChangedChangeInfo = {
+      const changeInfo: Bookmarks.OnChangedChangeInfoType = {
         title: bookmarkNode1.title,
       };
       filterManager.handleBookmarkChanged(bookmarkNode1.id, changeInfo);
@@ -911,7 +912,7 @@ describe('handleBookmarkChanged', () => {
   describe('when filter is not set', () => {
     it('ignores bookmarks', () => {
       const bookmarkNode = folderNode1.children[0] as Treetop.BookmarkNode;
-      const changeInfo: browser.bookmarks._OnChangedChangeInfo = {
+      const changeInfo: Bookmarks.OnChangedChangeInfoType = {
         title: faker.random.words(),
       };
       filterManager.handleBookmarkChanged(bookmarkNode.id, changeInfo);
@@ -921,7 +922,7 @@ describe('handleBookmarkChanged', () => {
     });
 
     it('ignores folders', () => {
-      const changeInfo: browser.bookmarks._OnChangedChangeInfo = {
+      const changeInfo: Bookmarks.OnChangedChangeInfoType = {
         title: faker.random.words(),
       };
       filterManager.handleBookmarkChanged(folderNode2.id, changeInfo);
@@ -953,7 +954,7 @@ describe('handleBookmarkMoved', () => {
       const children = folderNode2.children;
       [children[0], children[1]] = [children[1], children[0]];
 
-      const moveInfo: browser.bookmarks._OnMovedMoveInfo = {
+      const moveInfo: Bookmarks.OnMovedMoveInfoType = {
         parentId: bookmarkNode2.parentId!,
         index: 0,
         oldParentId: bookmarkNode2.parentId!,
@@ -988,7 +989,7 @@ describe('handleBookmarkMoved', () => {
         (node) => node.id !== bookmarkNode.id
       );
 
-      const moveInfo: browser.bookmarks._OnMovedMoveInfo = {
+      const moveInfo: Bookmarks.OnMovedMoveInfoType = {
         parentId: folderNode3.id,
         index: 0,
         oldParentId: folderNode2.id,
@@ -1025,7 +1026,7 @@ describe('handleBookmarkMoved', () => {
         (node) => node.id !== bookmarkNode2.id
       );
 
-      const moveInfo: browser.bookmarks._OnMovedMoveInfo = {
+      const moveInfo: Bookmarks.OnMovedMoveInfoType = {
         parentId: folderNode3.id,
         index: 0,
         oldParentId: folderNode2.id,
@@ -1060,7 +1061,7 @@ describe('handleBookmarkMoved', () => {
         (node) => node.id !== bookmarkNode.id
       );
 
-      const moveInfo: browser.bookmarks._OnMovedMoveInfo = {
+      const moveInfo: Bookmarks.OnMovedMoveInfoType = {
         parentId: folderNode4.id,
         index: 0,
         oldParentId: folderNode2.id,
@@ -1097,7 +1098,7 @@ describe('handleBookmarkMoved', () => {
         (node) => node.id !== bookmarkNode2.id
       );
 
-      const moveInfo: browser.bookmarks._OnMovedMoveInfo = {
+      const moveInfo: Bookmarks.OnMovedMoveInfoType = {
         parentId: folderNode4.id,
         index: 0,
         oldParentId: folderNode2.id,
@@ -1132,7 +1133,7 @@ describe('handleBookmarkMoved', () => {
         (node) => node.id !== bookmarkNode.id
       );
 
-      const moveInfo: browser.bookmarks._OnMovedMoveInfo = {
+      const moveInfo: Bookmarks.OnMovedMoveInfoType = {
         parentId: folderNode5.id,
         index: 0,
         oldParentId: folderNode2.id,
@@ -1168,7 +1169,7 @@ describe('handleBookmarkMoved', () => {
         (node) => node.id !== bookmarkNode2.id
       );
 
-      const moveInfo: browser.bookmarks._OnMovedMoveInfo = {
+      const moveInfo: Bookmarks.OnMovedMoveInfoType = {
         parentId: folderNode5.id,
         index: 0,
         oldParentId: folderNode2.id,
@@ -1204,7 +1205,7 @@ describe('handleBookmarkMoved', () => {
         (node) => node.id !== bookmarkNode.id
       );
 
-      const moveInfo: browser.bookmarks._OnMovedMoveInfo = {
+      const moveInfo: Bookmarks.OnMovedMoveInfoType = {
         parentId: folderNode6.id,
         index: 0,
         oldParentId: folderNode3.id,
@@ -1242,7 +1243,7 @@ describe('handleBookmarkMoved', () => {
         (node) => node.id !== bookmarkNode2.id
       );
 
-      const moveInfo: browser.bookmarks._OnMovedMoveInfo = {
+      const moveInfo: Bookmarks.OnMovedMoveInfoType = {
         parentId: folderNode6.id,
         index: 0,
         oldParentId: folderNode3.id,
@@ -1287,7 +1288,7 @@ describe('handleBookmarkMoved', () => {
         children[oldIndex],
       ];
 
-      const moveInfo: browser.bookmarks._OnMovedMoveInfo = {
+      const moveInfo: Bookmarks.OnMovedMoveInfoType = {
         parentId: folderNode1.id,
         index: newIndex,
         oldParentId: folderNode1.id,
@@ -1329,7 +1330,7 @@ describe('handleBookmarkMoved', () => {
       folderNode3.parentId = folderNode1.id;
       folderNode1.children.push(folderNode3);
 
-      const moveInfo: browser.bookmarks._OnMovedMoveInfo = {
+      const moveInfo: Bookmarks.OnMovedMoveInfoType = {
         parentId: folderNode1.id,
         index: newIndex,
         oldParentId: folderNode2.id,
@@ -1371,7 +1372,7 @@ describe('handleBookmarkMoved', () => {
       folderNode3.parentId = folderNode5.id;
       folderNode5.children.push(folderNode3);
 
-      const moveInfo: browser.bookmarks._OnMovedMoveInfo = {
+      const moveInfo: Bookmarks.OnMovedMoveInfoType = {
         parentId: folderNode5.id,
         index: newIndex,
         oldParentId: folderNode2.id,
@@ -1396,7 +1397,7 @@ describe('handleBookmarkMoved', () => {
       const children = folderNode2.children;
       [children[0], children[1]] = [children[1], children[0]];
 
-      const moveInfo: browser.bookmarks._OnMovedMoveInfo = {
+      const moveInfo: Bookmarks.OnMovedMoveInfoType = {
         parentId: bookmarkNode.parentId!,
         index: 0,
         oldParentId: bookmarkNode.parentId!,
@@ -1424,7 +1425,7 @@ describe('handleBookmarkMoved', () => {
         children[oldIndex],
       ];
 
-      const moveInfo: browser.bookmarks._OnMovedMoveInfo = {
+      const moveInfo: Bookmarks.OnMovedMoveInfoType = {
         parentId: folderNode1.id,
         index: newIndex,
         oldParentId: folderNode1.id,

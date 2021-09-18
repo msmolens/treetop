@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import type { Awaited } from 'treetop/types';
-  import { browser } from 'webextension-polyfill-ts';
+  import * as browser from 'webextension-polyfill';
 
   let options: Awaited<ReturnType<typeof browser.storage.local.get>>;
 

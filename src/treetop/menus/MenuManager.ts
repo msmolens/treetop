@@ -1,4 +1,4 @@
-import { browser } from 'webextension-polyfill-ts';
+import browser, { Menus, Tabs } from 'webextension-polyfill';
 
 import type { MenuItem } from './MenuItem';
 
@@ -26,8 +26,8 @@ export class MenuManager {
    * tab.
    */
   async handleMenuShown(
-    info: browser.menus._OnShownInfo,
-    tab: browser.tabs.Tab
+    info: Menus.OnShownInfoType,
+    tab: Tabs.Tab
   ): Promise<void> {
     if (!info.contexts.includes('link') || info.viewType !== 'tab') {
       return;
@@ -81,8 +81,8 @@ export class MenuManager {
    * The menu must have been clicked in the current Treetop tab.
    */
   async handleMenuClicked(
-    info: browser.menus.OnClickData,
-    tab?: browser.tabs.Tab
+    info: Menus.OnClickData,
+    tab?: Tabs.Tab
   ): Promise<void> {
     if (info.viewType !== 'tab' || !tab) {
       return;

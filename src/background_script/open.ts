@@ -1,4 +1,4 @@
-import { browser } from 'webextension-polyfill-ts';
+import browser, { Action, Runtime, Tabs } from 'webextension-polyfill';
 
 /**
  * Open the welcome page when the extension is installed.
@@ -6,7 +6,7 @@ import { browser } from 'webextension-polyfill-ts';
 export const openWelcome = ({
   reason,
   temporary,
-}: browser.runtime._OnInstalledDetails): void => {
+}: Runtime.OnInstalledDetailsType): void => {
   if (temporary || reason !== 'install') {
     return;
   }
@@ -29,15 +29,15 @@ export const openWelcome = ({
  *     Shift: Open in new tab
  */
 export const openTreetop = (
-  _tab: browser.tabs.Tab,
-  info: browser.browserAction.OnClickData | undefined
+  _tab: Tabs.Tab,
+  info: Action.OnClickData | undefined
 ): void => {
   if (!info) {
     return;
   }
 
   const url = browser.runtime.getURL('treetop.html');
-  const params: browser.tabs._CreateCreateProperties = { url };
+  const params: Tabs.CreateCreatePropertiesType = { url };
 
   const ctrl =
     info.modifiers.includes('Ctrl') || info.modifiers.includes('Command');

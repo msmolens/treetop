@@ -1,5 +1,5 @@
 import { Writable, writable } from 'svelte/store';
-import { browser } from 'webextension-polyfill-ts';
+import browser, { Storage } from 'webextension-polyfill';
 
 import type * as Treetop from './types';
 
@@ -14,7 +14,7 @@ export class PreferencesManager {
 
   // Bound event handler
   private readonly onChanged = (
-    changes: { [key: string]: browser.storage.StorageChange },
+    changes: { [key: string]: Storage.StorageChange },
     areaName: string
   ) => this.handleStorageChanged(changes, areaName);
 
@@ -57,7 +57,7 @@ export class PreferencesManager {
    * Update preferences stores when storage values change.
    */
   handleStorageChanged(
-    changes: { [key: string]: browser.storage.StorageChange },
+    changes: { [key: string]: Storage.StorageChange },
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _areaName: string
   ): void {

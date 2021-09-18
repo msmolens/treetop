@@ -1,4 +1,4 @@
-import { browser } from 'webextension-polyfill-ts';
+import browser, { Menus } from 'webextension-polyfill';
 
 /**
  * Create context menus.
@@ -9,7 +9,7 @@ export const createContextMenus = (): void => {
   const origin = browser.runtime.getURL('');
 
   const commonMenuParams: {
-    contexts: browser.menus.ContextType[];
+    contexts: Menus.ContextType[];
     documentUrlPatterns: string[];
   } = {
     contexts: ['link'],
