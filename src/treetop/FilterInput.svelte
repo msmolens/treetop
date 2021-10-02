@@ -70,6 +70,15 @@
   }
 
   /**
+   * Clear filter input when user presses Escape.
+   */
+  function onKeyDown(e: KeyboardEvent) {
+    if (e.key === 'Escape') {
+      clearFilterInput();
+    }
+  }
+
+  /**
    * Debounced filter input handler.
    */
   const debounceFilterInput = debounce((event: Event) => {
@@ -88,6 +97,7 @@
     <TextField
       bind:value={filter}
       on:input={debounceFilterInput}
+      on:keydown={onKeyDown}
       label={browser.i18n.getMessage('search')}>
       <IconButton
         bind:this={iconButton}

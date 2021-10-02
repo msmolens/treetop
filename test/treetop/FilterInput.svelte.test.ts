@@ -127,3 +127,33 @@ it('clears the input when the clear button is pressed', async () => {
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
 });
+
+it('clears the input when the escape is pressed', async () => {
+  const { component } = setup();
+
+  const callback = jest.fn();
+  component.$on('input', callback);
+
+  const input = screen.getByLabelText(/^search$/i);
+
+  const words = faker.random.words();
+  // eslint-disable-next-line @typescript-eslint/await-thenable
+  await userEvent.type(input, words);
+  userEvent.keyboard('[Enter]');
+
+  await waitFor(() => {
+    expect(screen.getByRole('button')).toBeInTheDocument();
+  });
+
+  expect(callback).toHaveBeenCalledTimes(1);
+
+  userEvent.keyboard('{Escape}');
+
+  await waitFor(() => {
+    expect(callback).toHaveBeenCalledTimes(2);
+  });
+
+  await waitFor(() => {
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+  });
+});

@@ -4,8 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
+
+## [1.3.0] - 2021-10-02
 ### Added
 - Add webextension-polyfill.
+- Pressing Escape clears the search input.
 
 ## [1.2.0] - 2021-09-18
 ### Added
@@ -42,7 +45,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - Initial release.
 
-[Unreleased]: https://github.com/msmolens/treetop/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/msmolens/treetop/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/msmolens/treetop/releases/tag/v1.3.0
 [1.2.0]: https://github.com/msmolens/treetop/releases/tag/v1.2.0
 [1.1.3]: https://github.com/msmolens/treetop/releases/tag/v1.1.3
 [1.1.2]: https://github.com/msmolens/treetop/releases/tag/v1.1.2
