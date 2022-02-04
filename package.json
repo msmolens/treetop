@@ -72,6 +72,10 @@
     "webextension-polyfill": "^0.8.0"
   },
   "dependencies": {},
+  "engines": {
+    "node": ">=14 <17",
+    "npm": ">=8"
+  },
   "webExt": {
     "sourceDir": "./dist"
   }
