@@ -16,7 +16,6 @@
     tooltips: browser.i18n.getMessage('optionDisplayTooltips'),
     showRecentlyVisited: browser.i18n.getMessage('optionShowRecentlyVisited'),
     colorScheme: browser.i18n.getMessage('optionColorScheme'),
-    colorSchemeSystem: browser.i18n.getMessage('optionColorSchemeSystem'),
     colorSchemeLight: browser.i18n.getMessage('optionColorSchemeLight'),
     colorSchemeDark: browser.i18n.getMessage('optionColorSchemeDark'),
     optionSourceAttributions: browser.i18n.getMessage('openSourceAttributions'),
@@ -172,17 +171,6 @@
   <h3>{strings.appearance}</h3>
   <h4>{strings.colorScheme}</h4>
   <div class="group">
-    <div>
-      <label>
-        <input
-          type="radio"
-          name="colorScheme"
-          value="system"
-          bind:group={options.colorScheme}
-          on:change={handleRadioChange} />
-        {strings.colorSchemeSystem}
-      </label>
-    </div>
     <div>
       <label>
         <input

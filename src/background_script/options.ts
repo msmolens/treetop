@@ -11,7 +11,7 @@ export const setDefaultOptions = async (): Promise<void> => {
     truncate: true,
     tooltips: true,
     showRecentlyVisited: true,
-    colorScheme: 'system',
+    colorScheme: 'light',
   };
 
   try {

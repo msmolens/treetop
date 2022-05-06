@@ -45,9 +45,6 @@ describe('Options', () => {
       .expect('optionColorScheme')
       .andReturn('color scheme');
     mockBrowser.i18n.getMessage
-      .expect('optionColorSchemeSystem')
-      .andReturn('system');
-    mockBrowser.i18n.getMessage
       .expect('optionColorSchemeLight')
       .andReturn('light');
     mockBrowser.i18n.getMessage
@@ -89,7 +86,6 @@ describe('Options', () => {
       expect(
         screen.getByLabelText(/^show recently visited/i)
       ).toBeInTheDocument();
-      expect(screen.getByLabelText(/^system/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/^light/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/^dark/i)).toBeInTheDocument();
       expect(
@@ -114,7 +110,6 @@ describe('Options', () => {
     expect(screen.getByLabelText(/^truncate/i)).not.toBeChecked();
     expect(screen.getByLabelText(/^tooltips/i)).toBeChecked();
     expect(screen.getByLabelText(/^show recently visited/i)).toBeChecked();
-    expect(screen.getByLabelText(/^system/i)).not.toBeChecked();
     expect(screen.getByLabelText(/^light/i)).toBeChecked();
     expect(screen.getByLabelText(/^dark/i)).not.toBeChecked();
   });

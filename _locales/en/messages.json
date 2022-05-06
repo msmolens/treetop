@@ -100,10 +100,6 @@
     "message": "Color scheme:",
     "description": "Title of option to choose a color scheme."
   },
-  "optionColorSchemeSystem": {
-    "message": "System",
-    "description": "Title of color scheme option to follow the system color scheme."
-  },
   "optionColorSchemeLight": {
     "message": "Light",
     "description": "Title of color scheme option to use a light color scheme."

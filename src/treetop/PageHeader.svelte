@@ -2,15 +2,18 @@
   import { createEventDispatcher } from 'svelte';
   import { elasticOut } from 'svelte/easing';
   import { fly } from 'svelte/transition';
-  import IconButton from '@smui/icon-button/styled';
+  import IconButton from '@smui/icon-button';
   import * as browser from 'webextension-polyfill';
 
   const dispatch = createEventDispatcher();
 
-  function openPreferences() {
+  function openPreferences(e: CustomEvent) {
     browser.runtime.openOptionsPage().catch(() => {
       dispatch('error');
     });
+
+    const element = e.currentTarget as HTMLElement;
+    element.blur();
   }
 </script>
 
@@ -76,7 +79,8 @@
     <div class="preferences">
       <IconButton
         aria-label={browser.i18n.getMessage('preferences')}
-        on:click={openPreferences}>
+        on:click={openPreferences}
+        ripple={false}>
         settings
       </IconButton>
     </div>

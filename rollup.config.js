@@ -34,12 +34,12 @@ export default [{
         css: false,
       }
     }),
-    typescript({ sourceMap: !production }),
     resolve({
       browser: true,
       dedupe: ['svelte']
     }),
     commonjs(),
+    typescript({ sourceMap: !production }),
     production && terser(),
     postcss({
       to: 'dist/treetop.bundle.css',
@@ -83,12 +83,12 @@ export default [{
         css: false,
       }
     }),
-    typescript({ sourceMap: !production }),
     resolve({
       browser: true,
       dedupe: ['svelte']
     }),
     commonjs(),
+    typescript({ sourceMap: !production }),
     production && terser(),
     postcss({
       extract: true,
@@ -116,12 +116,12 @@ export default [{
         css: false,
       }
     }),
-    typescript({ sourceMap: !production }),
     resolve({
       browser: true,
       dedupe: ['svelte']
     }),
     commonjs(),
+    typescript({ sourceMap: !production }),
     production && terser(),
     postcss({
       extract: true,
@@ -142,11 +142,11 @@ export default [{
     sourcemap: !production
   },
   plugins: [
-    typescript({ sourceMap: !production }),
     resolve({
       browser: true,
     }),
     commonjs(),
+    typescript({ sourceMap: !production }),
     production && terser(),
     copy({
       targets: [
@@ -154,6 +154,7 @@ export default [{
         { src: 'attributions.txt', dest: 'dist/' },
         { src: 'src/manifest.json', dest: 'dist/' },
         { src: 'src/icons/generated/icons/*', dest: 'dist/icons' },
+        { src: 'src/treetop/generated/*', dest: 'dist/' },
       ],
       verbose: true
     })
