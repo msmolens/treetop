@@ -1,5 +1,5 @@
+bracketSameLine = true
 singleQuote = true
 svelteAllowShorthand = true
-svelteBracketNewLine = false
 svelteSortOrder = "options-scripts-styles-markup"
 svelteStrictMode = false

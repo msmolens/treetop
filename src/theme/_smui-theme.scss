@@ -1,6 +1,11 @@
-@use '@material/theme' with ($primary: #ff4088, $surface: #fff);
+@use '@material/theme' with (
+  $primary: #ff4088,
+  $surface: #fff
+);
 
-@use '@material/typography' with ($font-family: unquote('Inter, sans-serif'));
+@use '@material/typography' with (
+  $font-family: unquote('Inter, sans-serif')
+);
 
 @use '@material/button';
 @use '@material/dialog';
