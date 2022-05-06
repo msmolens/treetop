@@ -1,6 +1,7 @@
 /* eslint no-irregular-whitespace: ["error", { "skipComments": true }] */
 
-import { get, Writable } from 'svelte/store';
+import type { Writable } from 'svelte/store';
+import { get } from 'svelte/store';
 import faker from 'faker';
 import type { Bookmarks } from 'webextension-polyfill';
 

@@ -1,6 +1,7 @@
 /* eslint no-irregular-whitespace: ["error", { "skipComments": true }] */
 
-import { get, Writable, writable } from 'svelte/store';
+import type { Writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
 import { render, screen } from '@testing-library/svelte';
 
 import { BOOKMARKS_ROOT_GUID } from '@Treetop/treetop/constants';

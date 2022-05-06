@@ -1,4 +1,5 @@
-import browser, { Action, Runtime, Tabs } from 'webextension-polyfill';
+import type { Action, Runtime, Tabs } from 'webextension-polyfill';
+import browser from 'webextension-polyfill';
 
 /**
  * Open the welcome page when the extension is installed.

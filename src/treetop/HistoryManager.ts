@@ -1,5 +1,6 @@
 import { get, writable } from 'svelte/store';
-import browser, { Bookmarks, History } from 'webextension-polyfill';
+import type { Bookmarks, History } from 'webextension-polyfill';
+import browser from 'webextension-polyfill';
 
 import { BOOKMARK_TREE_NODE_TYPE_BOOKMARK } from './constants';
 import * as Treetop from './types';

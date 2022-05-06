@@ -3,7 +3,8 @@
 import faker from 'faker';
 import type { Menus, Tabs } from 'webextension-polyfill';
 
-import { MenuItem, OnClickedCallback } from '@Treetop/treetop/menus/MenuItem';
+import type { OnClickedCallback } from '@Treetop/treetop/menus/MenuItem';
+import { MenuItem } from '@Treetop/treetop/menus/MenuItem';
 import { MenuManager } from '@Treetop/treetop/menus/MenuManager';
 
 let menuManager: MenuManager;
