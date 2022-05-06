@@ -5,7 +5,10 @@ import faker from 'faker';
 import FilterInput from '@Treetop/treetop/FilterInput.svelte';
 
 const setup = () => {
-  return render(FilterInput);
+  return {
+    user: userEvent.setup({ delay: null }),
+    ...render(FilterInput),
+  };
 };
 
 beforeEach(() => {
@@ -25,8 +28,8 @@ it('renders filter input', () => {
   expect(screen.queryByRole('button')).not.toBeInTheDocument();
 });
 
-it('dispatches input event when text is typed after debouncing', () => {
-  const { component } = setup();
+it('dispatches input event when text is typed after debouncing', async () => {
+  const { component, user } = setup();
 
   const callback = jest.fn();
   component.$on('input', callback);
@@ -34,7 +37,7 @@ it('dispatches input event when text is typed after debouncing', () => {
   const input = screen.getByLabelText(/^search$/i);
 
   const words = faker.random.words();
-  userEvent.type(input, words);
+  await user.type(input, words);
 
   expect(callback).not.toHaveBeenCalled();
   jest.runAllTimers();
@@ -43,13 +46,13 @@ it('dispatches input event when text is typed after debouncing', () => {
   // FIXME: Check event properties
   // https://github.com/sveltejs/svelte/issues/3119
 
-  userEvent.type(input, '{backspace}');
+  await user.type(input, '{backspace}');
 
   expect(callback).toHaveBeenCalledTimes(1);
   jest.runAllTimers();
   expect(callback).toHaveBeenCalledTimes(2);
 
-  userEvent.clear(input);
+  await user.clear(input);
 
   expect(callback).toHaveBeenCalledTimes(2);
   jest.runAllTimers();
@@ -57,7 +60,7 @@ it('dispatches input event when text is typed after debouncing', () => {
 });
 
 it('dispatches input event when enter is pressed', async () => {
-  const { component } = setup();
+  const { component, user } = setup();
 
   const callback = jest.fn();
   component.$on('input', callback);
@@ -65,9 +68,8 @@ it('dispatches input event when enter is pressed', async () => {
   const input = screen.getByLabelText(/^search$/i);
 
   const words = faker.random.words();
-  // eslint-disable-next-line @typescript-eslint/await-thenable
-  await userEvent.type(input, words);
-  userEvent.keyboard('[Enter]');
+  await user.type(input, words);
+  await user.keyboard('[Enter]');
 
   // Check that the event fired immediately
   // FIXME: Check event properties
@@ -81,13 +83,12 @@ it('dispatches input event when enter is pressed', async () => {
 });
 
 it('shows the clear button when text is entered', async () => {
-  setup();
+  const { user } = setup();
 
   const input = screen.getByLabelText(/^search$/i);
 
   const words = faker.random.words();
-  // eslint-disable-next-line @typescript-eslint/await-thenable
-  await userEvent.type(input, words);
+  await user.type(input, words);
 
   jest.runAllTimers();
 
@@ -99,7 +100,7 @@ it('shows the clear button when text is entered', async () => {
 });
 
 it('clears the input when the clear button is pressed', async () => {
-  const { component } = setup();
+  const { component, user } = setup();
 
   const callback = jest.fn();
   component.$on('input', callback);
@@ -107,9 +108,8 @@ it('clears the input when the clear button is pressed', async () => {
   const input = screen.getByLabelText(/^search$/i);
 
   const words = faker.random.words();
-  // eslint-disable-next-line @typescript-eslint/await-thenable
-  await userEvent.type(input, words);
-  userEvent.keyboard('[Enter]');
+  await user.type(input, words);
+  await user.keyboard('[Enter]');
 
   await waitFor(() => {
     expect(screen.getByRole('button')).toBeInTheDocument();
@@ -129,7 +129,7 @@ it('clears the input when the clear button is pressed', async () => {
 });
 
 it('clears the input when the escape is pressed', async () => {
-  const { component } = setup();
+  const { component, user } = setup();
 
   const callback = jest.fn();
   component.$on('input', callback);
@@ -137,9 +137,8 @@ it('clears the input when the escape is pressed', async () => {
   const input = screen.getByLabelText(/^search$/i);
 
   const words = faker.random.words();
-  // eslint-disable-next-line @typescript-eslint/await-thenable
-  await userEvent.type(input, words);
-  userEvent.keyboard('[Enter]');
+  await user.type(input, words);
+  await user.keyboard('[Enter]');
 
   await waitFor(() => {
     expect(screen.getByRole('button')).toBeInTheDocument();
@@ -147,7 +146,7 @@ it('clears the input when the escape is pressed', async () => {
 
   expect(callback).toHaveBeenCalledTimes(1);
 
-  userEvent.keyboard('{Escape}');
+  await user.keyboard('{Escape}');
 
   await waitFor(() => {
     expect(callback).toHaveBeenCalledTimes(2);

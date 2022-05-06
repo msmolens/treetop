@@ -4,16 +4,19 @@ import userEvent from '@testing-library/user-event';
 import PageHeader from '@Treetop/treetop/PageHeader.svelte';
 
 const setup = () => {
-  render(PageHeader);
+  return {
+    user: userEvent.setup(),
+    ...render(PageHeader),
+  };
 };
 
 beforeEach(() => {
   mockBrowser.i18n.getMessage.expect('preferences');
-
-  setup();
 });
 
 it('renders page header', () => {
+  setup();
+
   expect(screen.getByRole('banner')).toBeInTheDocument();
   expect(screen.getByRole('button', { hidden: true })).toBeInTheDocument();
 
@@ -24,15 +27,19 @@ it('renders page header', () => {
 });
 
 it('logo contents', () => {
+  setup();
+
   const logo = screen.getByRole('banner');
   expect(logo).toHaveTextContent('Treetop');
 });
 
-it('preferences button', () => {
+it('preferences button', async () => {
+  const { user } = setup();
+
   const button = screen.getByRole('button', { hidden: true });
   expect(button).toHaveTextContent('settings');
 
   mockBrowser.runtime.openOptionsPage.expect().andResolve();
 
-  userEvent.click(button);
+  await user.click(button);
 });
