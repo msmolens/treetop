@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
+- Update Svelte Material UI to 6.0.0-beta.16.
+- Remove option to follow the system color scheme.
 
 ## [1.3.0] - 2021-10-02
 ### Added

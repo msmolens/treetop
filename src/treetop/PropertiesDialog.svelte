@@ -1,9 +1,10 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import type { MDCDialogCloseEvent } from '@material/dialog';
-  import Button, { Label } from '@smui/button/styled';
-  import Dialog, { Actions, Content, Title } from '@smui/dialog/styled';
-  import TextField from '@smui/textfield/styled';
+  import Button, { Label } from '@smui/button';
+  import Dialog, { Actions, Content, Title } from '@smui/dialog';
+  import type { TextfieldComponentDev } from '@smui/textfield';
+  import TextField from '@smui/textfield';
   import truncate from 'lodash-es/truncate';
   import * as browser from 'webextension-polyfill';
 
@@ -15,8 +16,7 @@
   export let title: string;
   export let url: string | undefined;
 
-  let dialog: Dialog;
-  let nameLabel: TextField;
+  let nameLabel: TextfieldComponentDev;
 
   function handleOpened() {
     nameLabel.focus();
@@ -30,7 +30,8 @@
     }
   }
 
-  function handleTextFieldFocus(e: FocusEvent) {
+  function handleTextFieldFocus(e: CustomEvent | FocusEvent) {
+    e = e as FocusEvent;
     const inputElement = e.currentTarget as HTMLInputElement;
     inputElement.select();
   }
@@ -82,12 +83,12 @@
 </script>
 
 <Dialog
-  bind:this={dialog}
   bind:open
+  class="treetopDialog"
   aria-labelledby="dialog-title"
   aria-describedby="dialog-content"
-  on:MDCDialog:opened={handleOpened}
-  on:MDCDialog:closed={handleClosed}>
+  on:SMUIDialog:opened={handleOpened}
+  on:SMUIDialog:closed={handleClosed}>
   <Title id="dialog-title">{header}</Title>
   <Content id="dialog-content">
     <div>

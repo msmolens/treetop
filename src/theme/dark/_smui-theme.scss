@@ -1,4 +1,4 @@
-@use '@material/theme' with ($primary: #ff4088, $surface: #fff);
+@use '@material/theme' with ($primary: #ff4088, $surface: #202023);
 
 @use '@material/typography' with ($font-family: unquote('Inter, sans-serif'));
 
@@ -28,10 +28,10 @@
 }
 
 .searchBox .mdc-icon-button {
-  @include icon-button.ink-color(#00000099);
+  @include icon-button.ink-color(#ffffff99);
 
   &:hover {
-    @include icon-button.ink-color(#000000de);
+    @include icon-button.ink-color(#ffffffde);
   }
 
   &.mdc-icon-button--display-flex {

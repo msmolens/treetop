@@ -3,8 +3,9 @@
   import type { Unsubscriber, Writable } from 'svelte/store';
   import { get, writable } from 'svelte/store';
   import { fade } from 'svelte/transition';
-  import LinearProgress from '@smui/linear-progress/styled';
-  import Snackbar, { Label } from '@smui/snackbar/styled';
+  import LinearProgress from '@smui/linear-progress';
+  import type { SnackbarComponentDev } from '@smui/snackbar';
+  import Snackbar, { Label } from '@smui/snackbar';
   import type { Bookmarks, History, Menus, Tabs } from 'webextension-polyfill';
   import * as browser from 'webextension-polyfill';
 
@@ -52,7 +53,7 @@
     'showRecentlyVisited',
     true
   );
-  const colorScheme = preferencesManager.createStore('colorScheme', 'system');
+  const colorScheme = preferencesManager.createStore('colorScheme', 'light');
 
   // Make select preferences available to other components
   setContext('truncate', truncate);
@@ -104,8 +105,8 @@
   // Error notification
   //
 
-  let errorSnackbar: Snackbar;
-  let errorMessage: string | null;
+  let errorSnackbar: SnackbarComponentDev;
+  let errorMessage: string;
 
   //
   // Delete folder confirmation dialog
@@ -583,6 +584,7 @@
 </script>
 
 <style>
+  :global(html),
   :global(body) {
     background-color: var(--treetop-background-color);
     color: var(--treetop-color);
@@ -612,11 +614,19 @@
   }
 </style>
 
+<svelte:head>
+  {#if $colorScheme === 'light' || $colorScheme === 'system'}
+    <link rel="stylesheet" href="/smui.css" />
+  {:else if $colorScheme === 'dark'}
+    <link rel="stylesheet" href="/smui-dark.css" />
+  {/if}
+</svelte:head>
+
 {#await ready}
   <div class="progressContainer">
     <img src={icon} alt="Treetop Icon" />
     <div class="progress">
-      <LinearProgress indeterminate />
+      <LinearProgress class="treetopLinearProgress" indeterminate />
     </div>
   </div>
 {:then rootNodeId}
@@ -649,6 +659,10 @@
 {/await}
 
 <!-- Error notification -->
-<Snackbar bind:this={errorSnackbar} leading labelText={errorMessage}>
+<Snackbar
+  bind:this={errorSnackbar}
+  class="treetopSnackbar"
+  leading
+  labelText={errorMessage}>
   <Label />
 </Snackbar>

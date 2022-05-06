@@ -6,20 +6,6 @@ body {
  * Treetop global colors
  */
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --treetop-background-color: #fff;
-    --treetop-color: #212121;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --treetop-background-color: #202023;
-    --treetop-color: #e8e8e8;
-  }
-}
-
 .colorSchemeLight {
   --treetop-background-color: #fff;
   --treetop-color: #212121;

@@ -2,10 +2,11 @@
   /* eslint-disable simple-import-sort/imports */
 
   import { createEventDispatcher, onMount } from 'svelte';
-  import TextField from '@smui/textfield/styled';
+  import TextField from '@smui/textfield';
   // FIXME: IconButton must appear after TextField, otherwise custom
   // TextField styles aren't applied correctly
-  import IconButton from '@smui/icon-button/styled';
+  import IconButton from '@smui/icon-button';
+  import type { IconButtonComponentDev } from '@smui/icon-button';
   import debounce from 'lodash-es/debounce';
   import * as browser from 'webextension-polyfill';
 
@@ -13,7 +14,7 @@
   let filter = '';
 
   // Icon button
-  let iconButton: IconButton;
+  let iconButton: IconButtonComponentDev;
 
   // Debounce duration for typing in filter input (ms)
   const FILTER_DEBOUNCE_MS = 275;
@@ -28,7 +29,7 @@
     // Override button's type to disconnect it from the form. Otherwise,
     // pressing enter in the text field to submit the form causes a button
     // click, which clears the form.
-    iconButton.getElement().type = 'button';
+    (iconButton.getElement() as HTMLButtonElement).type = 'button';
   });
 
   /**
@@ -72,7 +73,8 @@
   /**
    * Clear filter input when user presses Escape.
    */
-  function onKeyDown(e: KeyboardEvent) {
+  function onKeyDown(e: CustomEvent | KeyboardEvent) {
+    e = e as KeyboardEvent;
     if (e.key === 'Escape') {
       clearFilterInput();
     }
