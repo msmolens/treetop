@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   /* eslint-disable simple-import-sort/imports */
 
   import { createEventDispatcher, onMount } from 'svelte';

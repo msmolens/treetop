@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { onMount } from 'svelte';
   import type { Awaited } from 'treetop/types';
   import * as browser from 'webextension-polyfill';

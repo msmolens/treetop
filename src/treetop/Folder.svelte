@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { getContext } from 'svelte';
   import type { Writable } from 'svelte/store';
   import { get } from 'svelte/store';
