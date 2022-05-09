@@ -27,8 +27,8 @@ module.exports = {
     // Fix syntax error when testing components that use SMUI.
     // https://github.com/facebook/jest/issues/6229
     // https://stackoverflow.com/questions/60622265/unable-to-use-jest-to-test-svelte-components-which-import-scss-from-inside-node
-    '^.+\\.(css|less|scss)$': 'babel-jest',
-    '^.+\\.svg$': 'babel-jest',
+    '^.+\\.(css|less|scss)$': '<rootdir>/__mocks__/styleMock.js',
+    '^.+\\.svg$': '<rootDir>/__mocks__/fileMock.js',
   },
   setupFilesAfterEnv: ['@testing-library/jest-dom/extend-expect', './src/setupTests.ts'],
   collectCoverage: true,
