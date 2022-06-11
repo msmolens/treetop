@@ -12,10 +12,10 @@ module.exports = {
     '^.+\\.ts$': 'ts-jest',
     "^.+\\.(js|jsx)$": 'babel-jest'
   },
-  // Allow transpiling SMUI and lodash-es modules.
+  // Allow transpiling specific modules.
   // https://jestjs.io/docs/en/configuration#transformignorepatterns-arraystring
   transformIgnorePatterns: [
-    "node_modules/(?!(@smui|lodash-es)/)"
+    "node_modules/(?!(@smui|chalk|lodash-es)/)"
   ],
   moduleFileExtensions: [
     'js',
@@ -29,6 +29,14 @@ module.exports = {
     // https://stackoverflow.com/questions/60622265/unable-to-use-jest-to-test-svelte-components-which-import-scss-from-inside-node
     '^.+\\.(css|less|scss)$': '<rootdir>/__mocks__/styleMock.js',
     '^.+\\.svg$': '<rootDir>/__mocks__/fileMock.js',
+
+    // Work around errors like the following when running tests:
+    //
+    //     Cannot find module '#ansi-styles' from 'node_modules/chalk/source/index.js
+    //
+    // See https://github.com/facebook/jest/issues/12270.
+    "#ansi-styles": "<rootDir>/node_modules/chalk/source/vendor/ansi-styles/index.js",
+    "#supports-color": "<rootDir>/node_modules/chalk/source/vendor/supports-color/index.js",
   },
   setupFilesAfterEnv: ['@testing-library/jest-dom/extend-expect', './src/setupTests.ts'],
   collectCoverage: true,
