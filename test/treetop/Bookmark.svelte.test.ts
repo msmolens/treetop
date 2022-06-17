@@ -159,25 +159,24 @@ describe('tooltips option', () => {
 });
 
 describe('sets class based on last visit time', () => {
-  it.each`
-    deltaHours        | className
-    ${0}              | ${'visitedPastDay'}
-    ${1}              | ${'visitedPastDay'}
-    ${4}              | ${'visitedPastDay'}
-    ${12}             | ${'visitedPastDay'}
-    ${20}             | ${'visitedPastDay'}
-    ${24 - 0.001}     | ${'visitedPastDay'}
-    ${24 + 0.001}     | ${'visitedPastTwoDays'}
-    ${24 + 1}         | ${'visitedPastTwoDays'}
-    ${2 * 24 - 0.001} | ${'visitedPastTwoDays'}
-    ${2 * 24 + 0.001} | ${'visitedPastThreeDays'}
-    ${3 * 24 - 0.001} | ${'visitedPastThreeDays'}
-    ${3 * 24 + 0.001} | ${'visitedPastWeek'}
-    ${4 * 24}         | ${'visitedPastWeek'}
-    ${5 * 24}         | ${'visitedPastWeek'}
-    ${6 * 24}         | ${'visitedPastWeek'}
-    ${7 * 24 - 0.001} | ${'visitedPastWeek'}
-  `(
+  it.each([
+    { deltaHours: 0, className: 'visitedPastDay' },
+    { deltaHours: 1, className: 'visitedPastDay' },
+    { deltaHours: 4, className: 'visitedPastDay' },
+    { deltaHours: 12, className: 'visitedPastDay' },
+    { deltaHours: 20, className: 'visitedPastDay' },
+    { deltaHours: 24 - 0.001, className: 'visitedPastDay' },
+    { deltaHours: 24 + 0.001, className: 'visitedPastTwoDays' },
+    { deltaHours: 24 + 1, className: 'visitedPastTwoDays' },
+    { deltaHours: 2 * 24 - 0.001, className: 'visitedPastTwoDays' },
+    { deltaHours: 2 * 24 + 0.001, className: 'visitedPastThreeDays' },
+    { deltaHours: 3 * 24 - 0.001, className: 'visitedPastThreeDays' },
+    { deltaHours: 3 * 24 + 0.001, className: 'visitedPastWeek' },
+    { deltaHours: 4 * 24, className: 'visitedPastWeek' },
+    { deltaHours: 5 * 24, className: 'visitedPastWeek' },
+    { deltaHours: 6 * 24, className: 'visitedPastWeek' },
+    { deltaHours: 7 * 24 - 0.001, className: 'visitedPastWeek' },
+  ])(
     'visited $deltaHours hours ago -> $className',
     ({ deltaHours, className }) => {
       const deltaMs = deltaHours * MILLISECONDS_PER_HOUR;

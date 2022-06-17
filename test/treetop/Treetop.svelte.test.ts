@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { cleanup, render, screen, waitFor } from '@testing-library/svelte';
 
 import Treetop from '@Treetop/treetop/Treetop.svelte';
@@ -22,7 +23,7 @@ describe('Treetop', () => {
     //
 
     // Preferences manager
-    mockBrowser.storage.onChanged.addListener.expect(expect.anything());
+    mockBrowser.storage.onChanged.addListener.expect(expect.any(Function));
 
     // Delete folder confirmation dialog
     mockBrowser.i18n.getMessage.expect('dialogHeadingDeleteFolder');
@@ -43,9 +44,9 @@ describe('Treetop', () => {
     //
 
     // Menu event handlers
-    mockBrowser.menus.onShown.addListener.expect(expect.anything());
-    mockBrowser.menus.onHidden.addListener.expect(expect.anything());
-    mockBrowser.menus.onClicked.addListener.expect(expect.anything());
+    mockBrowser.menus.onShown.addListener.expect(expect.any(Function));
+    mockBrowser.menus.onHidden.addListener.expect(expect.any(Function));
+    mockBrowser.menus.onClicked.addListener.expect(expect.any(Function));
 
     //
     // init()
@@ -55,14 +56,14 @@ describe('Treetop', () => {
     mockBrowser.storage.local.get.expect.andResolve({});
 
     // Bookmark event handlers
-    mockBrowser.bookmarks.onCreated.addListener.expect(expect.anything());
-    mockBrowser.bookmarks.onRemoved.addListener.expect(expect.anything());
-    mockBrowser.bookmarks.onChanged.addListener.expect(expect.anything());
-    mockBrowser.bookmarks.onMoved.addListener.expect(expect.anything());
+    mockBrowser.bookmarks.onCreated.addListener.expect(expect.any(Function));
+    mockBrowser.bookmarks.onRemoved.addListener.expect(expect.any(Function));
+    mockBrowser.bookmarks.onChanged.addListener.expect(expect.any(Function));
+    mockBrowser.bookmarks.onMoved.addListener.expect(expect.any(Function));
 
     // History event handlers
-    mockBrowser.history.onVisited.addListener.expect(expect.anything());
-    mockBrowser.history.onVisitRemoved.addListener.expect(expect.anything());
+    mockBrowser.history.onVisited.addListener.expect(expect.any(Function));
+    mockBrowser.history.onVisitRemoved.addListener.expect(expect.any(Function));
 
     // Load bookmarks
     const bookmarksTree = createBrowserBookmarksTree();
@@ -87,9 +88,9 @@ describe('Treetop', () => {
     // onDestroy
     //
 
-    mockBrowser.menus.onShown.removeListener.expect(expect.anything());
-    mockBrowser.menus.onHidden.removeListener.expect(expect.anything());
-    mockBrowser.menus.onClicked.removeListener.expect(expect.anything());
+    mockBrowser.menus.onShown.removeListener.expect(expect.any(Function));
+    mockBrowser.menus.onHidden.removeListener.expect(expect.any(Function));
+    mockBrowser.menus.onClicked.removeListener.expect(expect.any(Function));
 
     cleanup();
   });
