@@ -1,5 +1,4 @@
-import type { Writable } from 'svelte/store';
-import { get } from 'svelte/store';
+import { type Writable, get } from 'svelte/store';
 
 import {
   BOOKMARKS_MENU_GUID,
@@ -9,8 +8,7 @@ import {
 } from '@Treetop/treetop/constants';
 import type * as Treetop from '@Treetop/treetop/types';
 
-import type { OnClickedCallback } from './MenuItem';
-import { MenuItem } from './MenuItem';
+import { type OnClickedCallback, MenuItem } from './MenuItem';
 
 /**
  * Menu item to delete a bookmark or folder.

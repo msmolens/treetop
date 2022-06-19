@@ -1,5 +1,4 @@
-import type { Writable } from 'svelte/store';
-import { writable } from 'svelte/store';
+import { type Writable, writable } from 'svelte/store';
 import { render, screen } from '@testing-library/svelte';
 import faker from 'faker';
 import escapeRegExp from 'lodash-es/escapeRegExp';

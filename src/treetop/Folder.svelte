@@ -1,7 +1,6 @@
 <script lang="ts">
   import { getContext } from 'svelte';
-  import type { Writable } from 'svelte/store';
-  import { get } from 'svelte/store';
+  import { type Writable, get } from 'svelte/store';
   import * as browser from 'webextension-polyfill';
 
   import Bookmark from './Bookmark.svelte';

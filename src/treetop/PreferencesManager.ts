@@ -1,7 +1,5 @@
-import type { Writable } from 'svelte/store';
-import { writable } from 'svelte/store';
-import type { Storage } from 'webextension-polyfill';
-import browser from 'webextension-polyfill';
+import { type Writable, writable } from 'svelte/store';
+import browser, { type Storage } from 'webextension-polyfill';
 
 import type * as Treetop from './types';
 
