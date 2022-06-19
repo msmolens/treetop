@@ -1,11 +1,14 @@
 <script lang="ts">
   import { onDestroy, onMount, setContext } from 'svelte';
-  import type { Unsubscriber, Writable } from 'svelte/store';
-  import { get, writable } from 'svelte/store';
+  import {
+    type Unsubscriber,
+    type Writable,
+    get,
+    writable,
+  } from 'svelte/store';
   import { fade } from 'svelte/transition';
   import LinearProgress from '@smui/linear-progress';
-  import type { SnackbarComponentDev } from '@smui/snackbar';
-  import Snackbar, { Label } from '@smui/snackbar';
+  import Snackbar, { type SnackbarComponentDev, Label } from '@smui/snackbar';
   import type { Bookmarks, History, Menus, Tabs } from 'webextension-polyfill';
   import * as browser from 'webextension-polyfill';
 

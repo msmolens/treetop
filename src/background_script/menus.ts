@@ -1,5 +1,4 @@
-import type { Menus } from 'webextension-polyfill';
-import browser from 'webextension-polyfill';
+import browser, { type Menus } from 'webextension-polyfill';
 
 /**
  * Create context menus.

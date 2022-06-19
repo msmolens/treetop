@@ -1,5 +1,4 @@
-import type { Menus, Tabs } from 'webextension-polyfill';
-import browser from 'webextension-polyfill';
+import browser, { type Menus, type Tabs } from 'webextension-polyfill';
 
 import type { MenuItem } from './MenuItem';
 

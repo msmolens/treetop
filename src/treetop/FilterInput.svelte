@@ -5,8 +5,7 @@
   import TextField from '@smui/textfield';
   // FIXME: IconButton must appear after TextField, otherwise custom
   // TextField styles aren't applied correctly
-  import IconButton from '@smui/icon-button';
-  import type { IconButtonComponentDev } from '@smui/icon-button';
+  import IconButton, { type IconButtonComponentDev } from '@smui/icon-button';
   import debounce from 'lodash-es/debounce';
   import * as browser from 'webextension-polyfill';
 

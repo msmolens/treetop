@@ -3,8 +3,7 @@
   import type { MDCDialogCloseEvent } from '@material/dialog';
   import Button, { Label } from '@smui/button';
   import Dialog, { Actions, Content, Title } from '@smui/dialog';
-  import type { TextfieldComponentDev } from '@smui/textfield';
-  import TextField from '@smui/textfield';
+  import TextField, { type TextfieldComponentDev } from '@smui/textfield';
   import truncate from 'lodash-es/truncate';
   import * as browser from 'webextension-polyfill';
 
