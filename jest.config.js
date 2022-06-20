@@ -45,4 +45,5 @@ module.exports = {
     '!src/types/**',
     '!**/node_modules/**',
   ],
+  coverageProvider: 'v8',
 };
