@@ -38,7 +38,7 @@ module.exports = {
     "#ansi-styles": "<rootDir>/node_modules/chalk/source/vendor/ansi-styles/index.js",
     "#supports-color": "<rootDir>/node_modules/chalk/source/vendor/supports-color/index.js",
   },
-  setupFilesAfterEnv: ['@testing-library/jest-dom/extend-expect', './src/setupTests.ts'],
+  setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
   collectCoverage: true,
   collectCoverageFrom: [
     'src/**/*.{ts,tsx,js,jsx,svelte}',
