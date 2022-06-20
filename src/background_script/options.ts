@@ -1,3 +1,4 @@
+import get from 'lodash-es/get';
 import browser from 'webextension-polyfill';
 
 import type * as Treetop from '@Treetop/treetop/types';
@@ -11,6 +12,11 @@ export const setDefaultOptions = async (
   try {
     // Get stored options
     const storedOptions = await browser.storage.local.get();
+
+    // Remove values that are no longer supported from stored options
+    if (get(storedOptions, 'colorScheme') === 'system') {
+      delete storedOptions.colorScheme;
+    }
 
     // Merge stored options into default options
     const updatedOptions = {

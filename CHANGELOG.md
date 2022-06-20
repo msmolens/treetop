@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [1.4.1] - 2022-06-20
+### Fixed
+- Fix color scheme when legacy 'system' option is stored.
+
 ## [1.4.0] - 2022-06-19
 ### Changed
 - Update Svelte Material UI to 6.0.0-beta.16.
@@ -58,7 +62,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - Initial release.
 
-[Unreleased]: https://github.com/msmolens/treetop/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/msmolens/treetop/compare/v1.4.1...HEAD
+[1.4.1]: https://github.com/msmolens/treetop/compare/v1.4.1...HEAD
 [1.4.0]: https://github.com/msmolens/treetop/releases/tag/v1.4.0
 [1.3.0]: https://github.com/msmolens/treetop/releases/tag/v1.3.0
 [1.2.0]: https://github.com/msmolens/treetop/releases/tag/v1.2.0

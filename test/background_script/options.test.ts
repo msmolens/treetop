@@ -77,3 +77,41 @@ it('sets default options and leaves existing options unchanged', async () => {
 
   await setDefaultOptions(defaultOptions);
 });
+
+describe('colorScheme option', () => {
+  beforeEach(() => {
+    defaultOptions = {
+      colorScheme: 'light',
+    };
+  });
+
+  it("overwrites legacy 'system' colorScheme option", async () => {
+    const storedOptions = {
+      colorScheme: 'system',
+    };
+
+    const updatedOptions = {
+      ...defaultOptions,
+    };
+
+    mockBrowser.storage.local.get.expect.andResolve(storedOptions);
+    mockBrowser.storage.local.set.expect(updatedOptions);
+
+    await setDefaultOptions(defaultOptions);
+  });
+
+  it("doesn't overwrite non-legacy colorScheme option", async () => {
+    const storedOptions = {
+      colorScheme: 'dark',
+    };
+
+    const updatedOptions = {
+      ...storedOptions,
+    };
+
+    mockBrowser.storage.local.get.expect.andResolve(storedOptions);
+    mockBrowser.storage.local.set.expect(updatedOptions);
+
+    await setDefaultOptions(defaultOptions);
+  });
+});
