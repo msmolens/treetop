@@ -1,22 +1,27 @@
 import browser from 'webextension-polyfill';
 
-/**
- * Set default options.
- */
-export const setDefaultOptions = async (): Promise<void> => {
-  const defaultOptions = {
-    showBookmarksToolbar: true,
-    showBookmarksMenu: true,
-    showOtherBookmarks: true,
-    truncate: true,
-    tooltips: true,
-    showRecentlyVisited: true,
-    colorScheme: 'light',
-  };
+import type * as Treetop from '@Treetop/treetop/types';
 
+/**
+ * Set default options, leaving existing options unchanged.
+ */
+export const setDefaultOptions = async (
+  defaultOptions: Record<string, Treetop.PreferenceValue>
+): Promise<void> => {
   try {
-    await browser.storage.local.set(defaultOptions);
+    // Get stored options
+    const storedOptions = await browser.storage.local.get();
+
+    // Merge stored options into default options
+    const updatedOptions = {
+      ...defaultOptions,
+      ...storedOptions,
+    };
+
+    // Update stored options
+    await browser.storage.local.set(updatedOptions);
   } catch (err) {
     console.error('Error setting default options:', err);
+    throw err;
   }
 };
