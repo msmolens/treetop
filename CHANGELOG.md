@@ -4,8 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
+
+## [1.4.0] - 2022-06-19
 ### Changed
 - Update Svelte Material UI to 6.0.0-beta.16.
+- Update development and testing dependencies.
 
 ### Removed
 - Remove option to follow the system color scheme.
@@ -37,7 +40,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fix visited bookmark styling.
 
 ## [1.1.1] - 2020-12-04
-### Changed
+### Fixed
 - Fix bad 1.1.0 release on addons.mozilla.org.
 
 ## [1.1.0] - 2020-12-04
@@ -47,13 +50,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [1.0.1] - 2020-11-23
 ### Changed
 - Improve timer that updates when bookmarks were last visited.
+
+### Fixed
 - Fix setting the document title.
 
 ## [1.0.0] - 2020-11-10
 ### Added
 - Initial release.
 
-[Unreleased]: https://github.com/msmolens/treetop/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/msmolens/treetop/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/msmolens/treetop/releases/tag/v1.4.0
 [1.3.0]: https://github.com/msmolens/treetop/releases/tag/v1.3.0
 [1.2.0]: https://github.com/msmolens/treetop/releases/tag/v1.2.0
 [1.1.3]: https://github.com/msmolens/treetop/releases/tag/v1.1.3
