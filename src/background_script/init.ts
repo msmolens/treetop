@@ -15,7 +15,17 @@ export const init = async (): Promise<void> => {
   browser.browserAction.onClicked.addListener(openTreetop);
 
   // Set default options
-  await setDefaultOptions();
+  const options = {
+    showBookmarksToolbar: true,
+    showBookmarksMenu: true,
+    showOtherBookmarks: true,
+    truncate: true,
+    tooltips: true,
+    showRecentlyVisited: true,
+    colorScheme: 'light',
+  };
+
+  await setDefaultOptions(options);
 
   // Create context menus
   createContextMenus();
