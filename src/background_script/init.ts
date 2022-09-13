@@ -1,7 +1,8 @@
 import browser from 'webextension-polyfill';
 
 import { createContextMenus } from './menus';
-import { openTreetop, openWelcome } from './open';
+import { openTreetop } from './open';
+import { openWelcome } from './open-welcome';
 import { setDefaultOptions } from './options';
 
 /**

@@ -2,12 +2,14 @@ import { mockEvent } from 'mockzilla-webextension';
 
 import { init } from '@Treetop/background_script/init';
 import { createContextMenus } from '@Treetop/background_script/menus';
-import { openTreetop, openWelcome } from '@Treetop/background_script/open';
+import { openTreetop } from '@Treetop/background_script/open';
+import { openWelcome } from '@Treetop/background_script/open-welcome';
 import { setDefaultOptions } from '@Treetop/background_script/options';
 
 jest
   .mock('@Treetop/background_script/menus')
   .mock('@Treetop/background_script/open')
+  .mock('@Treetop/background_script/open-welcome')
   .mock('@Treetop/background_script/options');
 
 it('initializes extension', async () => {
