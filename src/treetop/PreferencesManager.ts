@@ -3,6 +3,10 @@ import browser, { type Storage } from 'webextension-polyfill';
 
 import type * as Treetop from './types';
 
+type StorageChangedCallback = Parameters<
+  typeof browser.storage.onChanged.addListener
+>[0];
+
 /**
  * Class to create and manage updating preference stores.
  */
@@ -13,10 +17,8 @@ export class PreferencesManager {
   >();
 
   // Bound event handler
-  private readonly onChanged = (
-    changes: { [key: string]: Storage.StorageChange },
-    areaName: string
-  ) => this.handleStorageChanged(changes, areaName);
+  private readonly onChanged: StorageChangedCallback = (changes, areaName) =>
+    this.handleStorageChanged(changes, areaName);
 
   constructor() {
     // Register storage event handler
@@ -56,7 +58,7 @@ export class PreferencesManager {
   /**
    * Update preferences stores when storage values change.
    */
-  handleStorageChanged(
+  private handleStorageChanged(
     changes: { [key: string]: Storage.StorageChange },
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _areaName: string

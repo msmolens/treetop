@@ -1,5 +1,6 @@
 import { type Writable, get } from 'svelte/store';
 import faker from 'faker';
+import { mockEvent, MockzillaEventOf } from 'mockzilla-webextension';
 
 import { PreferencesManager } from '@Treetop/treetop/PreferencesManager';
 import type * as Treetop from '@Treetop/treetop/types';
@@ -82,6 +83,7 @@ describe('loadPreferences', () => {
 });
 
 describe('handleStoreChanged', () => {
+  let storageOnChanged: MockzillaEventOf<typeof mockBrowser.storage.onChanged>;
   let stringStore: Writable<Treetop.PreferenceValue>;
   let numberStore: Writable<Treetop.PreferenceValue>;
   let booleanStore: Writable<Treetop.PreferenceValue>;
@@ -90,7 +92,7 @@ describe('handleStoreChanged', () => {
   let booleanArrayStore: Writable<Treetop.PreferenceValue>;
 
   beforeEach(() => {
-    mockBrowser.storage.onChanged.addListener.expect;
+    storageOnChanged = mockEvent(mockBrowser.storage.onChanged);
     preferencesManager = new PreferencesManager();
     stringStore = preferencesManager.createStore('string', 'value');
     numberStore = preferencesManager.createStore('number', 3);
@@ -123,7 +125,8 @@ describe('handleStoreChanged', () => {
         newValue: [false],
       },
     };
-    preferencesManager.handleStorageChanged(changes, 'local');
+
+    storageOnChanged.emit(changes, 'local');
 
     expect(get(stringStore)).toBe('value2');
     expect(get(numberStore)).toBe(4);
@@ -135,6 +138,6 @@ describe('handleStoreChanged', () => {
 
   it('ignores store changes without a corresponding store', () => {
     const changes = { other: { newValue: true } };
-    preferencesManager.handleStorageChanged(changes, 'local');
+    storageOnChanged.emit(changes, 'local');
   });
 });
