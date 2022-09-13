@@ -192,7 +192,6 @@ export class BookmarksManager {
    */
   async handleBookmarkChanged(
     id: string,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _changeInfo: Bookmarks.OnChangedChangeInfoType
   ): Promise<void> {
     if (this.nodeStoreMap.has(id)) {

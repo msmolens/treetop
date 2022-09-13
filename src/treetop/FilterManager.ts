@@ -140,10 +140,7 @@ export class FilterManager {
   /**
    * Update the FilterSet for a removed bookmark.
    */
-  handleBookmarkRemoved(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _id: string
-  ): void {
+  handleBookmarkRemoved(_id: string): void {
     if (!this.inBatchRemove) {
       this.refreshFilter();
     }
@@ -153,9 +150,7 @@ export class FilterManager {
    * Update the FilterSet for a modified bookmark.
    */
   handleBookmarkChanged(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _id: string,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _changeInfo: Bookmarks.OnChangedChangeInfoType
   ): void {
     this.refreshFilter();
@@ -166,9 +161,7 @@ export class FilterManager {
    * new offset within its folder.
    */
   handleBookmarkMoved(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _id: string,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _moveInfo: Bookmarks.OnMovedMoveInfoType
   ): void {
     this.refreshFilter();

@@ -60,7 +60,6 @@ export class PreferencesManager {
    */
   private handleStorageChanged(
     changes: { [key: string]: Storage.StorageChange },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _areaName: string
   ): void {
     for (const key of Object.keys(changes)) {
