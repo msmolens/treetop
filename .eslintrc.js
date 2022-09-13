@@ -4,13 +4,13 @@ module.exports = {
     browser: true,
     webextensions: true,
   },
-  parser: "@typescript-eslint/parser",
+  parser: '@typescript-eslint/parser',
   parserOptions: {
-    'ecmaVersion': 2019,
-    'sourceType': 'module',
-    'tsconfigRootDir': __dirname,
-    'project': ['./tsconfig.json'],
-    'extraFileExtensions': ['.svelte'],
+    ecmaVersion: 2019,
+    sourceType: 'module',
+    tsconfigRootDir: __dirname,
+    project: ['./tsconfig.json'],
+    extraFileExtensions: ['.svelte'],
   },
   extends: [
     'eslint:recommended',
@@ -18,11 +18,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'prettier',
   ],
-  plugins: [
-    '@typescript-eslint',
-    'simple-import-sort',
-    'svelte3',
-  ],
+  plugins: ['@typescript-eslint', 'simple-import-sort', 'svelte3'],
   overrides: [
     {
       files: ['*.svelte'],
@@ -31,7 +27,7 @@ module.exports = {
         // Disable rule that gives false positives for store subscriptions
         // https://github.com/sveltejs/eslint-plugin-svelte3/issues/104
         '@typescript-eslint/no-unsafe-call': 'off',
-      }
+      },
     },
   ],
   settings: {
@@ -45,20 +41,20 @@ module.exports = {
         groups: [
           // Configuration based on https://github.com/lydell/eslint-plugin-simple-import-sort/blob/7b29c07/examples/.eslintrc.js#L71-L89
           // Packages.
-          ["^svelte", "^@?\\w"],
+          ['^svelte', '^@?\\w'],
           // Internal packages.
-          ["^(@Treetop)(/.*|$)"],
+          ['^(@Treetop)(/.*|$)'],
           // Side effect imports.
-          ["^\\u0000"],
+          ['^\\u0000'],
           // Parent imports. Put `..` last.
-          ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
+          ['^\\.\\.(?!/?$)', '^\\.\\./?$'],
           // Other relative imports. Put same-folder imports and `.` last.
-          ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
+          ['^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'],
           // Style imports.
-          ["^.+\\.s?css$"],
-        ]
-      }
+          ['^.+\\.s?css$'],
+        ],
+      },
     ],
     'simple-import-sort/exports': 'error',
-  }
+  },
 };
