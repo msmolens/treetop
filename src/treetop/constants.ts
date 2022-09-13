@@ -1,5 +1,5 @@
 // Bookmark roots have special permanent GUIDs, see
-// firefox-78.0.1/toolkit/components/places/Bookmarks.jsm#L155-159
+// https://searchfox.org/mozilla-central/rev/7b36c8b83337c4b4cdfd4ccc2168f3491a86811b/toolkit/components/places/Bookmarks.sys.mjs#139-147
 export const BOOKMARKS_ROOT_GUID = 'root________';
 export const BOOKMARKS_TOOLBAR_GUID = 'toolbar_____';
 export const BOOKMARKS_MENU_GUID = 'menu________';

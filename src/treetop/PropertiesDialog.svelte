@@ -73,7 +73,8 @@
     };
 
     if (editUrl !== undefined && editUrl.length > 0) {
-      // TODO: Could fix URL like firefox-78-0.1/docshell/base/URIFixup.jsm#L269
+      // TODO: Could fix URL like in
+      // https://searchfox.org/mozilla-central/rev/7b36c8b83337c4b4cdfd4ccc2168f3491a86811b/browser/components/places/content/editBookmark.js#754-755
       changes.url = editUrl;
     }
 
