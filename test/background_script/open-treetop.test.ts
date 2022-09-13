@@ -1,7 +1,7 @@
 import faker from 'faker';
 import type { Action, Tabs } from 'webextension-polyfill';
 
-import { openTreetop } from '@Treetop/background_script/open';
+import { openTreetop } from '@Treetop/background_script/open-treetop';
 
 let tab: Tabs.Tab;
 let info: Action.OnClickData;
