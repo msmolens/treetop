@@ -33,3 +33,27 @@ it('opens the welcome page when the extension is installed', async () => {
 
   expect(openWelcome).toHaveBeenCalledTimes(1);
 });
+
+it('opens Treetop when the browser action is clicked', async () => {
+  const browserActionClicked = mockEvent(mockBrowser.browserAction.onClicked);
+  mockBrowser.runtime.onInstalled.addListener.expect(openWelcome);
+
+  await init();
+
+  const tab = {
+    index: 0,
+    highlighted: false,
+    active: false,
+    pinned: false,
+    incognito: false,
+  };
+
+  const info = {
+    modifiers: [],
+    button: 0,
+  };
+
+  browserActionClicked.emit(tab, info);
+
+  expect(openTreetop).toHaveBeenCalledTimes(1);
+});
