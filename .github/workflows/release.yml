@@ -11,14 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set output filename
         id: set-filename
         run: echo ::set-output name=filename::treetop-${GITHUB_REF#refs/*/}.zip
       - name: Use Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: 16
       - run: npm ci
       - run: npm run build
       - run: npx web-ext build --no-input=true --filename "${{ steps.set-filename.outputs.filename}}"
