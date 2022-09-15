@@ -50,16 +50,18 @@ npm install
 
 ### Commands
 
-| Command             | Description |
-| ------------------- | ----------- |
-| `npm run build:dev` | Build for development. |
-| `npm run build`     | Build for release. |
-| `npm run lint`      | Check code for linting errors. |
-| `npm run lint:fix`  | Fix linting errors. |
-| `npm run validate`  | Check for unused CSS, a11y issues, and TypeScript errors with [svelte-check](https://github.com/sveltejs/language-tools/tree/master/packages/svelte-check). |
-| `npm test`          | Run tests. |
-| `web-ext run`       | Start Firefox and load the extension temporarily. |
-| `web-ext build`     | Package the extension. |
+| Command                | Description |
+| ---------------------- | ----------- |
+| `npm run build:dev`    | Build for development. |
+| `npm run build`        | Build for release. |
+| `npm run lint`         | Check code for linting errors. |
+| `npm run lint:fix`     | Fix linting errors. |
+| `npm run prettier`     | Check code for formatting errors. |
+| `npm run prettier:fix` | Fix formatting errors. |
+| `npm run validate`     | Check for unused CSS, a11y issues, and TypeScript errors with [svelte-check](https://github.com/sveltejs/language-tools/tree/master/packages/svelte-check). |
+| `npm test`             | Run tests. |
+| `web-ext run`          | Start Firefox and load the extension temporarily. |
+| `web-ext build`        | Package the extension. |
 
 ### Core Technologies
 
