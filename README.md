@@ -52,7 +52,7 @@ npm install
 
 | Command                | Description |
 | ---------------------- | ----------- |
-| `npm run build:dev`    | Build for development. |
+| `npm run build:watch`  | Build, watching for file changes. |
 | `npm run build`        | Build for release. |
 | `npm run lint`         | Check code for linting errors. |
 | `npm run lint:fix`     | Fix linting errors. |
@@ -68,7 +68,7 @@ npm install
 #### Development
 - [Svelte](https://svelte.dev/): Component framework.
 - [TypeScript](https://www.typescriptlang.org/): Typed JavaScript.
-- [Rollup](https://rollupjs.org/): Module bundler.
+- [Vite](https://vitejs.dev/): Build tool.
 - [Svelte Material UI](https://sveltematerialui.com/): Material UI components for Svelte.
 - [ESLint](https://eslint.org/): Static analyzer.
 - [Prettier](https://prettier.io/): Code formatter.

@@ -13,7 +13,7 @@ import Treetop from './Treetop.svelte';
 const rootBookmarkId = decodeURIComponent(location.hash.substr(1));
 
 new Treetop({
-  target: document.body,
+  target: document.getElementById('app'),
   props: {
     rootBookmarkId,
   },

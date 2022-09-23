@@ -1,5 +1,5 @@
 import Options from './Options.svelte';
 
 new Options({
-  target: document.body,
+  target: document.getElementById('app'),
 });
