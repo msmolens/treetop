@@ -52,7 +52,7 @@ npm install
 
 | Command                | Description |
 | ---------------------- | ----------- |
-| `npm run build:watch`  | Build, watching for file changes. |
+| `npm run build:watch`  | Build for development, watching for file changes. |
 | `npm run build`        | Build for release. |
 | `npm run lint`         | Check code for linting errors. |
 | `npm run lint:fix`     | Fix linting errors. |
