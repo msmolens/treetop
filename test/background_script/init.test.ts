@@ -13,12 +13,26 @@ jest
   .mock('@Treetop/background_script/options');
 
 it('initializes extension', async () => {
+  mockBrowser.runtime.onInstalled.addListener.expect(createContextMenus);
   mockBrowser.runtime.onInstalled.addListener.expect(openWelcome);
   mockBrowser.browserAction.onClicked.addListener.expect(openTreetop);
 
   await init();
 
   expect(setDefaultOptions).toHaveBeenCalledTimes(1);
+});
+
+it('creates context menus when the extension is installed', async () => {
+  const runtimeOnInstalled = mockEvent(mockBrowser.runtime.onInstalled);
+  mockBrowser.browserAction.onClicked.addListener.expect(openTreetop);
+
+  await init();
+
+  runtimeOnInstalled.emit({
+    reason: 'install',
+    temporary: false,
+  });
+
   expect(createContextMenus).toHaveBeenCalledTimes(1);
 });
 
@@ -38,6 +52,7 @@ it('opens the welcome page when the extension is installed', async () => {
 
 it('opens Treetop when the browser action is clicked', async () => {
   const browserActionClicked = mockEvent(mockBrowser.browserAction.onClicked);
+  mockBrowser.runtime.onInstalled.addListener.expect(createContextMenus);
   mockBrowser.runtime.onInstalled.addListener.expect(openWelcome);
 
   await init();

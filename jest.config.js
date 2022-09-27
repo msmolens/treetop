@@ -46,4 +46,5 @@ module.exports = {
     '!**/node_modules/**',
   ],
   coverageProvider: 'v8',
+  clearMocks: true,
 };

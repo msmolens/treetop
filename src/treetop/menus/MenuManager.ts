@@ -6,6 +6,9 @@ import type { MenuItem } from './MenuItem';
  * Class to handle menu events and delegate to registered menu items.
  */
 export class MenuManager {
+  // The context menu's target element
+  activeElement: HTMLElement | null = null;
+
   private readonly menuItems = new Map<string, MenuItem>();
 
   // Track shown menu instance ID
@@ -55,25 +58,22 @@ export class MenuManager {
       return;
     }
 
-    // Get target bookmark
-    if (info.targetElementId) {
-      const elem = browser.menus.getTargetElement(
-        info.targetElementId
-      ) as HTMLElement;
-      const nodeId = elem.dataset.nodeId;
-
-      // Update whether menu items are enabled based on the target
-      if (nodeId) {
-        await this.updateEnabled(nodeId);
-      }
+    // Update whether menu items are enabled based on the target bookmark
+    const nodeId = this.activeElement?.dataset.nodeId;
+    if (nodeId) {
+      await this.updateEnabled(nodeId);
     }
   }
 
   /**
-   * Reset the menu instance ID when the menu is hidden.
+   * Clean up state when the menu is hidden.
    */
   handleMenuHidden(): void {
+    // Reset the menu instance ID
     this.lastMenuInstanceId = 0;
+
+    // Clear the active element
+    this.activeElement = null;
   }
 
   /**
@@ -84,6 +84,10 @@ export class MenuManager {
     info: Menus.OnClickData,
     tab?: Tabs.Tab
   ): Promise<void> {
+    // Store current active element; it may be cleared while waiting for an
+    // asynchronous function call
+    const activeElement = this.activeElement;
+
     if (info.viewType !== 'tab' || !tab) {
       return;
     }
@@ -93,20 +97,11 @@ export class MenuManager {
       return;
     }
 
-    // Get target bookmark
-    if (info.targetElementId) {
-      const elem = browser.menus.getTargetElement(
-        info.targetElementId
-      ) as HTMLElement;
-      const nodeId = elem.dataset.nodeId;
-
-      if (nodeId && info.menuItemId) {
-        // Call the menu item handler
-        const item = this.menuItems.get(info.menuItemId as string);
-        if (item !== undefined) {
-          item.onClicked(nodeId);
-        }
-      }
+    // Call the menu item handler
+    const nodeId = activeElement?.dataset.nodeId;
+    if (nodeId && info.menuItemId) {
+      const item = this.menuItems.get(info.menuItemId as string);
+      item?.onClicked(nodeId);
     }
   }
 
@@ -116,9 +111,9 @@ export class MenuManager {
   async updateEnabled(nodeId: string): Promise<void> {
     for (const [id, item] of this.menuItems.entries()) {
       const enabled = item.enabled(nodeId);
-      await browser.menus.update(id, { enabled });
+      await browser.contextMenus.update(id, { enabled });
     }
 
-    await browser.menus.refresh();
+    await browser.contextMenus.refresh();
   }
 }

@@ -44,9 +44,9 @@ describe('Treetop', () => {
     //
 
     // Menu event handlers
-    mockBrowser.menus.onShown.addListener.expect(expect.any(Function));
-    mockBrowser.menus.onHidden.addListener.expect(expect.any(Function));
-    mockBrowser.menus.onClicked.addListener.expect(expect.any(Function));
+    mockBrowser.contextMenus.onShown.addListener.expect(expect.any(Function));
+    mockBrowser.contextMenus.onHidden.addListener.expect(expect.any(Function));
+    mockBrowser.contextMenus.onClicked.addListener.expect(expect.any(Function));
 
     //
     // init()
@@ -88,9 +88,15 @@ describe('Treetop', () => {
     // onDestroy
     //
 
-    mockBrowser.menus.onShown.removeListener.expect(expect.any(Function));
-    mockBrowser.menus.onHidden.removeListener.expect(expect.any(Function));
-    mockBrowser.menus.onClicked.removeListener.expect(expect.any(Function));
+    mockBrowser.contextMenus.onShown.removeListener.expect(
+      expect.any(Function)
+    );
+    mockBrowser.contextMenus.onHidden.removeListener.expect(
+      expect.any(Function)
+    );
+    mockBrowser.contextMenus.onClicked.removeListener.expect(
+      expect.any(Function)
+    );
 
     cleanup();
   });
