@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Treetop",
   "description": "__MSG_extensionDescription__",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "author": "Max Smolens",
   "homepage_url": "https://github.com/msmolens/treetop",
   "default_locale": "en",
