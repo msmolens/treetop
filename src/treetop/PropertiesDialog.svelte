@@ -31,8 +31,11 @@
 
   function handleTextFieldFocus(e: CustomEvent | FocusEvent) {
     e = e as FocusEvent;
-    const inputElement = e.currentTarget as HTMLInputElement;
-    inputElement.select();
+
+    // Select all text in the focused input element
+    const labelElement = e.currentTarget as HTMLLabelElement;
+    const inputElement = labelElement.control as HTMLInputElement;
+    inputElement?.select();
   }
 
   const maxHeaderTitleLength = 58;

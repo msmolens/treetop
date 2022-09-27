@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Update Svelte Material UI to 6.1.4.
 - Replace Rollup with Vite as the build tool.
 
+### Fixed
+- Fix selecting bookmark name or URL in properties dialog when focusing each input.
+
 ## [1.4.1] - 2022-06-20
 ### Fixed
 - Fix color scheme when legacy 'system' option is stored.
