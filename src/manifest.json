@@ -32,7 +32,7 @@
     "page": "options.html",
     "browser_style": true
   },
-  "permissions": ["bookmarks", "history", "menus", "storage"],
+  "permissions": ["bookmarks", "contextMenus", "history", "storage"],
   "browser_specific_settings": {
     "gecko": {
       "id": "treetop@maxsmolens.org",

@@ -87,16 +87,14 @@ describe('handleMenuShown', () => {
   });
 
   it('updates whether menu items are enabled', async () => {
-    const element = createElement();
     mockBrowser.runtime.getURL.expect('').andReturn(origin);
     mockBrowser.tabs.getCurrent.expect.andResolve(tab);
-    mockBrowser.menus.getTargetElement
-      .expect(info.targetElementId!)
-      // @ts-ignore
-      .andReturn(element);
-    mockBrowser.menus.update.expect('test1', { enabled: true });
-    mockBrowser.menus.update.expect('test2', { enabled: false });
-    mockBrowser.menus.refresh.expect;
+    mockBrowser.contextMenus.update.expect('test1', { enabled: true });
+    mockBrowser.contextMenus.update.expect('test2', { enabled: false });
+    mockBrowser.contextMenus.refresh.expect;
+
+    // @ts-ignore
+    menuManager.activeElement = createElement();
 
     await menuManager.handleMenuShown(info, tab);
   });
@@ -104,11 +102,17 @@ describe('handleMenuShown', () => {
   it("no-op if context is not 'link'", async () => {
     info.contexts = ['page'];
 
+    // @ts-ignore
+    menuManager.activeElement = createElement();
+
     await menuManager.handleMenuShown(info, tab);
   });
 
   it("no-op if viewType is not 'tab'", async () => {
     info.viewType = 'popup';
+
+    // @ts-ignore
+    menuManager.activeElement = createElement();
 
     await menuManager.handleMenuShown(info, tab);
   });
@@ -118,6 +122,9 @@ describe('handleMenuShown', () => {
 
     mockBrowser.runtime.getURL.expect('').andReturn(origin);
 
+    // @ts-ignore
+    menuManager.activeElement = createElement();
+
     await menuManager.handleMenuShown(info, tab);
   });
 
@@ -125,6 +132,9 @@ describe('handleMenuShown', () => {
     info.pageUrl = faker.internet.url();
 
     mockBrowser.runtime.getURL.expect('').andReturn(origin);
+
+    // @ts-ignore
+    menuManager.activeElement = createElement();
 
     await menuManager.handleMenuShown(info, tab);
   });
@@ -135,11 +145,14 @@ describe('handleMenuShown', () => {
     const otherTab = createTab();
     mockBrowser.tabs.getCurrent.expect.andResolve(otherTab);
 
+    // @ts-ignore
+    menuManager.activeElement = createElement();
+
     await menuManager.handleMenuShown(info, tab);
   });
 
-  it("no-op if targetElementId isn't provided", async () => {
-    delete info.targetElementId;
+  it("no-op if active element isn't provided", async () => {
+    menuManager.activeElement = null;
 
     mockBrowser.runtime.getURL.expect('').andReturn(origin);
     mockBrowser.tabs.getCurrent.expect.andResolve(tab);
@@ -148,14 +161,11 @@ describe('handleMenuShown', () => {
   });
 
   it("no-op if nodeId isn't available", async () => {
-    const element = createElement(false);
+    // @ts-ignore
+    menuManager.activeElement = createElement(false);
 
     mockBrowser.runtime.getURL.expect('').andReturn(origin);
     mockBrowser.tabs.getCurrent.expect.andResolve(tab);
-    mockBrowser.menus.getTargetElement
-      .expect(info.targetElementId!)
-      // @ts-ignore
-      .andReturn(element);
 
     await menuManager.handleMenuShown(info, tab);
   });
@@ -199,10 +209,9 @@ describe('handleMenuClicked', () => {
   it('calls a registered menu item handler', async () => {
     const element = createElement();
     mockBrowser.tabs.getCurrent.expect.andResolve(tab);
-    mockBrowser.menus.getTargetElement
-      .expect(info.targetElementId!)
-      // @ts-ignore
-      .andReturn(element);
+
+    // @ts-ignore
+    menuManager.activeElement = element;
 
     await menuManager.handleMenuClicked(info, tab);
 
@@ -214,6 +223,9 @@ describe('handleMenuClicked', () => {
   it("no-op if viewType is not 'tab'", async () => {
     info.viewType = 'popup';
 
+    // @ts-ignore
+    menuManager.activeElement = createElement();
+
     await menuManager.handleMenuClicked(info, tab);
 
     expect(test1Clicked).toBe(false);
@@ -223,6 +235,9 @@ describe('handleMenuClicked', () => {
   it('no-op if tab is not provided', async () => {
     await menuManager.handleMenuClicked(info);
 
+    // @ts-ignore
+    menuManager.activeElement = createElement();
+
     expect(test1Clicked).toBe(false);
     expect(test2Clicked).toBe(false);
   });
@@ -231,14 +246,17 @@ describe('handleMenuClicked', () => {
     const otherTab = createTab();
     mockBrowser.tabs.getCurrent.expect.andResolve(otherTab);
 
+    // @ts-ignore
+    menuManager.activeElement = createElement();
+
     await menuManager.handleMenuClicked(info, tab);
 
     expect(test1Clicked).toBe(false);
     expect(test2Clicked).toBe(false);
   });
 
-  it("no-op if targetElementId isn't provided", async () => {
-    delete info.targetElementId;
+  it("no-op if active element isn't provided", async () => {
+    menuManager.activeElement = null;
 
     mockBrowser.tabs.getCurrent.expect.andResolve(tab);
 
@@ -249,13 +267,10 @@ describe('handleMenuClicked', () => {
   });
 
   it("no-op if nodeId isn't available", async () => {
-    const element = createElement(false);
+    // @ts-ignore
+    menuManager.activeElement = createElement(false);
 
     mockBrowser.tabs.getCurrent.expect.andResolve(tab);
-    mockBrowser.menus.getTargetElement
-      .expect(info.targetElementId!)
-      // @ts-ignore
-      .andReturn(element);
 
     await menuManager.handleMenuClicked(info, tab);
 
@@ -264,14 +279,12 @@ describe('handleMenuClicked', () => {
   });
 
   it("no-op if menuItemId isn't registered", async () => {
-    const element = createElement();
     info.menuItemId = 'other';
 
     mockBrowser.tabs.getCurrent.expect.andResolve(tab);
-    mockBrowser.menus.getTargetElement
-      .expect(info.targetElementId!)
-      // @ts-ignore
-      .andReturn(element);
+
+    // @ts-ignore
+    menuManager.activeElement = createElement();
 
     await menuManager.handleMenuClicked(info, tab);
 

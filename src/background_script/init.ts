@@ -9,6 +9,9 @@ import { setDefaultOptions } from './options';
  * Initialize Treetop.
  */
 export const init = async (): Promise<void> => {
+  // Install handler to create context menus when the extension is installed
+  browser.runtime.onInstalled.addListener(createContextMenus);
+
   // Install handler to open the welcome page when the extension is installed
   browser.runtime.onInstalled.addListener(openWelcome);
 
@@ -27,7 +30,4 @@ export const init = async (): Promise<void> => {
   };
 
   await setDefaultOptions(options);
-
-  // Create context menus
-  createContextMenus();
 };

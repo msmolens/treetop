@@ -16,31 +16,31 @@ export const createContextMenus = (): void => {
     documentUrlPatterns: [`${origin}*`],
   };
 
-  browser.menus.create({
+  browser.contextMenus.create({
     id: 'openAllInTabs',
     title: browser.i18n.getMessage('menuItemOpenAllInTabs'),
     ...commonMenuParams,
   });
 
-  browser.menus.create({
+  browser.contextMenus.create({
     id: 'separator1',
     type: 'separator',
     ...commonMenuParams,
   });
 
-  browser.menus.create({
+  browser.contextMenus.create({
     id: 'delete',
     title: browser.i18n.getMessage('menuItemDelete'),
     ...commonMenuParams,
   });
 
-  browser.menus.create({
+  browser.contextMenus.create({
     id: 'separator2',
     type: 'separator',
     ...commonMenuParams,
   });
 
-  browser.menus.create({
+  browser.contextMenus.create({
     id: 'properties',
     title: browser.i18n.getMessage('menuItemProperties'),
     ...commonMenuParams,
