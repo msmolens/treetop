@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 ### Changed
+- Update Svelte Material UI to 6.1.4.
 - Replace Rollup with Vite as the build tool.
 
 ## [1.4.1] - 2022-06-20
