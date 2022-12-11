@@ -1,31 +1,30 @@
 import faker from 'faker';
 
-import {
-  BOOKMARKS_MENU_GUID,
-  BOOKMARKS_ROOT_GUID,
-  BOOKMARKS_TOOLBAR_GUID,
-  OTHER_BOOKMARKS_GUID,
-} from '@Treetop/treetop/constants';
 import type { OnClickedCallback } from '@Treetop/treetop/menus/MenuItem';
 import { PropertiesMenuItem } from '@Treetop/treetop/menus/PropertiesMenuItem';
+import type * as Treetop from '@Treetop/treetop/types';
 
 let menuItem: PropertiesMenuItem;
+
+const BUILT_IN_FOLDER_INFO: Treetop.BuiltInFolderInfo = {
+  rootNodeId: 'bookmarks-root-id',
+  builtInFolderIds: ['bookmarks-toolbar-id', 'other-bookmarks-id'],
+};
 
 beforeEach(() => {
   const callback: OnClickedCallback = (nodeId) => {
     void nodeId;
   };
 
-  menuItem = new PropertiesMenuItem(callback);
+  menuItem = new PropertiesMenuItem(BUILT_IN_FOLDER_INFO, callback);
 });
 
-it.each([
-  BOOKMARKS_MENU_GUID,
-  BOOKMARKS_ROOT_GUID,
-  BOOKMARKS_TOOLBAR_GUID,
-  OTHER_BOOKMARKS_GUID,
-])('is disabled for special bookmark root: %p', (nodeId) => {
-  expect(menuItem.enabled(nodeId)).toBe(false);
+it('is disabled for built-in folders', () => {
+  expect(menuItem.enabled(BUILT_IN_FOLDER_INFO.rootNodeId!)).toBe(false);
+
+  for (const nodeId of BUILT_IN_FOLDER_INFO.builtInFolderIds) {
+    expect(menuItem.enabled(nodeId)).toBe(false);
+  }
 });
 
 it('is enabled for normal bookmark node IDs', () => {

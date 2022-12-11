@@ -1,12 +1,6 @@
 import { type Writable, writable } from 'svelte/store';
 import faker from 'faker';
 
-import {
-  BOOKMARKS_MENU_GUID,
-  BOOKMARKS_ROOT_GUID,
-  BOOKMARKS_TOOLBAR_GUID,
-  OTHER_BOOKMARKS_GUID,
-} from '@Treetop/treetop/constants';
 import { DeleteMenuItem } from '@Treetop/treetop/menus/DeleteMenuItem';
 import type { OnClickedCallback } from '@Treetop/treetop/menus/MenuItem';
 import type * as Treetop from '@Treetop/treetop/types';
@@ -17,6 +11,11 @@ let menuItem: DeleteMenuItem;
 let nodeStoreMap: Treetop.NodeStoreMap;
 let filterActive: Writable<boolean>;
 
+const BUILT_IN_FOLDER_INFO: Treetop.BuiltInFolderInfo = {
+  rootNodeId: 'bookmarks-root-id',
+  builtInFolderIds: ['bookmarks-toolbar-id', 'other-bookmarks-id'],
+};
+
 beforeEach(() => {
   nodeStoreMap = new Map() as Treetop.NodeStoreMap;
   filterActive = writable(false);
@@ -25,16 +24,20 @@ beforeEach(() => {
     void nodeId;
   };
 
-  menuItem = new DeleteMenuItem(nodeStoreMap, filterActive, callback);
+  menuItem = new DeleteMenuItem(
+    BUILT_IN_FOLDER_INFO,
+    nodeStoreMap,
+    filterActive,
+    callback
+  );
 });
 
-it.each([
-  BOOKMARKS_MENU_GUID,
-  BOOKMARKS_ROOT_GUID,
-  BOOKMARKS_TOOLBAR_GUID,
-  OTHER_BOOKMARKS_GUID,
-])('is disabled for special bookmark root: %p', (nodeId) => {
-  expect(menuItem.enabled(nodeId)).toBe(false);
+it('is disabled for built-in folders', () => {
+  expect(menuItem.enabled(BUILT_IN_FOLDER_INFO.rootNodeId!)).toBe(false);
+
+  for (const nodeId of BUILT_IN_FOLDER_INFO.builtInFolderIds) {
+    expect(menuItem.enabled(nodeId)).toBe(false);
+  }
 });
 
 it('is enabled for normal bookmark node IDs', () => {

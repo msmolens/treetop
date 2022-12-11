@@ -1,7 +1,6 @@
 import { writable } from 'svelte/store';
 import faker from 'faker';
 
-import { BOOKMARKS_ROOT_GUID } from '@Treetop/treetop/constants';
 import type { OnClickedCallback } from '@Treetop/treetop/menus/MenuItem';
 import { OpenAllInTabsMenuItem } from '@Treetop/treetop/menus/OpenAllInTabsMenuItem';
 import type * as Treetop from '@Treetop/treetop/types';
@@ -11,6 +10,11 @@ import { createBookmarkNode, createFolderNode } from '../../utils/factories';
 let menuItem: OpenAllInTabsMenuItem;
 let nodeStoreMap: Treetop.NodeStoreMap;
 
+const BUILT_IN_FOLDER_INFO: Treetop.BuiltInFolderInfo = {
+  rootNodeId: 'bookmarks-root-id',
+  builtInFolderIds: [],
+};
+
 beforeEach(() => {
   nodeStoreMap = new Map() as Treetop.NodeStoreMap;
 
@@ -18,11 +22,15 @@ beforeEach(() => {
     void nodeId;
   };
 
-  menuItem = new OpenAllInTabsMenuItem(nodeStoreMap, callback);
+  menuItem = new OpenAllInTabsMenuItem(
+    BUILT_IN_FOLDER_INFO,
+    nodeStoreMap,
+    callback
+  );
 });
 
 it('is disabled for the bookmarks root', () => {
-  expect(menuItem.enabled(BOOKMARKS_ROOT_GUID)).toBe(false);
+  expect(menuItem.enabled(BUILT_IN_FOLDER_INFO.rootNodeId!)).toBe(false);
 });
 
 it('is disabled for bookmarks', () => {

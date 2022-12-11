@@ -4,12 +4,13 @@
   import * as browser from 'webextension-polyfill';
 
   import Bookmark from './Bookmark.svelte';
-  import { BOOKMARKS_ROOT_GUID } from './constants';
   import * as Treetop from './types';
 
   export let nodeId: string;
   export let root = false;
 
+  const builtInFolderInfo: Treetop.BuiltInFolderInfo =
+    getContext('builtInFolderInfo');
   const nodeStoreMap: Treetop.NodeStoreMap = getContext('nodeStoreMap');
   const filterActive = getContext<Writable<boolean>>('filterActive');
   const filterSet = getContext<Treetop.FilterSet>('filterSet');
@@ -51,7 +52,7 @@
   function getFallbackTitle(nodeId: string): string {
     let key;
 
-    if (nodeId === BOOKMARKS_ROOT_GUID) {
+    if (nodeId === builtInFolderInfo.rootNodeId) {
       key = 'bookmarks';
     } else {
       key = 'folderNoTitle';

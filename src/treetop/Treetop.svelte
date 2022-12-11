@@ -20,7 +20,6 @@
   import { PropertiesMenuItem } from './menus/PropertiesMenuItem';
   import { BookmarksManager } from './BookmarksManager';
   import ConfirmationDialog from './ConfirmationDialog.svelte';
-  import { BOOKMARKS_ROOT_GUID } from './constants';
   import FilterInput from './FilterInput.svelte';
   import { FilterManager } from './FilterManager';
   import Folder from './Folder.svelte';
@@ -74,8 +73,17 @@
   // Set of node IDs that match the active filter.
   const filterSet: Treetop.FilterSet = writable(new Set());
 
+  // Built-in folder info
+  const builtInFolderInfo: Treetop.BuiltInFolderInfo = {
+    rootNodeId: null,
+    builtInFolderIds: [],
+  };
+
   // Bookmarks manager
-  const bookmarksManager = new BookmarksManager(nodeStoreMap);
+  const bookmarksManager = new BookmarksManager(
+    nodeStoreMap,
+    builtInFolderInfo
+  );
 
   // History manager
   const historyManager = new HistoryManager(lastVisitTimeMap);
@@ -87,6 +95,7 @@
   const filterActive = writable(false);
 
   // Make bookmark data available to other components
+  setContext('builtInFolderInfo', builtInFolderInfo);
   setContext('nodeStoreMap', nodeStoreMap);
   setContext('lastVisitTimeMap', lastVisitTimeMap);
   setContext('filterActive', filterActive);
@@ -524,7 +533,7 @@
 
     // Validate specified root bookmark ID, falling back to bookmarks root
     if (!rootBookmarkId || !nodeStoreMap.has(rootBookmarkId)) {
-      rootBookmarkId = BOOKMARKS_ROOT_GUID;
+      rootBookmarkId = builtInFolderInfo.rootNodeId ?? '';
     }
 
     return rootBookmarkId;
@@ -544,15 +553,20 @@
     menuManager = new MenuManager();
     menuManager.registerMenuItem(
       'delete',
-      new DeleteMenuItem(nodeStoreMap, filterActive, deleteBookmark)
+      new DeleteMenuItem(
+        builtInFolderInfo,
+        nodeStoreMap,
+        filterActive,
+        deleteBookmark
+      )
     );
     menuManager.registerMenuItem(
       'openAllInTabs',
-      new OpenAllInTabsMenuItem(nodeStoreMap, openAllInTabs)
+      new OpenAllInTabsMenuItem(builtInFolderInfo, nodeStoreMap, openAllInTabs)
     );
     menuManager.registerMenuItem(
       'properties',
-      new PropertiesMenuItem(showPropertiesDialog)
+      new PropertiesMenuItem(builtInFolderInfo, showPropertiesDialog)
     );
 
     window.addEventListener('hashchange', onHashChange);

@@ -1,6 +1,5 @@
 import { get } from 'svelte/store';
 
-import { BOOKMARKS_ROOT_GUID } from '@Treetop/treetop/constants';
 import type * as Treetop from '@Treetop/treetop/types';
 
 import { MenuItem, type OnClickedCallback } from './MenuItem';
@@ -10,6 +9,7 @@ import { MenuItem, type OnClickedCallback } from './MenuItem';
  */
 export class OpenAllInTabsMenuItem extends MenuItem {
   constructor(
+    private readonly builtInFolderInfo: Treetop.BuiltInFolderInfo,
     private readonly nodeStoreMap: Treetop.NodeStoreMap,
     onClickedCallback: OnClickedCallback
   ) {
@@ -21,7 +21,7 @@ export class OpenAllInTabsMenuItem extends MenuItem {
     // Enable for non-empty folders, excluding the bookmarks root
     //
 
-    if (nodeId === BOOKMARKS_ROOT_GUID) {
+    if (nodeId === this.builtInFolderInfo.rootNodeId) {
       return false;
     }
 

@@ -1,7 +1,7 @@
 import { get, writable } from 'svelte/store';
 import browser, { type Bookmarks, type History } from 'webextension-polyfill';
 
-import { BOOKMARK_TREE_NODE_TYPE_BOOKMARK } from './constants';
+import { isBookmark } from './bookmarktreenode-utils';
 import * as Treetop from './types';
 
 /**
@@ -85,7 +85,7 @@ export class HistoryManager {
     _id: string,
     bookmark: Bookmarks.BookmarkTreeNode
   ): Promise<void> {
-    if (bookmark.type !== BOOKMARK_TREE_NODE_TYPE_BOOKMARK) {
+    if (!isBookmark(bookmark)) {
       return;
     }
 

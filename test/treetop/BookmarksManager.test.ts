@@ -5,13 +5,7 @@ import faker from 'faker';
 import type { Bookmarks } from 'webextension-polyfill';
 
 import { BookmarksManager } from '@Treetop/treetop/BookmarksManager';
-import {
-  BOOKMARKS_MENU_GUID,
-  BOOKMARKS_ROOT_GUID,
-  BOOKMARKS_TOOLBAR_GUID,
-  MOBILE_BOOKMARKS_GUID,
-  OTHER_BOOKMARKS_GUID,
-} from '@Treetop/treetop/constants';
+import { MOBILE_BOOKMARKS_GUID } from '@Treetop/treetop/constants';
 import * as Treetop from '@Treetop/treetop/types';
 
 import {
@@ -35,58 +29,66 @@ let nodeStoreMap: Treetop.NodeStoreMap;
 let bookmarksManager: BookmarksManager;
 let bookmarksTree: Bookmarks.BookmarkTreeNode[];
 let bookmarksRoot: Bookmarks.BookmarkTreeNode;
-
-const NUM_BOOKMARK_ROOTS = 4;
+let numBuiltInFolders = 0;
+let builtInFolderInfo: Treetop.BuiltInFolderInfo;
 
 beforeEach(() => {
   nodeStoreMap = new Map() as Treetop.NodeStoreMap;
   bookmarksTree = createBrowserBookmarksTree();
   bookmarksRoot = bookmarksTree[0];
-  bookmarksManager = new BookmarksManager(nodeStoreMap);
+  numBuiltInFolders = 1 + bookmarksRoot.children!.length;
+  builtInFolderInfo = {
+    rootNodeId: null,
+    builtInFolderIds: [],
+  };
+  bookmarksManager = new BookmarksManager(nodeStoreMap, builtInFolderInfo);
 });
 
 describe('loadBookmarks', () => {
+  it('stores IDs for built-in folders', async () => {
+    mockBrowser.bookmarks.getTree.expect.andResolve(bookmarksTree);
+
+    await bookmarksManager.loadBookmarks();
+
+    expect(builtInFolderInfo.rootNodeId).toBe(bookmarksRoot.id);
+
+    expect(builtInFolderInfo.builtInFolderIds).toEqual(
+      bookmarksRoot.children?.map((node) => node.id)
+    );
+  });
+
   it('creates nodes for built-in bookmark roots', async () => {
     mockBrowser.bookmarks.getTree.expect.andResolve(bookmarksTree);
 
     await bookmarksManager.loadBookmarks();
 
-    expect(nodeStoreMap.size).toBe(NUM_BOOKMARK_ROOTS);
+    expect(nodeStoreMap.size).toBe(numBuiltInFolders);
 
-    expect(nodeStoreMap.get(BOOKMARKS_ROOT_GUID)).toBeDefined();
-    expect(get(nodeStoreMap.get(BOOKMARKS_ROOT_GUID)!)).toMatchObject({
-      id: BOOKMARKS_ROOT_GUID,
-      type: Treetop.NodeType.Folder,
-      title: '',
-    });
+    for (const folder of bookmarksRoot.children!) {
+      expect(nodeStoreMap.get(folder.id)).toBeDefined();
 
-    expect(nodeStoreMap.get(BOOKMARKS_MENU_GUID)).toBeDefined();
-    expect(get(nodeStoreMap.get(BOOKMARKS_MENU_GUID)!)).toMatchObject({
-      id: BOOKMARKS_MENU_GUID,
-      type: Treetop.NodeType.Folder,
-      title: 'Bookmarks Menu',
-    });
+      const node = get(nodeStoreMap.get(folder.id)!);
+      expect(node.id).toBe(folder.id);
+      expect(node.title).toBe(folder.title);
+    }
+  });
 
-    expect(nodeStoreMap.get(BOOKMARKS_TOOLBAR_GUID)).toBeDefined();
-    expect(get(nodeStoreMap.get(BOOKMARKS_TOOLBAR_GUID)!)).toMatchObject({
-      id: BOOKMARKS_TOOLBAR_GUID,
-      type: Treetop.NodeType.Folder,
-      title: 'Bookmarks Toolbar',
-    });
+  it('excludes mobile bookmarks folder', async () => {
+    const mobileBookmarksNode = createBrowserFolderNode(bookmarksRoot);
+    mobileBookmarksNode.id = MOBILE_BOOKMARKS_GUID;
 
-    expect(nodeStoreMap.get(OTHER_BOOKMARKS_GUID)).toBeDefined();
-    expect(get(nodeStoreMap.get(OTHER_BOOKMARKS_GUID)!)).toMatchObject({
-      id: OTHER_BOOKMARKS_GUID,
-      type: Treetop.NodeType.Folder,
-      title: 'Other Bookmarks',
-    });
+    mockBrowser.bookmarks.getTree.expect.andResolve(bookmarksTree);
+
+    await bookmarksManager.loadBookmarks();
+
+    expect(nodeStoreMap.size).toBe(numBuiltInFolders);
 
     expect(nodeStoreMap.has(MOBILE_BOOKMARKS_GUID)).toBe(false);
   });
 
   it('creates nodes for folders', async () => {
-    // Create one or more folders under each root
-    const folders = [0, 1, 1, 2, 2, 2].map((index) => {
+    // Create one or more folders in each built-in folder
+    const folders = [0, 1, 1, 1].map((index) => {
       return createBrowserFolderNode(bookmarksRoot.children![index]);
     });
 
@@ -94,7 +96,7 @@ describe('loadBookmarks', () => {
 
     await bookmarksManager.loadBookmarks();
 
-    expect(nodeStoreMap.size).toBe(NUM_BOOKMARK_ROOTS + folders.length);
+    expect(nodeStoreMap.size).toBe(numBuiltInFolders + folders.length);
 
     for (const folder of folders) {
       expect(nodeStoreMap.get(folder.id)).toBeDefined();
@@ -117,7 +119,7 @@ describe('loadBookmarks', () => {
 
     await bookmarksManager.loadBookmarks();
 
-    expect(nodeStoreMap.size).toBe(NUM_BOOKMARK_ROOTS + 3);
+    expect(nodeStoreMap.size).toBe(numBuiltInFolders + 3);
 
     expect(nodeStoreMap.get(parentFolder.id)).toBeDefined();
     expect(get(nodeStoreMap.get(parentFolder.id)!)).toMatchObject({
@@ -167,7 +169,7 @@ describe('loadBookmarks', () => {
 
     await bookmarksManager.loadBookmarks();
 
-    expect(nodeStoreMap.size).toBe(NUM_BOOKMARK_ROOTS + 1);
+    expect(nodeStoreMap.size).toBe(numBuiltInFolders + 1);
 
     expect(nodeStoreMap.get(folder.id)).toBeDefined();
     expect(get(nodeStoreMap.get(folder.id)!)).toMatchObject({
@@ -206,7 +208,7 @@ describe('loadBookmarks', () => {
 
     await bookmarksManager.loadBookmarks();
 
-    expect(nodeStoreMap.size).toBe(NUM_BOOKMARK_ROOTS + 1);
+    expect(nodeStoreMap.size).toBe(numBuiltInFolders + 1);
 
     expect(nodeStoreMap.get(folder.id)).toBeDefined();
     expect(get(nodeStoreMap.get(folder.id)!)).toMatchObject({
@@ -217,37 +219,6 @@ describe('loadBookmarks', () => {
         {
           id: separator.id,
           type: Treetop.NodeType.Separator,
-        },
-      ],
-    });
-  });
-
-  it("reorders root boookmark node's children", async () => {
-    mockBrowser.bookmarks.getTree.expect.andResolve(bookmarksTree);
-
-    await bookmarksManager.loadBookmarks();
-
-    expect(nodeStoreMap.size).toBe(NUM_BOOKMARK_ROOTS);
-    expect(nodeStoreMap.get(BOOKMARKS_ROOT_GUID)).toBeDefined();
-    expect(get(nodeStoreMap.get(BOOKMARKS_ROOT_GUID)!)).toMatchObject({
-      id: BOOKMARKS_ROOT_GUID,
-      type: Treetop.NodeType.Folder,
-      title: '',
-      children: [
-        {
-          id: BOOKMARKS_TOOLBAR_GUID,
-          type: Treetop.NodeType.Folder,
-          title: 'Bookmarks Toolbar',
-        },
-        {
-          id: BOOKMARKS_MENU_GUID,
-          type: Treetop.NodeType.Folder,
-          title: 'Bookmarks Menu',
-        },
-        {
-          id: OTHER_BOOKMARKS_GUID,
-          type: Treetop.NodeType.Folder,
-          title: 'Other Bookmarks',
         },
       ],
     });
@@ -269,7 +240,7 @@ describe('handleBookmarkCreated', () => {
     createBrowserBookmarkNode(folderNode);
     mockBrowser.bookmarks.getTree.expect.andResolve(bookmarksTree);
     await bookmarksManager.loadBookmarks();
-    expect(nodeStoreMap.size).toBe(NUM_BOOKMARK_ROOTS + 1);
+    expect(nodeStoreMap.size).toBe(numBuiltInFolders + 1);
     expect(nodeStoreMap.get(baseNode.id)).toBeDefined();
     expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children).toHaveLength(
       2
@@ -294,7 +265,7 @@ describe('handleBookmarkCreated', () => {
     await bookmarksManager.handleBookmarkCreated(node.id, node);
 
     // New node store is not created for a bookmark
-    expect(nodeStoreMap.size).toBe(NUM_BOOKMARK_ROOTS + 1);
+    expect(nodeStoreMap.size).toBe(numBuiltInFolders + 1);
 
     // New bookmark node appears in parent node's children
     expect(
@@ -324,7 +295,7 @@ describe('handleBookmarkCreated', () => {
     await bookmarksManager.handleBookmarkCreated(node.id, node);
 
     // New node store is not created for a separator
-    expect(nodeStoreMap.size).toBe(NUM_BOOKMARK_ROOTS + 1);
+    expect(nodeStoreMap.size).toBe(numBuiltInFolders + 1);
 
     // New separator node appears in parent node's children
     expect(
@@ -358,7 +329,7 @@ describe('handleBookmarkCreated', () => {
     await bookmarksManager.handleBookmarkCreated(node.id, node);
 
     // New node store is created for a folder
-    expect(nodeStoreMap.size).toBe(NUM_BOOKMARK_ROOTS + 2);
+    expect(nodeStoreMap.size).toBe(numBuiltInFolders + 2);
     expect(nodeStoreMap.get(node.id)).toBeDefined();
     expect(getFolderNode(nodeStoreMap.get(node.id))).toMatchObject({
       id: node.id,
@@ -412,7 +383,7 @@ describe('handleBookmarkRemoved', () => {
     separatorNode = createBrowserSeparatorNode(folderNode2);
     mockBrowser.bookmarks.getTree.expect.andResolve(bookmarksTree);
     await bookmarksManager.loadBookmarks();
-    expect(nodeStoreMap.size).toBe(NUM_BOOKMARK_ROOTS + 2);
+    expect(nodeStoreMap.size).toBe(numBuiltInFolders + 2);
     expect(nodeStoreMap.get(baseNode.id)).toBeDefined();
     expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children).toHaveLength(
       2
@@ -556,7 +527,7 @@ describe('handleBookmarkChanged', () => {
     bookmarkNode2 = createBrowserBookmarkNode(folderNode1);
     mockBrowser.bookmarks.getTree.expect.andResolve(bookmarksTree);
     await bookmarksManager.loadBookmarks();
-    expect(nodeStoreMap.size).toBe(NUM_BOOKMARK_ROOTS + 1);
+    expect(nodeStoreMap.size).toBe(numBuiltInFolders + 1);
     expect(nodeStoreMap.get(baseNode.id)).toBeDefined();
     expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children).toHaveLength(
       1
@@ -683,7 +654,7 @@ describe('handleBookmarkMoved', () => {
     bookmarkNode3 = createBrowserBookmarkNode(folderNode1);
     mockBrowser.bookmarks.getTree.expect.andResolve(bookmarksTree);
     await bookmarksManager.loadBookmarks();
-    expect(nodeStoreMap.size).toBe(NUM_BOOKMARK_ROOTS + 1);
+    expect(nodeStoreMap.size).toBe(numBuiltInFolders + 1);
     expect(nodeStoreMap.get(baseNode.id)).toBeDefined();
     expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children).toHaveLength(
       2

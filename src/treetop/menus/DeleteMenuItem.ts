@@ -1,11 +1,5 @@
 import { get, type Writable } from 'svelte/store';
 
-import {
-  BOOKMARKS_MENU_GUID,
-  BOOKMARKS_ROOT_GUID,
-  BOOKMARKS_TOOLBAR_GUID,
-  OTHER_BOOKMARKS_GUID,
-} from '@Treetop/treetop/constants';
 import type * as Treetop from '@Treetop/treetop/types';
 
 import { MenuItem, type OnClickedCallback } from './MenuItem';
@@ -15,6 +9,7 @@ import { MenuItem, type OnClickedCallback } from './MenuItem';
  */
 export class DeleteMenuItem extends MenuItem {
   constructor(
+    private readonly builtInFolderInfo: Treetop.BuiltInFolderInfo,
     private readonly nodeStoreMap: Treetop.NodeStoreMap,
     private readonly filterActive: Writable<boolean>,
     onClickedCallback: OnClickedCallback
@@ -23,13 +18,9 @@ export class DeleteMenuItem extends MenuItem {
   }
 
   enabled(nodeId: string): boolean {
-    // Disable deleting special bookmark roots
-    if (
-      nodeId === BOOKMARKS_ROOT_GUID ||
-      nodeId === BOOKMARKS_TOOLBAR_GUID ||
-      nodeId === BOOKMARKS_MENU_GUID ||
-      nodeId === OTHER_BOOKMARKS_GUID
-    ) {
+    // Disable deleting built-in folders
+    const { rootNodeId, builtInFolderIds } = this.builtInFolderInfo;
+    if (rootNodeId === nodeId || builtInFolderIds.includes(nodeId)) {
       return false;
     }
 

@@ -1,7 +1,7 @@
 import { get } from 'svelte/store';
 import type { Bookmarks } from 'webextension-polyfill';
 
-import { BOOKMARK_TREE_NODE_TYPE_BOOKMARK } from './constants';
+import { isBookmark } from './bookmarktreenode-utils';
 import * as Treetop from './types';
 
 /**
@@ -92,7 +92,7 @@ export class FilterManager {
       return;
     }
 
-    if (bookmark.type !== BOOKMARK_TREE_NODE_TYPE_BOOKMARK) {
+    if (!isBookmark(bookmark)) {
       return;
     }
 
