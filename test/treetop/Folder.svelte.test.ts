@@ -3,7 +3,6 @@
 import { get, type Writable, writable } from 'svelte/store';
 import { render, screen } from '@testing-library/svelte';
 
-import { BOOKMARKS_ROOT_GUID } from '@Treetop/treetop/constants';
 import Folder from '@Treetop/treetop/Folder.svelte';
 import type * as Treetop from '@Treetop/treetop/types';
 
@@ -15,6 +14,7 @@ import {
 } from '../utils/factories';
 
 // Folder component requirements
+let builtInFolderInfo: Treetop.BuiltInFolderInfo;
 let nodeStoreMap: Treetop.NodeStoreMap;
 let filterActive: Writable<boolean>;
 let filterSet: Treetop.FilterSet;
@@ -35,6 +35,7 @@ const setup = () => {
       root: true,
     },
     Context: {
+      builtInFolderInfo,
       nodeStoreMap,
       lastVisitTimeMap,
       filterActive,
@@ -101,6 +102,10 @@ const expectFolderInFolder = (child: HTMLElement, headerLink: HTMLElement) => {
 };
 
 beforeEach(() => {
+  builtInFolderInfo = {
+    rootNodeId: 'bookmarks-root-id',
+    builtInFolderIds: ['bookmarks-toolbar-id', 'other-bookmarks-id'],
+  };
   nodeStoreMap = new Map() as Treetop.NodeStoreMap;
   lastVisitTimeMap = new Map() as Treetop.LastVisitTimeMap;
   filterActive = writable(false);
@@ -114,8 +119,7 @@ describe('rooted at bookmarks root', () => {
     beforeEach(() => {
       // Create node tree:
       // rootNode
-      rootNode = createFolderNode();
-      rootNode.id = BOOKMARKS_ROOT_GUID;
+      rootNode = createFolderNode({ id: builtInFolderInfo.rootNodeId! });
 
       nodeStoreMap.set(rootNode.id, writable(rootNode));
 
@@ -153,9 +157,10 @@ describe('rooted at bookmarks root', () => {
     beforeEach(() => {
       // Create node tree:
       // rootNode
-      rootNode = createFolderNode();
-      rootNode.id = BOOKMARKS_ROOT_GUID;
-      rootNode.title = '';
+      rootNode = createFolderNode({
+        id: builtInFolderInfo.rootNodeId!,
+        title: '',
+      });
 
       nodeStoreMap.set(rootNode.id, writable(rootNode));
 
@@ -191,8 +196,7 @@ describe('rooted at bookmarks root', () => {
       // Create node tree:
       // rootNode
       //   └── folderNode
-      rootNode = createFolderNode();
-      rootNode.id = BOOKMARKS_ROOT_GUID;
+      rootNode = createFolderNode({ id: builtInFolderInfo.rootNodeId! });
 
       folderNode = createFolderNode();
       folderNode.parentId = rootNode.id;
@@ -250,8 +254,7 @@ describe('rooted at bookmarks root', () => {
       //      ├── bookmarkNode
       //      └── folderNode2
       //         └── bookmarkNode
-      rootNode = createFolderNode();
-      rootNode.id = BOOKMARKS_ROOT_GUID;
+      rootNode = createFolderNode({ id: builtInFolderInfo.rootNodeId! });
 
       folderNode1 = createFolderNode();
       folderNode1.parentId = rootNode.id;
@@ -365,8 +368,7 @@ describe('rooted at bookmarks root', () => {
       //   └── folderNode2
       //      ├── bookmarkNode
       //      └── separatorNode
-      rootNode = createFolderNode();
-      rootNode.id = BOOKMARKS_ROOT_GUID;
+      rootNode = createFolderNode({ id: builtInFolderInfo.rootNodeId! });
 
       folderNode1 = createFolderNode();
       folderNode1.parentId = rootNode.id;
@@ -473,8 +475,7 @@ describe('rooted at subfolder', () => {
     //      ├── bookmarkNode
     //      └── folderNode3
     //         └── bookmarkNode
-    rootNode = createFolderNode();
-    rootNode.id = BOOKMARKS_ROOT_GUID;
+    rootNode = createFolderNode({ id: builtInFolderInfo.rootNodeId! });
 
     folderNode1 = createFolderNode();
     folderNode1.parentId = rootNode.id;
@@ -623,8 +624,7 @@ describe('filter active', () => {
     //      └── folderNode3
     //         ├── bookmarkNode5
     //         └── bookmarkNode6
-    rootNode = createFolderNode();
-    rootNode.id = BOOKMARKS_ROOT_GUID;
+    rootNode = createFolderNode({ id: builtInFolderInfo.rootNodeId! });
 
     folderNode1 = createFolderNode();
     folderNode1.parentId = rootNode.id;

@@ -1,19 +1,14 @@
 import faker from 'faker';
 import type { Bookmarks, History } from 'webextension-polyfill';
 
-import {
-  BOOKMARK_TREE_NODE_TYPE_BOOKMARK,
-  BOOKMARK_TREE_NODE_TYPE_FOLDER,
-  BOOKMARK_TREE_NODE_TYPE_SEPARATOR,
-  BOOKMARKS_MENU_GUID,
-  BOOKMARKS_ROOT_GUID,
-  BOOKMARKS_TOOLBAR_GUID,
-  MOBILE_BOOKMARKS_GUID,
-  OTHER_BOOKMARKS_GUID,
-} from '@Treetop/treetop/constants';
+import { BOOKMARK_TREE_NODE_TYPE_SEPARATOR } from '@Treetop/treetop/constants';
 import * as Treetop from '@Treetop/treetop/types';
 
 const TITLE_NUM_RANDOM_WORDS = 3;
+
+const BOOKMARKS_ROOT_GUID = 'bookmarks-root-id';
+const BOOKMARKS_TOOLBAR_GUID = 'bookmarks-toolbar-id';
+const OTHER_BOOKMARKS_GUID = 'other-bookmarks-ids';
 
 //
 // Treetop node factories
@@ -64,7 +59,6 @@ export const createBrowserBookmarkNode = (
     id: faker.datatype.uuid(),
     parentId: parent.id,
     title: faker.random.words(TITLE_NUM_RANDOM_WORDS),
-    type: BOOKMARK_TREE_NODE_TYPE_BOOKMARK,
     url: faker.internet.url(),
   };
   parent.children!.push(node);
@@ -78,7 +72,6 @@ export const createBrowserFolderNode = (
     id: faker.datatype.uuid(),
     parentId: parent.id,
     title: faker.random.words(TITLE_NUM_RANDOM_WORDS),
-    type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
     children: [],
   };
   parent.children!.push(node);
@@ -99,22 +92,11 @@ export const createBrowserSeparatorNode = (
   return node;
 };
 
-export const createBookmarksMenuNode = (): Bookmarks.BookmarkTreeNode => {
-  return {
-    id: BOOKMARKS_MENU_GUID,
-    parentId: BOOKMARKS_ROOT_GUID,
-    title: 'Bookmarks Menu',
-    type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
-    children: [],
-  };
-};
-
 export const createBookmarksToolbarNode = (): Bookmarks.BookmarkTreeNode => {
   return {
     id: BOOKMARKS_TOOLBAR_GUID,
     parentId: BOOKMARKS_ROOT_GUID,
     title: 'Bookmarks Toolbar',
-    type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
     children: [],
   };
 };
@@ -124,17 +106,6 @@ export const createOtherBookmarksNode = (): Bookmarks.BookmarkTreeNode => {
     id: OTHER_BOOKMARKS_GUID,
     parentId: BOOKMARKS_ROOT_GUID,
     title: 'Other Bookmarks',
-    type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
-    children: [],
-  };
-};
-
-export const createMobileBookmarksNode = (): Bookmarks.BookmarkTreeNode => {
-  return {
-    id: MOBILE_BOOKMARKS_GUID,
-    parentId: BOOKMARKS_ROOT_GUID,
-    title: 'Mobile Bookmarks',
-    type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
     children: [],
   };
 };
@@ -144,14 +115,8 @@ export const createBookmarksRootNode = (): Bookmarks.BookmarkTreeNode => {
     id: BOOKMARKS_ROOT_GUID,
     parentId: undefined,
     url: undefined,
-    type: BOOKMARK_TREE_NODE_TYPE_FOLDER,
     title: '',
-    children: [
-      createBookmarksMenuNode(),
-      createBookmarksToolbarNode(),
-      createOtherBookmarksNode(),
-      createMobileBookmarksNode(),
-    ],
+    children: [createBookmarksToolbarNode(), createOtherBookmarksNode()],
   };
 };
 

@@ -55,3 +55,10 @@ export type PreferenceValue =
   | string[]
   | number[]
   | boolean[];
+
+export interface BuiltInFolderInfo {
+  // Root bookmark node ID.
+  rootNodeId: string | null;
+  // Node IDs of built-in folders under the root bookmark node.
+  builtInFolderIds: string[];
+}

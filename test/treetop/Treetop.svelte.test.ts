@@ -70,8 +70,8 @@ describe('Treetop', () => {
     bookmarksTree[0].title = 'Bookmarks root';
     mockBrowser.bookmarks.getTree.expect.andResolve(bookmarksTree);
 
-    // Expect all bookmark root folders, excluding Mobile Bookmarks, to be empty
-    const numEmptyFolders = bookmarksTree[0].children!.length - 1;
+    // Expect all bookmark root folders to be empty
+    const numEmptyFolders = bookmarksTree[0].children!.length;
     mockBrowser.i18n.getMessage.expect('emptyFolder').times(numEmptyFolders);
 
     setup();

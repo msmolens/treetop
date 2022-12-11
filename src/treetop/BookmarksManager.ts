@@ -1,41 +1,45 @@
 import { get, writable } from 'svelte/store';
 import browser, { type Bookmarks } from 'webextension-polyfill';
 
-import {
-  BOOKMARK_TREE_NODE_TYPE_BOOKMARK,
-  BOOKMARK_TREE_NODE_TYPE_FOLDER,
-  BOOKMARK_TREE_NODE_TYPE_SEPARATOR,
-  BOOKMARKS_MENU_GUID,
-  BOOKMARKS_TOOLBAR_GUID,
-  OTHER_BOOKMARKS_GUID,
-} from './constants';
+import { isBookmark, isFolder, isSeparator } from './bookmarktreenode-utils';
+import { MOBILE_BOOKMARKS_GUID } from './constants';
 import * as Treetop from './types';
-
-// Map bookmarks.BookmarkTreeNodeType to Treetop.NodeType
-const BookmarkTypeMap: Map<Bookmarks.BookmarkTreeNodeType, Treetop.NodeType> =
-  new Map([
-    [BOOKMARK_TREE_NODE_TYPE_BOOKMARK, Treetop.NodeType.Bookmark],
-    [BOOKMARK_TREE_NODE_TYPE_FOLDER, Treetop.NodeType.Folder],
-    [BOOKMARK_TREE_NODE_TYPE_SEPARATOR, Treetop.NodeType.Separator],
-  ]);
 
 /**
  * Class to initialize and manage updating bookmark node stores.
  */
 export class BookmarksManager {
-  constructor(private readonly nodeStoreMap: Treetop.NodeStoreMap) {}
+  constructor(
+    private readonly nodeStoreMap: Treetop.NodeStoreMap,
+    private readonly builtInFolderInfo: Treetop.BuiltInFolderInfo
+  ) {}
 
   /**
    * Load all bookmarks and initialize node stores for folders.
+   * Initialize built-in folder info.
    */
   async loadBookmarks(): Promise<void> {
     const nodes = await browser.bookmarks.getTree();
-    this.orderBookmarksRootChildren(nodes[0]);
 
+    // Store root node ID
+    const rootNode = nodes[0];
+    this.builtInFolderInfo.rootNodeId = rootNode.id;
+
+    // Firefox: Exclude Mobile Bookmarks folder
+    rootNode.children = rootNode.children?.filter(
+      ({ id }) => id !== MOBILE_BOOKMARKS_GUID
+    );
+
+    // Store built-in folder IDs (e.g. Other Bookmarks)
+    this.builtInFolderInfo.builtInFolderIds = rootNode.children!.map(
+      ({ id }) => id
+    );
+
+    // Initialize node stores for folders
     while (nodes.length > 0) {
       const node = nodes.pop()!;
 
-      if (node.type === BOOKMARK_TREE_NODE_TYPE_FOLDER) {
+      if (isFolder(node)) {
         this.buildNodeStore(node);
         nodes.push(...node.children!);
       }
@@ -54,32 +58,27 @@ export class BookmarksManager {
       title: node.title,
       children: node.children!.map((child): Treetop.Node => {
         let newChild: Treetop.Node;
-        const type = BookmarkTypeMap.get(child.type!)!;
-        switch (type) {
-          case Treetop.NodeType.Bookmark:
-            newChild = {
-              type,
-              id: child.id,
-              title: child.title,
-              url: child.url!,
-            };
-            break;
-          case Treetop.NodeType.Folder:
-            newChild = {
-              type,
-              id: child.id,
-              title: child.title,
-              children: [],
-            };
-            break;
-          case Treetop.NodeType.Separator:
-            newChild = {
-              type,
-              id: child.id,
-            };
-            break;
-          default:
-            throw new TypeError();
+        if (isBookmark(child)) {
+          newChild = {
+            id: child.id,
+            title: child.title,
+            type: Treetop.NodeType.Bookmark,
+            url: child.url!,
+          };
+        } else if (isFolder(child)) {
+          newChild = {
+            id: child.id,
+            title: child.title,
+            type: Treetop.NodeType.Folder,
+            children: [],
+          };
+        } else if (isSeparator(child)) {
+          newChild = {
+            id: child.id,
+            type: Treetop.NodeType.Separator,
+          };
+        } else {
+          throw new TypeError();
         }
 
         return newChild;
@@ -93,10 +92,6 @@ export class BookmarksManager {
    * Create and record a node store for the specified bookmark node.
    */
   private buildNodeStore(node: Bookmarks.BookmarkTreeNode): void {
-    if (node.type !== BOOKMARK_TREE_NODE_TYPE_FOLDER) {
-      throw new TypeError();
-    }
-
     const newNode = this.convertNode(node);
     const nodeStore = writable(newNode);
     this.nodeStoreMap.set(node.id, nodeStore);
@@ -108,7 +103,7 @@ export class BookmarksManager {
   private async updateNodeStore(nodeId: string): Promise<void> {
     const [node] = await browser.bookmarks.get(nodeId);
 
-    if (node.type !== BOOKMARK_TREE_NODE_TYPE_FOLDER) {
+    if (!isFolder(node)) {
       throw new TypeError();
     }
 
@@ -126,7 +121,7 @@ export class BookmarksManager {
     id: string,
     bookmark: Bookmarks.BookmarkTreeNode
   ): Promise<void> {
-    if (bookmark.type === BOOKMARK_TREE_NODE_TYPE_FOLDER) {
+    if (isFolder(bookmark)) {
       // Add node store for the new folder
       const [node] = await browser.bookmarks.get(id);
       node.children = await browser.bookmarks.getChildren(id);
@@ -149,7 +144,7 @@ export class BookmarksManager {
   ): Promise<string[]> {
     const removedNodeIds = [];
 
-    if (removeInfo.node.type === BOOKMARK_TREE_NODE_TYPE_FOLDER) {
+    if (isFolder(removeInfo.node)) {
       const nodeStore = this.nodeStoreMap.get(id)!;
       const nodes: [Treetop.FolderNode] = [get(nodeStore)];
 
@@ -218,36 +213,5 @@ export class BookmarksManager {
     if (parentId !== oldParentId) {
       await this.updateNodeStore(oldParentId);
     }
-  }
-
-  /**
-   * Order root bookmark node children like:
-   * - Bookmarks Toolbar
-   * - Bookmarks Menu
-   * - Other Bookmarks
-   *
-   * Respect preference settings for whether to include each folder.
-   *
-   * Omit Mobile Bookmarks.
-   */
-  private orderBookmarksRootChildren(node: Bookmarks.BookmarkTreeNode): void {
-    const children: Bookmarks.BookmarkTreeNode[] = [];
-
-    const bookmarksToolbarNode = node.children!.find(
-      ({ id }) => id === BOOKMARKS_TOOLBAR_GUID
-    )!;
-    children.push(bookmarksToolbarNode);
-
-    const bookmarksMenuNode = node.children!.find(
-      ({ id }) => id === BOOKMARKS_MENU_GUID
-    )!;
-    children.push(bookmarksMenuNode);
-
-    const otherBookmarksNode = node.children!.find(
-      ({ id }) => id === OTHER_BOOKMARKS_GUID
-    )!;
-    children.push(otherBookmarksNode);
-
-    node.children = children;
   }
 }
