@@ -23,10 +23,6 @@ const BookmarkTypeMap: Map<Bookmarks.BookmarkTreeNodeType, Treetop.NodeType> =
  * Class to initialize and manage updating bookmark node stores.
  */
 export class BookmarksManager {
-  showBookmarksToolbar = true;
-  showBookmarksMenu = true;
-  showOtherBookmarks = true;
-
   constructor(private readonly nodeStoreMap: Treetop.NodeStoreMap) {}
 
   /**
@@ -237,26 +233,20 @@ export class BookmarksManager {
   private orderBookmarksRootChildren(node: Bookmarks.BookmarkTreeNode): void {
     const children: Bookmarks.BookmarkTreeNode[] = [];
 
-    if (this.showBookmarksToolbar) {
-      const bookmarksToolbarNode = node.children!.find(
-        ({ id }) => id === BOOKMARKS_TOOLBAR_GUID
-      )!;
-      children.push(bookmarksToolbarNode);
-    }
+    const bookmarksToolbarNode = node.children!.find(
+      ({ id }) => id === BOOKMARKS_TOOLBAR_GUID
+    )!;
+    children.push(bookmarksToolbarNode);
 
-    if (this.showBookmarksMenu) {
-      const bookmarksMenuNode = node.children!.find(
-        ({ id }) => id === BOOKMARKS_MENU_GUID
-      )!;
-      children.push(bookmarksMenuNode);
-    }
+    const bookmarksMenuNode = node.children!.find(
+      ({ id }) => id === BOOKMARKS_MENU_GUID
+    )!;
+    children.push(bookmarksMenuNode);
 
-    if (this.showOtherBookmarks) {
-      const otherBookmarksNode = node.children!.find(
-        ({ id }) => id === OTHER_BOOKMARKS_GUID
-      )!;
-      children.push(otherBookmarksNode);
-    }
+    const otherBookmarksNode = node.children!.find(
+      ({ id }) => id === OTHER_BOOKMARKS_GUID
+    )!;
+    children.push(otherBookmarksNode);
 
     node.children = children;
   }

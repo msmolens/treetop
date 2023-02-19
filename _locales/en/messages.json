@@ -72,18 +72,6 @@
     "message": "Appearance",
     "description": "Title of group for appearance options."
   },
-  "optionShowBookmarksToolbar": {
-    "message": "Show Bookmarks Toolbar",
-    "description": "Title of option to show the Bookmarks Toolbar folder."
-  },
-  "optionShowBookmarksMenu": {
-    "message": "Show Bookmarks Menu",
-    "description": "Title of option to show the Bookmarks Menu folder."
-  },
-  "optionShowOtherBookmarks": {
-    "message": "Show Other Bookmarks",
-    "description": "Title of option to show the Other Bookmarks folder."
-  },
   "optionTruncateLongTitles": {
     "message": "Truncate long titles",
     "description": "Title of option to truncate long bookmark titles."

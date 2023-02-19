@@ -5,12 +5,8 @@
   let options: Awaited<ReturnType<typeof browser.storage.local.get>>;
 
   const strings = {
-    general: browser.i18n.getMessage('optionHeadingGeneral'),
     bookmarks: browser.i18n.getMessage('optionHeadingBookmarks'),
     appearance: browser.i18n.getMessage('optionHeadingAppearance'),
-    showBookmarksToolbar: browser.i18n.getMessage('optionShowBookmarksToolbar'),
-    showBookmarksMenu: browser.i18n.getMessage('optionShowBookmarksMenu'),
-    showOtherBookmarks: browser.i18n.getMessage('optionShowOtherBookmarks'),
     truncate: browser.i18n.getMessage('optionTruncateLongTitles'),
     tooltips: browser.i18n.getMessage('optionDisplayTooltips'),
     showRecentlyVisited: browser.i18n.getMessage('optionShowRecentlyVisited'),
@@ -103,38 +99,6 @@
 </style>
 
 {#if options}
-  <h3>{strings.general}</h3>
-  <div>
-    <label>
-      <input
-        type="checkbox"
-        bind:checked={options.showBookmarksToolbar}
-        on:change={handleCheckboxChange}
-        data-option-name="showBookmarksToolbar" />
-      {strings.showBookmarksToolbar}
-    </label>
-  </div>
-  <div>
-    <label>
-      <input
-        type="checkbox"
-        bind:checked={options.showBookmarksMenu}
-        on:change={handleCheckboxChange}
-        data-option-name="showBookmarksMenu" />
-      {strings.showBookmarksMenu}
-    </label>
-  </div>
-  <div>
-    <label>
-      <input
-        type="checkbox"
-        bind:checked={options.showOtherBookmarks}
-        on:change={handleCheckboxChange}
-        data-option-name="showOtherBookmarks" />
-      {strings.showOtherBookmarks}
-    </label>
-  </div>
-
   <h3>{strings.bookmarks}</h3>
   <div>
     <label>
