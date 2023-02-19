@@ -225,10 +225,6 @@ describe('loadBookmarks', () => {
   it("reorders root boookmark node's children", async () => {
     mockBrowser.bookmarks.getTree.expect.andResolve(bookmarksTree);
 
-    expect(bookmarksManager.showBookmarksToolbar).toBe(true);
-    expect(bookmarksManager.showBookmarksMenu).toBe(true);
-    expect(bookmarksManager.showOtherBookmarks).toBe(true);
-
     await bookmarksManager.loadBookmarks();
 
     expect(nodeStoreMap.size).toBe(NUM_BOOKMARK_ROOTS);
@@ -254,90 +250,6 @@ describe('loadBookmarks', () => {
           title: 'Other Bookmarks',
         },
       ],
-    });
-  });
-
-  describe('respects options', () => {
-    beforeEach(() => {
-      mockBrowser.bookmarks.getTree.expect.andResolve(bookmarksTree);
-    });
-
-    it('showBookmarksToolbar', async () => {
-      bookmarksManager.showBookmarksToolbar = false;
-
-      await bookmarksManager.loadBookmarks();
-
-      expect(nodeStoreMap.size).toBe(NUM_BOOKMARK_ROOTS - 1);
-      expect(nodeStoreMap.get(BOOKMARKS_ROOT_GUID)).toBeDefined();
-      expect(get(nodeStoreMap.get(BOOKMARKS_ROOT_GUID)!)).toMatchObject({
-        id: BOOKMARKS_ROOT_GUID,
-        type: Treetop.NodeType.Folder,
-        title: '',
-        children: [
-          {
-            id: BOOKMARKS_MENU_GUID,
-            type: Treetop.NodeType.Folder,
-            title: 'Bookmarks Menu',
-          },
-          {
-            id: OTHER_BOOKMARKS_GUID,
-            type: Treetop.NodeType.Folder,
-            title: 'Other Bookmarks',
-          },
-        ],
-      });
-    });
-
-    it('showBookmarksMenu', async () => {
-      bookmarksManager.showBookmarksMenu = false;
-
-      await bookmarksManager.loadBookmarks();
-
-      expect(nodeStoreMap.size).toBe(NUM_BOOKMARK_ROOTS - 1);
-      expect(nodeStoreMap.get(BOOKMARKS_ROOT_GUID)).toBeDefined();
-      expect(get(nodeStoreMap.get(BOOKMARKS_ROOT_GUID)!)).toMatchObject({
-        id: BOOKMARKS_ROOT_GUID,
-        type: Treetop.NodeType.Folder,
-        title: '',
-        children: [
-          {
-            id: BOOKMARKS_TOOLBAR_GUID,
-            type: Treetop.NodeType.Folder,
-            title: 'Bookmarks Toolbar',
-          },
-          {
-            id: OTHER_BOOKMARKS_GUID,
-            type: Treetop.NodeType.Folder,
-            title: 'Other Bookmarks',
-          },
-        ],
-      });
-    });
-
-    it('showOtherBookmarks', async () => {
-      bookmarksManager.showOtherBookmarks = false;
-
-      await bookmarksManager.loadBookmarks();
-
-      expect(nodeStoreMap.size).toBe(NUM_BOOKMARK_ROOTS - 1);
-      expect(nodeStoreMap.get(BOOKMARKS_ROOT_GUID)).toBeDefined();
-      expect(get(nodeStoreMap.get(BOOKMARKS_ROOT_GUID)!)).toMatchObject({
-        id: BOOKMARKS_ROOT_GUID,
-        type: Treetop.NodeType.Folder,
-        title: '',
-        children: [
-          {
-            id: BOOKMARKS_TOOLBAR_GUID,
-            type: Treetop.NodeType.Folder,
-            title: 'Bookmarks Toolbar',
-          },
-          {
-            id: BOOKMARKS_MENU_GUID,
-            type: Treetop.NodeType.Folder,
-            title: 'Bookmarks Menu',
-          },
-        ],
-      });
     });
   });
 });

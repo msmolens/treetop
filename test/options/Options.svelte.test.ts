@@ -15,23 +15,11 @@ const setup = () => {
 describe('Options', () => {
   beforeEach(() => {
     mockBrowser.i18n.getMessage
-      .expect('optionHeadingGeneral')
-      .andReturn('general');
-    mockBrowser.i18n.getMessage
       .expect('optionHeadingBookmarks')
       .andReturn('bookmarks');
     mockBrowser.i18n.getMessage
       .expect('optionHeadingAppearance')
       .andReturn('appearance');
-    mockBrowser.i18n.getMessage
-      .expect('optionShowBookmarksToolbar')
-      .andReturn('show bookmarks toolbar');
-    mockBrowser.i18n.getMessage
-      .expect('optionShowBookmarksMenu')
-      .andReturn('show bookmarks menu');
-    mockBrowser.i18n.getMessage
-      .expect('optionShowOtherBookmarks')
-      .andReturn('show other bookmarks');
     mockBrowser.i18n.getMessage
       .expect('optionTruncateLongTitles')
       .andReturn('truncate');
@@ -55,9 +43,6 @@ describe('Options', () => {
       .andReturn('attributions');
 
     mockBrowser.storage.local.get.expect.andResolve({
-      showBookmarksToolbar: true,
-      showBookmarksMenu: false,
-      showOtherBookmarks: true,
       truncate: false,
       tooltips: true,
       showRecentlyVisited: true,
@@ -69,18 +54,8 @@ describe('Options', () => {
     setup();
 
     await waitFor(() => {
-      expect(screen.getByText(/^general/i)).toBeInTheDocument();
       expect(screen.getByText(/^bookmarks/i)).toBeInTheDocument();
       expect(screen.getByText(/^appearance/i)).toBeInTheDocument();
-      expect(
-        screen.getByLabelText(/^show bookmarks toolbar/i)
-      ).toBeInTheDocument();
-      expect(
-        screen.getByLabelText(/^show bookmarks menu/i)
-      ).toBeInTheDocument();
-      expect(
-        screen.getByLabelText(/^show other bookmarks/i)
-      ).toBeInTheDocument();
       expect(screen.getByLabelText(/^truncate/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/^tooltips/i)).toBeInTheDocument();
       expect(
@@ -101,12 +76,9 @@ describe('Options', () => {
     setup();
 
     await waitFor(() => {
-      expect(screen.getByText(/^general/i)).toBeInTheDocument();
+      expect(screen.getByText(/^bookmarks/i)).toBeInTheDocument();
     });
 
-    expect(screen.getByLabelText(/^show bookmarks toolbar/i)).toBeChecked();
-    expect(screen.getByLabelText(/^show bookmarks menu/i)).not.toBeChecked();
-    expect(screen.getByLabelText(/^show other bookmarks/i)).toBeChecked();
     expect(screen.getByLabelText(/^truncate/i)).not.toBeChecked();
     expect(screen.getByLabelText(/^tooltips/i)).toBeChecked();
     expect(screen.getByLabelText(/^show recently visited/i)).toBeChecked();

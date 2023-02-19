@@ -38,18 +38,6 @@
   //
 
   const preferencesManager = new PreferencesManager();
-  const showBookmarksToolbar = preferencesManager.createStore(
-    'showBookmarksToolbar',
-    true
-  );
-  const showBookmarksMenu = preferencesManager.createStore(
-    'showBookmarksMenu',
-    true
-  );
-  const showOtherBookmarks = preferencesManager.createStore(
-    'showOtherBookmarks',
-    true
-  );
   const truncate = preferencesManager.createStore('truncate', true);
   const tooltips = preferencesManager.createStore('tooltips', true);
   const showRecentlyVisited = preferencesManager.createStore(
@@ -492,11 +480,6 @@
       console.error(err);
       handleError(browser.i18n.getMessage('errorLoadingPreferences'));
     }
-
-    // Configure bookmarks manager
-    bookmarksManager.showBookmarksToolbar = $showBookmarksToolbar as boolean;
-    bookmarksManager.showBookmarksMenu = $showBookmarksMenu as boolean;
-    bookmarksManager.showOtherBookmarks = $showOtherBookmarks as boolean;
 
     // Register bookmark event handlers
     browser.bookmarks.onCreated.addListener(onBookmarkCreated);
