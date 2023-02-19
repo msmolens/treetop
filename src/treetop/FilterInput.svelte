@@ -5,7 +5,7 @@
   import TextField from '@smui/textfield';
   // FIXME: IconButton must appear after TextField, otherwise custom
   // TextField styles aren't applied correctly
-  import IconButton, { type IconButtonComponentDev } from '@smui/icon-button';
+  import IconButton from '@smui/icon-button';
   import debounce from 'lodash-es/debounce';
   import * as browser from 'webextension-polyfill';
 
@@ -13,7 +13,7 @@
   let filter = '';
 
   // Icon button
-  let iconButton: IconButtonComponentDev;
+  let iconButton: InstanceType<typeof IconButton>;
 
   // Debounce duration for typing in filter input (ms)
   const FILTER_DEBOUNCE_MS = 275;

@@ -3,7 +3,7 @@
   import type { MDCDialogCloseEvent } from '@material/dialog';
   import Button, { Label } from '@smui/button';
   import Dialog, { Actions, Content, Title } from '@smui/dialog';
-  import TextField, { type TextfieldComponentDev } from '@smui/textfield';
+  import TextField from '@smui/textfield';
   import truncate from 'lodash-es/truncate';
   import * as browser from 'webextension-polyfill';
 
@@ -15,7 +15,7 @@
   export let title: string;
   export let url: string | undefined;
 
-  let nameLabel: TextfieldComponentDev;
+  let nameLabel: InstanceType<typeof TextField>;
 
   function handleOpened() {
     nameLabel.focus();

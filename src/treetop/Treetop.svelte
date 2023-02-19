@@ -8,7 +8,7 @@
   } from 'svelte/store';
   import { fade } from 'svelte/transition';
   import LinearProgress from '@smui/linear-progress';
-  import Snackbar, { Label, type SnackbarComponentDev } from '@smui/snackbar';
+  import Snackbar, { Label } from '@smui/snackbar';
   import type { Bookmarks, History, Menus, Tabs } from 'webextension-polyfill';
   import * as browser from 'webextension-polyfill';
 
@@ -96,7 +96,7 @@
   // Error notification
   //
 
-  let errorSnackbar: SnackbarComponentDev;
+  let errorSnackbar: InstanceType<typeof Snackbar>;
   let errorMessage: string;
 
   //

@@ -4,7 +4,7 @@
   import { setContext, SvelteComponent } from 'svelte';
 
   // Component
-  export let Component: SvelteComponent;
+  export let Component: typeof SvelteComponent;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   export let Props: Record<string, any>;
 
