@@ -1,4 +1,4 @@
-import { type Writable, get } from 'svelte/store';
+import { get, type Writable } from 'svelte/store';
 import faker from 'faker';
 import { mockEvent, MockzillaEventOf } from 'mockzilla-webextension';
 

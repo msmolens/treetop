@@ -5,7 +5,7 @@ import {
   OTHER_BOOKMARKS_GUID,
 } from '@Treetop/treetop/constants';
 
-import { type OnClickedCallback, MenuItem } from './MenuItem';
+import { MenuItem, type OnClickedCallback } from './MenuItem';
 
 /**
  * Menu item to show the properties dialog for a bookmark or folder.
