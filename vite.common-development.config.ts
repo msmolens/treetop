@@ -1,7 +1,6 @@
 import { UserConfig } from 'vite';
 
-/** @type {UserConfig} */
-export const developmentConfig = {
+export const developmentConfig: UserConfig = {
   build: {
     minify: false,
   },

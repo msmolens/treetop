@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
+### Changed
+- Update Vite to 4.1.
+
 ### Removed
 - Remove options to set visibility of built-in bookmark folders.
 

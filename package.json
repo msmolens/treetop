@@ -2,6 +2,7 @@
   "name": "treetop",
   "version": "0.0.1",
   "description": "Treetop",
+  "type": "module",
   "scripts": {
     "compile-smui-theme-light": "smui-theme compile src/treetop/generated/smui.css -i src/theme",
     "compile-smui-theme-dark": "smui-theme compile src/treetop/generated/smui-dark.css -i src/theme/dark",
@@ -11,14 +12,14 @@
     "prettier:fix": "prettier --write ./src ./test",
     "build": "concurrently --max-processes 1 \"npm:build:background_script\" \"npm:build:options\" \"npm:build:treetop\" \"npm:build:welcome\"",
     "build:watch": "concurrently \"npm:build:background_script:watch\" \"npm:build:options:watch\" \"npm:build:treetop:watch\" \"npm:build:welcome:watch\"",
-    "build:background_script": "vite build --config vite.background_script.config.js",
-    "build:background_script:watch": "vite build --config vite.background_script.config.js --mode development --watch",
-    "build:options": "vite build --config vite.options.config.js",
-    "build:options:watch": "vite build --config vite.options.config.js --mode development --watch",
-    "build:treetop": "vite build --config vite.treetop.config.js",
-    "build:treetop:watch": "vite build --config vite.treetop.config.js --mode development --watch",
-    "build:welcome": "vite build --config vite.welcome.config.js",
-    "build:welcome:watch": "vite build --config vite.welcome.config.js --mode development --watch",
+    "build:background_script": "vite build --config vite.background_script.config.ts",
+    "build:background_script:watch": "vite build --config vite.background_script.config.ts --mode development --watch",
+    "build:options": "vite build --config vite.options.config.ts",
+    "build:options:watch": "vite build --config vite.options.config.ts --mode development --watch",
+    "build:treetop": "vite build --config vite.treetop.config.ts",
+    "build:treetop:watch": "vite build --config vite.treetop.config.ts --mode development --watch",
+    "build:welcome": "vite build --config vite.welcome.config.ts",
+    "build:welcome:watch": "vite build --config vite.welcome.config.ts --mode development --watch",
     "prepare": "npm run compile-smui-theme-light && npm run compile-smui-theme-dark",
     "test": "jest",
     "validate": "svelte-check --no-tsconfig"
@@ -26,7 +27,7 @@
   "author": "Max Smolens <msmolens@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.20.12",
+    "@babel/core": "^7.21.0",
     "@babel/preset-env": "^7.20.2",
     "@fontsource/inter": "^4.5.15",
     "@fontsource/material-icons": "^4.5.4",
@@ -37,7 +38,7 @@
     "@smui/linear-progress": "^6.1.4",
     "@smui/snackbar": "^6.1.4",
     "@smui/textfield": "^6.1.4",
-    "@sveltejs/vite-plugin-svelte": "^1.4.0",
+    "@sveltejs/vite-plugin-svelte": "^2.0.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/svelte": "^3.2.2",
     "@testing-library/user-event": "^14.4.3",
@@ -73,9 +74,12 @@
     "svelte-preprocess": "^5.0.1",
     "ts-jest": "^28.0.5",
     "typescript": "~4.9.5",
-    "vite": "^3.2.5",
+    "vite": "^4.1.3",
     "vite-tsconfig-paths": "^4.0.5",
     "webextension-polyfill": "^0.9.0"
+  },
+  "overrides": {
+    "@babel/generator": "7.21.1"
   },
   "engines": {
     "node": ">=14 <17",

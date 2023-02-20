@@ -1,4 +1,4 @@
-import { merge } from 'lodash';
+import merge from 'lodash/merge';
 import { resolve } from 'path';
 import { UserConfig, defineConfig } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
@@ -9,8 +9,7 @@ import { developmentConfig } from './vite.common-development.config.js';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  /** @type {UserConfig} */
-  const commonConfig = {
+  const commonConfig: UserConfig = {
     plugins: [
       copy({
         targets: [
