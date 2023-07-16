@@ -36,7 +36,7 @@ Treetop is a Firefox extension that provides a high-level live view of your book
 
 ### Requirements
 
-- [Node.js](https://nodejs.org/) 14.x or greater
+- [Node.js](https://nodejs.org/) 18.x or greater
 - Firefox browser
 
 ### Prerequisites
@@ -50,22 +50,23 @@ npm install
 
 ### Commands
 
-| Command                | Description |
-| ---------------------- | ----------- |
-| `npm run build:watch`  | Build for development, watching for file changes. |
-| `npm run build`        | Build for release. |
-| `npm run lint`         | Check code for linting errors. |
-| `npm run lint:fix`     | Fix linting errors. |
-| `npm run prettier`     | Check code for formatting errors. |
-| `npm run prettier:fix` | Fix formatting errors. |
+| Command                | Description                                                                                                                                                 |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run build:watch`  | Build for development, watching for file changes.                                                                                                           |
+| `npm run build`        | Build for release.                                                                                                                                          |
+| `npm run lint`         | Check code for linting errors.                                                                                                                              |
+| `npm run lint:fix`     | Fix linting errors.                                                                                                                                         |
+| `npm run prettier`     | Check code for formatting errors.                                                                                                                           |
+| `npm run prettier:fix` | Fix formatting errors.                                                                                                                                      |
 | `npm run validate`     | Check for unused CSS, a11y issues, and TypeScript errors with [svelte-check](https://github.com/sveltejs/language-tools/tree/master/packages/svelte-check). |
-| `npm test`             | Run tests. |
-| `web-ext run`          | Start Firefox and load the extension temporarily. |
-| `web-ext build`        | Package the extension. |
+| `npm test`             | Run tests.                                                                                                                                                  |
+| `web-ext run`          | Start Firefox and load the extension temporarily.                                                                                                           |
+| `web-ext build`        | Package the extension.                                                                                                                                      |
 
 ### Core Technologies
 
 #### Development
+
 - [Svelte](https://svelte.dev/): Component framework.
 - [TypeScript](https://www.typescriptlang.org/): Typed JavaScript.
 - [Vite](https://vitejs.dev/): Build tool.
@@ -76,6 +77,7 @@ npm install
 - [webextension-polyfill](https://github.com/mozilla/webextension-polyfill): WebExtension `browser` API polyfill.
 
 #### Testing
+
 - [Jest](https://jestjs.io/): Testing framework.
 - [DOM Testing Library](https://testing-library.com/): Framework to test Svelte components.
 - [mockzilla-webextension](https://lusito.github.io/mockzilla-webextension/): Mocking toolkit for web extensions.
