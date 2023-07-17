@@ -14,14 +14,14 @@ jobs:
         uses: actions/checkout@v3
       - name: Set output filename
         id: set-filename
-        run: echo ::set-output name=filename::treetop-${GITHUB_REF#refs/*/}.zip
+        run: echo "FILENAME=treetop-${GITHUB_REF#refs/*/}.zip" >> $GITHUB_OUTPUT
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
       - run: npm ci
       - run: npm run build
-      - run: npx web-ext build --no-input=true --filename "${{ steps.set-filename.outputs.filename}}"
+      - run: npx web-ext build --no-input=true --filename "${{ steps.set-filename.outputs.FILENAME}}"
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -39,6 +39,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./web-ext-artifacts/${{ steps.set-filename.outputs.filename}}
-          asset_name: ${{ steps.set-filename.outputs.filename}}
+          asset_path: ./web-ext-artifacts/${{ steps.set-filename.outputs.FILENAME}}
+          asset_name: ${{ steps.set-filename.outputs.FILENAME}}
           asset_content_type: application/zip
