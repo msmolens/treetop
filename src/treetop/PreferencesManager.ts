@@ -59,7 +59,7 @@ export class PreferencesManager {
    * Update preferences stores when storage values change.
    */
   private handleStorageChanged(
-    changes: { [key: string]: Storage.StorageChange },
+    changes: Record<string, Storage.StorageChange>,
     _areaName: string
   ): void {
     for (const key of Object.keys(changes)) {

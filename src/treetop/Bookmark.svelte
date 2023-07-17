@@ -16,7 +16,7 @@
   const truncate = getContext<Writable<boolean>>('truncate');
   const tooltips = getContext<Writable<boolean>>('tooltips');
 
-  let lastVisitTime = lastVisitTimeMap.get(nodeId) as Writable<number>;
+  let lastVisitTime = lastVisitTimeMap.get(nodeId)!;
 
   // Maximum length of displayed bookmark titles and, in tooltips, URLs.
   const maxLength = 78;

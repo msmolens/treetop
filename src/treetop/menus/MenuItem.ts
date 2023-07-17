@@ -1,6 +1,4 @@
-export interface OnClickedCallback {
-  (nodeId: string): void;
-}
+export type OnClickedCallback = (nodeId: string) => void;
 
 export abstract class MenuItem {
   constructor(private readonly onClickedCallback: OnClickedCallback) {}
