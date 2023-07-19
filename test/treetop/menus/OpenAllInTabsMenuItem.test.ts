@@ -25,7 +25,7 @@ beforeEach(() => {
   menuItem = new OpenAllInTabsMenuItem(
     BUILT_IN_FOLDER_INFO,
     nodeStoreMap,
-    callback
+    callback,
   );
 });
 

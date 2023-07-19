@@ -30,7 +30,7 @@ export class MenuManager {
    */
   async handleMenuShown(
     info: Menus.OnShownInfoType,
-    tab: Tabs.Tab
+    tab: Tabs.Tab,
   ): Promise<void> {
     if (!info.contexts.includes('link') || info.viewType !== 'tab') {
       return;
@@ -82,7 +82,7 @@ export class MenuManager {
    */
   async handleMenuClicked(
     info: Menus.OnClickData,
-    tab?: Tabs.Tab
+    tab?: Tabs.Tab,
   ): Promise<void> {
     // Store current active element; it may be cleared while waiting for an
     // asynchronous function call

@@ -65,7 +65,7 @@ const expectDocumentTitle = (title: string) => {
  */
 const expectToBeInContentsOfFolder = (
   child: HTMLElement,
-  headerLink: HTMLElement
+  headerLink: HTMLElement,
 ) => {
   const contents = child.parentElement;
   expect(contents).not.toBeNull();
@@ -134,7 +134,7 @@ describe('rooted at bookmarks root', () => {
 
     it('renders', () => {
       expect(
-        screen.getByRole('link', { name: rootNode.title })
+        screen.getByRole('link', { name: rootNode.title }),
       ).toBeInTheDocument();
       expect(screen.getByText(/^empty folder/i)).toBeInTheDocument();
 
@@ -216,10 +216,10 @@ describe('rooted at bookmarks root', () => {
 
     it('renders', () => {
       expect(
-        screen.getByRole('link', { name: rootNode.title })
+        screen.getByRole('link', { name: rootNode.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: folderNode.title })
+        screen.getByRole('link', { name: folderNode.title }),
       ).toBeInTheDocument();
       expect(screen.getByText(/^empty folder/i)).toBeInTheDocument();
 
@@ -278,29 +278,29 @@ describe('rooted at bookmarks root', () => {
 
     it('renders', () => {
       expect(
-        screen.getByRole('link', { name: rootNode.title })
+        screen.getByRole('link', { name: rootNode.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: folderNode1.title })
+        screen.getByRole('link', { name: folderNode1.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: folderNode2.title })
+        screen.getByRole('link', { name: folderNode2.title }),
       ).toBeInTheDocument();
       expect(screen.queryByText(/^empty folder/i)).not.toBeInTheDocument();
       expect(
         screen.getByRole('link', {
           name: (folderNode1.children[0] as Treetop.BookmarkNode).title,
-        })
+        }),
       ).toBeInTheDocument();
       expect(
         screen.getByRole('link', {
           name: (folderNode1.children[1] as Treetop.BookmarkNode).title,
-        })
+        }),
       ).toBeInTheDocument();
       expect(
         screen.getByRole('link', {
           name: (folderNode2.children[0] as Treetop.BookmarkNode).title,
-        })
+        }),
       ).toBeInTheDocument();
 
       const rootNodeLink = screen.getByRole('link', { name: rootNode.title });
@@ -323,12 +323,12 @@ describe('rooted at bookmarks root', () => {
       expect(bookmarkLink1.dataset.nodeId).toBe(folderNode1.children[0].id);
       expect(bookmarkLink1).toHaveAttribute(
         'href',
-        (folderNode1.children[0] as Treetop.BookmarkNode).url
+        (folderNode1.children[0] as Treetop.BookmarkNode).url,
       );
       expect(bookmarkLink2.dataset.nodeId).toBe(folderNode1.children[1].id);
       expect(bookmarkLink2).toHaveAttribute(
         'href',
-        (folderNode1.children[1] as Treetop.BookmarkNode).url
+        (folderNode1.children[1] as Treetop.BookmarkNode).url,
       );
       expectToBeInContentsOfFolder(bookmarkLink1, folderNode1Link);
       expectToBeInContentsOfFolder(bookmarkLink2, folderNode1Link);
@@ -346,7 +346,7 @@ describe('rooted at bookmarks root', () => {
       expect(bookmarkLink3.dataset.nodeId).toBe(folderNode2.children[0].id);
       expect(bookmarkLink3).toHaveAttribute(
         'href',
-        (folderNode2.children[0] as Treetop.BookmarkNode).url
+        (folderNode2.children[0] as Treetop.BookmarkNode).url,
       );
       expectToBeInContentsOfFolder(bookmarkLink3, folderNode2Link);
     });
@@ -392,24 +392,24 @@ describe('rooted at bookmarks root', () => {
 
     it('renders', () => {
       expect(
-        screen.getByRole('link', { name: rootNode.title })
+        screen.getByRole('link', { name: rootNode.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: folderNode1.title })
+        screen.getByRole('link', { name: folderNode1.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: folderNode2.title })
+        screen.getByRole('link', { name: folderNode2.title }),
       ).toBeInTheDocument();
       expect(screen.queryByText(/^empty folder/i)).not.toBeInTheDocument();
       expect(
         screen.getByRole('link', {
           name: (folderNode1.children[0] as Treetop.BookmarkNode).title,
-        })
+        }),
       ).toBeInTheDocument();
       expect(
         screen.getByRole('link', {
           name: (folderNode2.children[0] as Treetop.BookmarkNode).title,
-        })
+        }),
       ).toBeInTheDocument();
       expect(screen.getByRole('separator')).toBeInTheDocument();
 
@@ -430,7 +430,7 @@ describe('rooted at bookmarks root', () => {
       expect(bookmarkLink1.dataset.nodeId).toBe(folderNode1.children[0].id);
       expect(bookmarkLink1).toHaveAttribute(
         'href',
-        (folderNode1.children[0] as Treetop.BookmarkNode).url
+        (folderNode1.children[0] as Treetop.BookmarkNode).url,
       );
       expectToBeInContentsOfFolder(bookmarkLink1, folderNode1Link);
 
@@ -447,7 +447,7 @@ describe('rooted at bookmarks root', () => {
       expect(bookmarkLink2.dataset.nodeId).toBe(folderNode2.children[0].id);
       expect(bookmarkLink2).toHaveAttribute(
         'href',
-        (folderNode2.children[0] as Treetop.BookmarkNode).url
+        (folderNode2.children[0] as Treetop.BookmarkNode).url,
       );
       expectToBeInContentsOfFolder(bookmarkLink2, folderNode2Link);
 
@@ -504,27 +504,27 @@ describe('rooted at subfolder', () => {
 
   it('renders when rooted at subfolder', () => {
     expect(
-      screen.getByRole('link', { name: rootNode.title })
+      screen.getByRole('link', { name: rootNode.title }),
     ).toBeInTheDocument();
     expect(
-      screen.queryByRole('link', { name: folderNode1.title })
+      screen.queryByRole('link', { name: folderNode1.title }),
     ).not.toBeInTheDocument();
     expect(
-      screen.getByRole('link', { name: folderNode2.title })
+      screen.getByRole('link', { name: folderNode2.title }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('link', { name: folderNode3.title })
+      screen.getByRole('link', { name: folderNode3.title }),
     ).toBeInTheDocument();
     expect(screen.queryByText(/^empty folder/i)).not.toBeInTheDocument();
     expect(
       screen.getByRole('link', {
         name: (folderNode2.children[0] as Treetop.BookmarkNode).title,
-      })
+      }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole('link', {
         name: (folderNode3.children[0] as Treetop.BookmarkNode).title,
-      })
+      }),
     ).toBeInTheDocument();
 
     const rootNodeLink = screen.getByRole('link', { name: rootNode.title });
@@ -543,7 +543,7 @@ describe('rooted at subfolder', () => {
     expect(bookmarkLink1.dataset.nodeId).toBe(folderNode2.children[0].id);
     expect(bookmarkLink1).toHaveAttribute(
       'href',
-      (folderNode2.children[0] as Treetop.BookmarkNode).url
+      (folderNode2.children[0] as Treetop.BookmarkNode).url,
     );
     expectToBeInContentsOfFolder(bookmarkLink1, folderNode2Link);
 
@@ -560,7 +560,7 @@ describe('rooted at subfolder', () => {
     expect(bookmarkLink2.dataset.nodeId).toBe(folderNode3.children[0].id);
     expect(bookmarkLink2).toHaveAttribute(
       'href',
-      (folderNode3.children[0] as Treetop.BookmarkNode).url
+      (folderNode3.children[0] as Treetop.BookmarkNode).url,
     );
     expectToBeInContentsOfFolder(bookmarkLink2, folderNode3Link);
   });
@@ -685,33 +685,33 @@ describe('filter active', () => {
       setup();
 
       expect(
-        screen.getByRole('link', { name: folderNode1.title })
+        screen.getByRole('link', { name: folderNode1.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: bookmarkNode1.title })
+        screen.getByRole('link', { name: bookmarkNode1.title }),
       ).toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: folderNode2.title })
+        screen.queryByRole('link', { name: folderNode2.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: folderNode3.title })
+        screen.queryByRole('link', { name: folderNode3.title }),
       ).not.toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: bookmarkNode2.title })
+        screen.queryByRole('link', { name: bookmarkNode2.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode3.title })
+        screen.queryByRole('link', { name: bookmarkNode3.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode4.title })
+        screen.queryByRole('link', { name: bookmarkNode4.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode5.title })
+        screen.queryByRole('link', { name: bookmarkNode5.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode6.title })
+        screen.queryByRole('link', { name: bookmarkNode6.title }),
       ).not.toBeInTheDocument();
     });
 
@@ -726,33 +726,33 @@ describe('filter active', () => {
       setup();
 
       expect(
-        screen.getByRole('link', { name: folderNode2.title })
+        screen.getByRole('link', { name: folderNode2.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: bookmarkNode3.title })
+        screen.getByRole('link', { name: bookmarkNode3.title }),
       ).toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: folderNode1.title })
+        screen.queryByRole('link', { name: folderNode1.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: folderNode3.title })
+        screen.queryByRole('link', { name: folderNode3.title }),
       ).not.toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: bookmarkNode1.title })
+        screen.queryByRole('link', { name: bookmarkNode1.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode2.title })
+        screen.queryByRole('link', { name: bookmarkNode2.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode4.title })
+        screen.queryByRole('link', { name: bookmarkNode4.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode5.title })
+        screen.queryByRole('link', { name: bookmarkNode5.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode6.title })
+        screen.queryByRole('link', { name: bookmarkNode6.title }),
       ).not.toBeInTheDocument();
     });
 
@@ -769,33 +769,33 @@ describe('filter active', () => {
       setup();
 
       expect(
-        screen.getByRole('link', { name: folderNode1.title })
+        screen.getByRole('link', { name: folderNode1.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: folderNode2.title })
+        screen.getByRole('link', { name: folderNode2.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: bookmarkNode1.title })
+        screen.getByRole('link', { name: bookmarkNode1.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: bookmarkNode3.title })
+        screen.getByRole('link', { name: bookmarkNode3.title }),
       ).toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: folderNode3.title })
+        screen.queryByRole('link', { name: folderNode3.title }),
       ).not.toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: bookmarkNode2.title })
+        screen.queryByRole('link', { name: bookmarkNode2.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode4.title })
+        screen.queryByRole('link', { name: bookmarkNode4.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode5.title })
+        screen.queryByRole('link', { name: bookmarkNode5.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode6.title })
+        screen.queryByRole('link', { name: bookmarkNode6.title }),
       ).not.toBeInTheDocument();
     });
 
@@ -811,33 +811,33 @@ describe('filter active', () => {
       setup();
 
       expect(
-        screen.getByRole('link', { name: folderNode2.title })
+        screen.getByRole('link', { name: folderNode2.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: folderNode3.title })
+        screen.getByRole('link', { name: folderNode3.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: bookmarkNode5.title })
+        screen.getByRole('link', { name: bookmarkNode5.title }),
       ).toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: folderNode1.title })
+        screen.queryByRole('link', { name: folderNode1.title }),
       ).not.toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: bookmarkNode1.title })
+        screen.queryByRole('link', { name: bookmarkNode1.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode2.title })
+        screen.queryByRole('link', { name: bookmarkNode2.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode3.title })
+        screen.queryByRole('link', { name: bookmarkNode3.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode4.title })
+        screen.queryByRole('link', { name: bookmarkNode4.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode6.title })
+        screen.queryByRole('link', { name: bookmarkNode6.title }),
       ).not.toBeInTheDocument();
     });
 
@@ -855,32 +855,32 @@ describe('filter active', () => {
       setup();
 
       expect(
-        screen.getByRole('link', { name: folderNode1.title })
+        screen.getByRole('link', { name: folderNode1.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: folderNode2.title })
+        screen.getByRole('link', { name: folderNode2.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: folderNode3.title })
+        screen.getByRole('link', { name: folderNode3.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: bookmarkNode1.title })
+        screen.getByRole('link', { name: bookmarkNode1.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: bookmarkNode5.title })
+        screen.getByRole('link', { name: bookmarkNode5.title }),
       ).toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: bookmarkNode2.title })
+        screen.queryByRole('link', { name: bookmarkNode2.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode3.title })
+        screen.queryByRole('link', { name: bookmarkNode3.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode4.title })
+        screen.queryByRole('link', { name: bookmarkNode4.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode6.title })
+        screen.queryByRole('link', { name: bookmarkNode6.title }),
       ).not.toBeInTheDocument();
     });
 
@@ -899,32 +899,32 @@ describe('filter active', () => {
       setup();
 
       expect(
-        screen.getByRole('link', { name: folderNode1.title })
+        screen.getByRole('link', { name: folderNode1.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: folderNode2.title })
+        screen.getByRole('link', { name: folderNode2.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: folderNode3.title })
+        screen.getByRole('link', { name: folderNode3.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: bookmarkNode1.title })
+        screen.getByRole('link', { name: bookmarkNode1.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: bookmarkNode4.title })
+        screen.getByRole('link', { name: bookmarkNode4.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: bookmarkNode5.title })
+        screen.getByRole('link', { name: bookmarkNode5.title }),
       ).toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: bookmarkNode2.title })
+        screen.queryByRole('link', { name: bookmarkNode2.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode3.title })
+        screen.queryByRole('link', { name: bookmarkNode3.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode6.title })
+        screen.queryByRole('link', { name: bookmarkNode6.title }),
       ).not.toBeInTheDocument();
     });
 
@@ -940,33 +940,33 @@ describe('filter active', () => {
       setup();
 
       expect(
-        screen.getByRole('link', { name: folderNode1.title })
+        screen.getByRole('link', { name: folderNode1.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: bookmarkNode1.title })
+        screen.getByRole('link', { name: bookmarkNode1.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: bookmarkNode2.title })
+        screen.getByRole('link', { name: bookmarkNode2.title }),
       ).toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: folderNode2.title })
+        screen.queryByRole('link', { name: folderNode2.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: folderNode3.title })
+        screen.queryByRole('link', { name: folderNode3.title }),
       ).not.toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: bookmarkNode3.title })
+        screen.queryByRole('link', { name: bookmarkNode3.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode4.title })
+        screen.queryByRole('link', { name: bookmarkNode4.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode5.title })
+        screen.queryByRole('link', { name: bookmarkNode5.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode6.title })
+        screen.queryByRole('link', { name: bookmarkNode6.title }),
       ).not.toBeInTheDocument();
     });
   });
@@ -1012,33 +1012,33 @@ describe('filter active', () => {
       setup();
 
       expect(
-        screen.getByRole('link', { name: folderNode2.title })
+        screen.getByRole('link', { name: folderNode2.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: bookmarkNode3.title })
+        screen.getByRole('link', { name: bookmarkNode3.title }),
       ).toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: folderNode1.title })
+        screen.queryByRole('link', { name: folderNode1.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: folderNode3.title })
+        screen.queryByRole('link', { name: folderNode3.title }),
       ).not.toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: bookmarkNode1.title })
+        screen.queryByRole('link', { name: bookmarkNode1.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode2.title })
+        screen.queryByRole('link', { name: bookmarkNode2.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode4.title })
+        screen.queryByRole('link', { name: bookmarkNode4.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode5.title })
+        screen.queryByRole('link', { name: bookmarkNode5.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode6.title })
+        screen.queryByRole('link', { name: bookmarkNode6.title }),
       ).not.toBeInTheDocument();
     });
 
@@ -1055,33 +1055,33 @@ describe('filter active', () => {
       setup();
 
       expect(
-        screen.getByRole('link', { name: folderNode2.title })
+        screen.getByRole('link', { name: folderNode2.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: bookmarkNode3.title })
+        screen.getByRole('link', { name: bookmarkNode3.title }),
       ).toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: folderNode1.title })
+        screen.queryByRole('link', { name: folderNode1.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: folderNode3.title })
+        screen.queryByRole('link', { name: folderNode3.title }),
       ).not.toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: bookmarkNode1.title })
+        screen.queryByRole('link', { name: bookmarkNode1.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode2.title })
+        screen.queryByRole('link', { name: bookmarkNode2.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode4.title })
+        screen.queryByRole('link', { name: bookmarkNode4.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode5.title })
+        screen.queryByRole('link', { name: bookmarkNode5.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode6.title })
+        screen.queryByRole('link', { name: bookmarkNode6.title }),
       ).not.toBeInTheDocument();
     });
 
@@ -1097,33 +1097,33 @@ describe('filter active', () => {
       setup();
 
       expect(
-        screen.getByRole('link', { name: folderNode2.title })
+        screen.getByRole('link', { name: folderNode2.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: folderNode3.title })
+        screen.getByRole('link', { name: folderNode3.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: bookmarkNode5.title })
+        screen.getByRole('link', { name: bookmarkNode5.title }),
       ).toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: folderNode1.title })
+        screen.queryByRole('link', { name: folderNode1.title }),
       ).not.toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: bookmarkNode1.title })
+        screen.queryByRole('link', { name: bookmarkNode1.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode2.title })
+        screen.queryByRole('link', { name: bookmarkNode2.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode3.title })
+        screen.queryByRole('link', { name: bookmarkNode3.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode4.title })
+        screen.queryByRole('link', { name: bookmarkNode4.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode6.title })
+        screen.queryByRole('link', { name: bookmarkNode6.title }),
       ).not.toBeInTheDocument();
     });
 
@@ -1141,33 +1141,33 @@ describe('filter active', () => {
       setup();
 
       expect(
-        screen.getByRole('link', { name: folderNode2.title })
+        screen.getByRole('link', { name: folderNode2.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: folderNode3.title })
+        screen.getByRole('link', { name: folderNode3.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: bookmarkNode5.title })
+        screen.getByRole('link', { name: bookmarkNode5.title }),
       ).toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: folderNode1.title })
+        screen.queryByRole('link', { name: folderNode1.title }),
       ).not.toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: bookmarkNode1.title })
+        screen.queryByRole('link', { name: bookmarkNode1.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode2.title })
+        screen.queryByRole('link', { name: bookmarkNode2.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode3.title })
+        screen.queryByRole('link', { name: bookmarkNode3.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode4.title })
+        screen.queryByRole('link', { name: bookmarkNode4.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode6.title })
+        screen.queryByRole('link', { name: bookmarkNode6.title }),
       ).not.toBeInTheDocument();
     });
 
@@ -1186,33 +1186,33 @@ describe('filter active', () => {
       setup();
 
       expect(
-        screen.getByRole('link', { name: folderNode2.title })
+        screen.getByRole('link', { name: folderNode2.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: folderNode3.title })
+        screen.getByRole('link', { name: folderNode3.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: bookmarkNode4.title })
+        screen.getByRole('link', { name: bookmarkNode4.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: bookmarkNode5.title })
+        screen.getByRole('link', { name: bookmarkNode5.title }),
       ).toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: folderNode1.title })
+        screen.queryByRole('link', { name: folderNode1.title }),
       ).not.toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: bookmarkNode1.title })
+        screen.queryByRole('link', { name: bookmarkNode1.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode2.title })
+        screen.queryByRole('link', { name: bookmarkNode2.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode3.title })
+        screen.queryByRole('link', { name: bookmarkNode3.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode6.title })
+        screen.queryByRole('link', { name: bookmarkNode6.title }),
       ).not.toBeInTheDocument();
     });
 
@@ -1228,33 +1228,33 @@ describe('filter active', () => {
       setup();
 
       expect(
-        screen.getByRole('link', { name: folderNode2.title })
+        screen.getByRole('link', { name: folderNode2.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: bookmarkNode3.title })
+        screen.getByRole('link', { name: bookmarkNode3.title }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: bookmarkNode4.title })
+        screen.getByRole('link', { name: bookmarkNode4.title }),
       ).toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: folderNode1.title })
+        screen.queryByRole('link', { name: folderNode1.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: folderNode3.title })
+        screen.queryByRole('link', { name: folderNode3.title }),
       ).not.toBeInTheDocument();
 
       expect(
-        screen.queryByRole('link', { name: bookmarkNode1.title })
+        screen.queryByRole('link', { name: bookmarkNode1.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode2.title })
+        screen.queryByRole('link', { name: bookmarkNode2.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode5.title })
+        screen.queryByRole('link', { name: bookmarkNode5.title }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('link', { name: bookmarkNode6.title })
+        screen.queryByRole('link', { name: bookmarkNode6.title }),
       ).not.toBeInTheDocument();
     });
   });

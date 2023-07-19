@@ -15,9 +15,9 @@ it('renders welcome page', () => {
   expect(screen.getByText(/welcome to treetop/i)).toBeInTheDocument();
   expect(screen.getByText(/getting started/i)).toBeInTheDocument();
   expect(
-    screen.getByText(/open treetop by clicking its icon/i)
+    screen.getByText(/open treetop by clicking its icon/i),
   ).toBeInTheDocument();
   expect(
-    screen.getByText(/treetop shows all your bookmarks on a single page/i)
+    screen.getByText(/treetop shows all your bookmarks on a single page/i),
   ).toBeInTheDocument();
 });

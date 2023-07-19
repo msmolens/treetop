@@ -28,7 +28,7 @@ beforeEach(() => {
     BUILT_IN_FOLDER_INFO,
     nodeStoreMap,
     filterActive,
-    callback
+    callback,
   );
 });
 

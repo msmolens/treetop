@@ -30,7 +30,7 @@ export class PreferencesManager {
    */
   createStore(
     name: string,
-    value: Treetop.PreferenceValue
+    value: Treetop.PreferenceValue,
   ): Writable<Treetop.PreferenceValue> {
     const store = writable(value);
     this.stores.set(name, store);
@@ -60,7 +60,7 @@ export class PreferencesManager {
    */
   private handleStorageChanged(
     changes: Record<string, Storage.StorageChange>,
-    _areaName: string
+    _areaName: string,
   ): void {
     for (const key of Object.keys(changes)) {
       const value = changes[key].newValue as Treetop.PreferenceValue;

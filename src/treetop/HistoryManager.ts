@@ -83,7 +83,7 @@ export class HistoryManager {
    */
   async handleBookmarkCreated(
     _id: string,
-    bookmark: Bookmarks.BookmarkTreeNode
+    bookmark: Bookmarks.BookmarkTreeNode,
   ): Promise<void> {
     if (!isBookmark(bookmark)) {
       return;
@@ -110,7 +110,7 @@ export class HistoryManager {
    */
   async handleBookmarkChanged(
     id: string,
-    changeInfo: Bookmarks.OnChangedChangeInfoType
+    changeInfo: Bookmarks.OnChangedChangeInfoType,
   ): Promise<void> {
     // Ignore changed folders
     if (changeInfo.url === undefined) {
@@ -146,7 +146,7 @@ export class HistoryManager {
    * history.
    */
   async handleVisitRemoved(
-    removed: History.OnVisitRemovedRemovedType
+    removed: History.OnVisitRemovedRemovedType,
   ): Promise<void> {
     if (removed.allHistory) {
       // All history was removed

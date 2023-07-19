@@ -26,7 +26,12 @@
   :global(body) {
     background-color: var(--background-color);
     color: var(--color);
-    font-family: 'Open Sans', -apple-system, 'Segoe UI', 'Roboto', sans-serif;
+    font-family:
+      'Open Sans',
+      -apple-system,
+      'Segoe UI',
+      'Roboto',
+      sans-serif;
     font-size: 1.75rem;
     font-weight: 400;
   }

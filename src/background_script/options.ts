@@ -7,7 +7,7 @@ import type * as Treetop from '@Treetop/treetop/types';
  * Set default options, leaving existing options unchanged.
  */
 export const setDefaultOptions = async (
-  defaultOptions: Record<string, Treetop.PreferenceValue>
+  defaultOptions: Record<string, Treetop.PreferenceValue>,
 ): Promise<void> => {
   try {
     // Get stored options

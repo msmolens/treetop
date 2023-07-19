@@ -1,3 +1,4 @@
+plugins = ["prettier-plugin-svelte"]
 bracketSameLine = true
 singleQuote = true
 svelteAllowShorthand = true

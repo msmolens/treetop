@@ -15,7 +15,7 @@ const OTHER_BOOKMARKS_GUID = 'other-bookmarks-ids';
 //
 
 export const createBookmarkNode = (
-  withProperties?: Partial<Omit<Treetop.BookmarkNode, 'type'>>
+  withProperties?: Partial<Omit<Treetop.BookmarkNode, 'type'>>,
 ): Treetop.BookmarkNode => {
   return {
     id: faker.datatype.uuid(),
@@ -27,7 +27,7 @@ export const createBookmarkNode = (
 };
 
 export const createFolderNode = (
-  withProperties?: Partial<Omit<Treetop.FolderNode, 'type'>>
+  withProperties?: Partial<Omit<Treetop.FolderNode, 'type'>>,
 ): Treetop.FolderNode => {
   return {
     id: faker.datatype.uuid(),
@@ -39,7 +39,7 @@ export const createFolderNode = (
 };
 
 export const createSeparatorNode = (
-  withProperties?: Partial<Omit<Treetop.SeparatorNode, 'type'>>
+  withProperties?: Partial<Omit<Treetop.SeparatorNode, 'type'>>,
 ): Treetop.SeparatorNode => {
   return {
     id: faker.datatype.uuid(),
@@ -53,7 +53,7 @@ export const createSeparatorNode = (
 //
 
 export const createBrowserBookmarkNode = (
-  parent: Bookmarks.BookmarkTreeNode
+  parent: Bookmarks.BookmarkTreeNode,
 ): Bookmarks.BookmarkTreeNode => {
   const node: Bookmarks.BookmarkTreeNode = {
     id: faker.datatype.uuid(),
@@ -66,7 +66,7 @@ export const createBrowserBookmarkNode = (
 };
 
 export const createBrowserFolderNode = (
-  parent: Bookmarks.BookmarkTreeNode
+  parent: Bookmarks.BookmarkTreeNode,
 ): Bookmarks.BookmarkTreeNode => {
   const node: Bookmarks.BookmarkTreeNode = {
     id: faker.datatype.uuid(),
@@ -79,7 +79,7 @@ export const createBrowserFolderNode = (
 };
 
 export const createBrowserSeparatorNode = (
-  parent: Bookmarks.BookmarkTreeNode
+  parent: Bookmarks.BookmarkTreeNode,
 ): Bookmarks.BookmarkTreeNode => {
   const node: Bookmarks.BookmarkTreeNode = {
     id: faker.datatype.uuid(),

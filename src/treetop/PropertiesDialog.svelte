@@ -55,7 +55,7 @@
     });
     header = browser.i18n.getMessage(
       'dialogHeadingBookmarkProperties',
-      truncatedTitle
+      truncatedTitle,
     );
   }
 

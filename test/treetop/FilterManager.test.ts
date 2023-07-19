@@ -22,7 +22,7 @@ const NUM_RANDOM_WORDS = 3;
 // Generate a random string that contains the specified string.
 const randomStringContaining = (str: string) => {
   return `${faker.random.words(NUM_RANDOM_WORDS)}${str}${faker.random.words(
-    NUM_RANDOM_WORDS
+    NUM_RANDOM_WORDS,
   )}`;
 };
 
@@ -428,7 +428,7 @@ describe('handleBookmarkRemoved', () => {
       expect(filterSet.size).toBe(2);
 
       folderNode1.children = folderNode1.children.filter(
-        (child) => child.id !== bookmarkNode.id
+        (child) => child.id !== bookmarkNode.id,
       );
 
       filterManager.handleBookmarkRemoved(bookmarkNode.id);
@@ -451,7 +451,7 @@ describe('handleBookmarkRemoved', () => {
       expect(filterSet.size).toBe(3);
 
       folderNode1.children = folderNode1.children.filter(
-        (child) => child.id !== bookmarkNode1.id
+        (child) => child.id !== bookmarkNode1.id,
       );
 
       filterManager.handleBookmarkRemoved(bookmarkNode1.id);
@@ -478,7 +478,7 @@ describe('handleBookmarkRemoved', () => {
       expect(filterSet.size).toBe(4);
 
       folderNode1.children = folderNode1.children.filter(
-        (child) => child.id !== bookmarkNode1.id
+        (child) => child.id !== bookmarkNode1.id,
       );
 
       filterManager.handleBookmarkRemoved(bookmarkNode1.id);
@@ -504,7 +504,7 @@ describe('handleBookmarkRemoved', () => {
       expect(filterSet.size).toBe(4);
 
       folderNode3.children = folderNode3.children.filter(
-        (child) => child.id !== bookmarkNode.id
+        (child) => child.id !== bookmarkNode.id,
       );
 
       expect(filterSet.has(bookmarkNode.id)).toBe(true);
@@ -534,7 +534,7 @@ describe('handleBookmarkRemoved', () => {
       expect(filterSet.size).toBe(4);
 
       folderNode2.children = folderNode2.children.filter(
-        (child) => child.id !== bookmarkNode1.id
+        (child) => child.id !== bookmarkNode1.id,
       );
 
       filterManager.handleBookmarkRemoved(bookmarkNode1.id);
@@ -563,7 +563,7 @@ describe('handleBookmarkRemoved', () => {
       expect(filterSet.size).toBe(5);
 
       folderNode2.children = folderNode2.children.filter(
-        (child) => child.id !== bookmarkNode1.id
+        (child) => child.id !== bookmarkNode1.id,
       );
 
       filterManager.handleBookmarkRemoved(bookmarkNode1.id);
@@ -585,7 +585,7 @@ describe('handleBookmarkRemoved', () => {
       expect(filterSet.size).toBe(0);
 
       folderNode1.children = folderNode1.children.filter(
-        (child) => child.id !== bookmarkNode.id
+        (child) => child.id !== bookmarkNode.id,
       );
 
       filterManager.handleBookmarkRemoved(bookmarkNode.id);
@@ -602,7 +602,7 @@ describe('handleBookmarkRemoved', () => {
       expect(filterSet.size).toBe(0);
 
       folderNode2.children = folderNode2.children.filter(
-        (child) => child.id !== bookmarkNode.id
+        (child) => child.id !== bookmarkNode.id,
       );
 
       filterManager.handleBookmarkRemoved(bookmarkNode.id);
@@ -631,7 +631,7 @@ describe('handleBookmarkRemoved', () => {
 
       filterManager.beginBatchRemove();
       removedNodeIds.forEach((nodeId) =>
-        filterManager.handleBookmarkRemoved(nodeId)
+        filterManager.handleBookmarkRemoved(nodeId),
       );
       filterManager.endBatchRemove();
 
@@ -653,7 +653,7 @@ describe('handleBookmarkRemoved', () => {
 
       filterManager.beginBatchRemove();
       removedNodeIds.forEach((nodeId) =>
-        filterManager.handleBookmarkRemoved(nodeId)
+        filterManager.handleBookmarkRemoved(nodeId),
       );
       filterManager.endBatchRemove();
 
@@ -808,7 +808,7 @@ describe('handleBookmarkChanged', () => {
 
       bookmarkNode.title = bookmarkNode.title.replace(
         filter,
-        faker.random.word()
+        faker.random.word(),
       );
 
       const changeInfo: Bookmarks.OnChangedChangeInfoType = {
@@ -859,7 +859,7 @@ describe('handleBookmarkChanged', () => {
 
       bookmarkNode1.title = bookmarkNode1.title.replace(
         filter,
-        faker.random.word()
+        faker.random.word(),
       );
 
       const changeInfo: Bookmarks.OnChangedChangeInfoType = {
@@ -892,7 +892,7 @@ describe('handleBookmarkChanged', () => {
 
       bookmarkNode1.title = bookmarkNode1.title.replace(
         filter,
-        faker.random.word()
+        faker.random.word(),
       );
 
       const changeInfo: Bookmarks.OnChangedChangeInfoType = {
@@ -986,7 +986,7 @@ describe('handleBookmarkMoved', () => {
       // Move bookmarkNode to parent folder
       folderNode2.children.unshift(bookmarkNode);
       folderNode3.children = folderNode3.children.filter(
-        (node) => node.id !== bookmarkNode.id
+        (node) => node.id !== bookmarkNode.id,
       );
 
       const moveInfo: Bookmarks.OnMovedMoveInfoType = {
@@ -1023,7 +1023,7 @@ describe('handleBookmarkMoved', () => {
       // Move bookmarkNode2 to parent folder
       folderNode2.children.unshift(bookmarkNode2);
       folderNode3.children = folderNode3.children.filter(
-        (node) => node.id !== bookmarkNode2.id
+        (node) => node.id !== bookmarkNode2.id,
       );
 
       const moveInfo: Bookmarks.OnMovedMoveInfoType = {
@@ -1058,7 +1058,7 @@ describe('handleBookmarkMoved', () => {
       // Move bookmarkNode to child folder
       folderNode4.children.unshift(bookmarkNode);
       folderNode2.children = folderNode2.children.filter(
-        (node) => node.id !== bookmarkNode.id
+        (node) => node.id !== bookmarkNode.id,
       );
 
       const moveInfo: Bookmarks.OnMovedMoveInfoType = {
@@ -1095,7 +1095,7 @@ describe('handleBookmarkMoved', () => {
       // Move bookmarkNode2 to child folder
       folderNode4.children.unshift(bookmarkNode2);
       folderNode2.children = folderNode2.children.filter(
-        (node) => node.id !== bookmarkNode2.id
+        (node) => node.id !== bookmarkNode2.id,
       );
 
       const moveInfo: Bookmarks.OnMovedMoveInfoType = {
@@ -1130,7 +1130,7 @@ describe('handleBookmarkMoved', () => {
       // Move bookmarkNode to sibling folder
       folderNode5.children.unshift(bookmarkNode);
       folderNode2.children = folderNode2.children.filter(
-        (node) => node.id !== bookmarkNode.id
+        (node) => node.id !== bookmarkNode.id,
       );
 
       const moveInfo: Bookmarks.OnMovedMoveInfoType = {
@@ -1166,7 +1166,7 @@ describe('handleBookmarkMoved', () => {
       // Move bookmarkNode2 to sibling folder
       folderNode5.children.unshift(bookmarkNode2);
       folderNode2.children = folderNode2.children.filter(
-        (node) => node.id !== bookmarkNode2.id
+        (node) => node.id !== bookmarkNode2.id,
       );
 
       const moveInfo: Bookmarks.OnMovedMoveInfoType = {
@@ -1202,7 +1202,7 @@ describe('handleBookmarkMoved', () => {
       // Move bookmarkNode to distant folder
       folderNode6.children.unshift(bookmarkNode);
       folderNode3.children = folderNode3.children.filter(
-        (node) => node.id !== bookmarkNode.id
+        (node) => node.id !== bookmarkNode.id,
       );
 
       const moveInfo: Bookmarks.OnMovedMoveInfoType = {
@@ -1240,7 +1240,7 @@ describe('handleBookmarkMoved', () => {
       // Move bookmarkNode2 to distant folder
       folderNode6.children.unshift(bookmarkNode2);
       folderNode3.children = folderNode3.children.filter(
-        (node) => node.id !== bookmarkNode2.id
+        (node) => node.id !== bookmarkNode2.id,
       );
 
       const moveInfo: Bookmarks.OnMovedMoveInfoType = {
@@ -1277,7 +1277,7 @@ describe('handleBookmarkMoved', () => {
       // Move folderNode2 within folderNode1
       expect(folderNode2.parentId!).toBe(folderNode1.id);
       const oldIndex = folderNode1.children.findIndex(
-        (node) => node.id === folderNode2.id
+        (node) => node.id === folderNode2.id,
       );
       expect(oldIndex).toBe(4);
       const newIndex = folderNode1.children.length - 1;
@@ -1319,13 +1319,13 @@ describe('handleBookmarkMoved', () => {
       // Move folderNode3 to folderNode1
       expect(folderNode3.parentId!).toBe(folderNode2.id);
       const oldIndex = folderNode2.children.findIndex(
-        (node) => node.id === folderNode3.id
+        (node) => node.id === folderNode3.id,
       );
       expect(oldIndex).toBe(3);
       const newIndex = folderNode1.children.length - 1;
 
       folderNode2.children = folderNode2.children.filter(
-        (node) => node.id !== folderNode3.id
+        (node) => node.id !== folderNode3.id,
       );
       folderNode3.parentId = folderNode1.id;
       folderNode1.children.push(folderNode3);
@@ -1361,13 +1361,13 @@ describe('handleBookmarkMoved', () => {
       // Move folderNode3 to folderNode5
       expect(folderNode3.parentId!).toBe(folderNode2.id);
       const oldIndex = folderNode2.children.findIndex(
-        (node) => node.id === folderNode3.id
+        (node) => node.id === folderNode3.id,
       );
       expect(oldIndex).toBe(3);
       const newIndex = folderNode5.children.length - 1;
 
       folderNode2.children = folderNode2.children.filter(
-        (node) => node.id !== folderNode3.id
+        (node) => node.id !== folderNode3.id,
       );
       folderNode3.parentId = folderNode5.id;
       folderNode5.children.push(folderNode3);
@@ -1414,7 +1414,7 @@ describe('handleBookmarkMoved', () => {
       // Move folderNode2 within folderNode1
       expect(folderNode2.parentId!).toBe(folderNode1.id);
       const oldIndex = folderNode1.children.findIndex(
-        (node) => node.id === folderNode2.id
+        (node) => node.id === folderNode2.id,
       );
       expect(oldIndex).toBe(4);
       const newIndex = folderNode1.children.length - 1;

@@ -18,7 +18,7 @@ export class FilterManager {
 
   constructor(
     private readonly filterSet: Treetop.FilterSet,
-    private readonly nodeStoreMap: Treetop.NodeStoreMap
+    private readonly nodeStoreMap: Treetop.NodeStoreMap,
   ) {}
 
   /**
@@ -86,7 +86,7 @@ export class FilterManager {
    */
   handleBookmarkCreated(
     _id: string,
-    bookmark: Bookmarks.BookmarkTreeNode
+    bookmark: Bookmarks.BookmarkTreeNode,
   ): void {
     if (this.filter === null) {
       return;
@@ -151,7 +151,7 @@ export class FilterManager {
    */
   handleBookmarkChanged(
     _id: string,
-    _changeInfo: Bookmarks.OnChangedChangeInfoType
+    _changeInfo: Bookmarks.OnChangedChangeInfoType,
   ): void {
     this.refreshFilter();
   }
@@ -162,7 +162,7 @@ export class FilterManager {
    */
   handleBookmarkMoved(
     _id: string,
-    _moveInfo: Bookmarks.OnMovedMoveInfoType
+    _moveInfo: Bookmarks.OnMovedMoveInfoType,
   ): void {
     this.refreshFilter();
   }

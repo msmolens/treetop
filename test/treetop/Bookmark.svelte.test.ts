@@ -60,7 +60,7 @@ it('renders link with expected attributes', () => {
     'visitedPastDay',
     'visitedPastTwoDays',
     'visitedPastThreeDays',
-    'visitedPastWeek'
+    'visitedPastWeek',
   );
 });
 
@@ -86,7 +86,7 @@ describe('truncate option', () => {
 
     const link = screen.getByRole('link');
     expect(link).toHaveTextContent(
-      new RegExp(`^${title.substring(0, title.length - 4)}.{3}$`)
+      new RegExp(`^${title.substring(0, title.length - 4)}.{3}$`),
     );
   });
 
@@ -99,7 +99,7 @@ describe('truncate option', () => {
     const link = screen.getByRole('link');
     const titleStart = title.substring(0, Math.floor(maxLength / 2));
     expect(link).toHaveTextContent(
-      new RegExp(`^${escapeRegExp(titleStart)}.+\\S\\.{3}$`)
+      new RegExp(`^${escapeRegExp(titleStart)}.+\\S\\.{3}$`),
     );
   });
 
@@ -136,7 +136,7 @@ describe('tooltips option', () => {
     const link = screen.getByRole('link');
     expect(link).toHaveAttribute(
       'title',
-      expect.stringMatching(`^${title}\n${url}$`)
+      expect.stringMatching(`^${title}\n${url}$`),
     );
   });
 
@@ -150,9 +150,9 @@ describe('tooltips option', () => {
       'title',
       expect.stringMatching(
         `^${title}\n${url.substring(0, 20)}.+\\.{3}.+${url.substring(
-          url.length - 10
-        )}$`
-      )
+          url.length - 10,
+        )}$`,
+      ),
     );
   });
 });
@@ -186,7 +186,7 @@ describe('sets class based on last visit time', () => {
 
       const link = screen.getByRole('link');
       expect(link).toHaveClass(className);
-    }
+    },
   );
 
   it.each`
@@ -205,7 +205,7 @@ describe('sets class based on last visit time', () => {
       'visitedPastDay',
       'visitedPastTwoDays',
       'visitedPastThreeDays',
-      'visitedPastWeek'
+      'visitedPastWeek',
     );
   });
 });

@@ -12,7 +12,7 @@ let menuManager: MenuManager;
 class TestMenuItem extends MenuItem {
   constructor(
     onClickedCallback: OnClickedCallback,
-    private isEnabled: boolean
+    private isEnabled: boolean,
   ) {
     super(onClickedCallback);
   }

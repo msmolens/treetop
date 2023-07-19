@@ -11,7 +11,7 @@ export class OpenAllInTabsMenuItem extends MenuItem {
   constructor(
     private readonly builtInFolderInfo: Treetop.BuiltInFolderInfo,
     private readonly nodeStoreMap: Treetop.NodeStoreMap,
-    onClickedCallback: OnClickedCallback
+    onClickedCallback: OnClickedCallback,
   ) {
     super(onClickedCallback);
   }

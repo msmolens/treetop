@@ -19,7 +19,7 @@ import {
 } from '../utils/factories';
 
 const getBookmarkNodes = (
-  folder: Treetop.FolderNode
+  folder: Treetop.FolderNode,
 ): Treetop.BookmarkNode[] => {
   const bookmarkNodes = [];
   for (const child of folder.children) {
@@ -181,7 +181,7 @@ describe('handleBookmarkCreated', () => {
 
     expect(lastVisitTimeMap.has(bookmarkNode.id)).toBe(true);
     expect(get(lastVisitTimeMap.get(bookmarkNode.id)!)).toBe(
-      visitItem.visitTime!
+      visitItem.visitTime!,
     );
   });
 
@@ -254,7 +254,7 @@ describe('handleBookmarkChanged', () => {
     await historyManager.handleBookmarkChanged(bookmarkNode.id, changeInfo);
 
     expect(get(lastVisitTimeMap.get(bookmarkNode.id)!)).toBe(
-      visitItem.visitTime!
+      visitItem.visitTime!,
     );
   });
 
@@ -305,10 +305,10 @@ describe('handleVisited', () => {
     await historyManager.handleVisited(historyItem);
 
     expect(get(lastVisitTimeMap.get(bookmarkNode1.id)!)).toBe(
-      historyItem.lastVisitTime!
+      historyItem.lastVisitTime!,
     );
     expect(get(lastVisitTimeMap.get(bookmarkNode2.id)!)).toBe(
-      historyItem.lastVisitTime!
+      historyItem.lastVisitTime!,
     );
   });
 

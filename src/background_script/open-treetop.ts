@@ -34,7 +34,7 @@ export const openWelcome = ({
  */
 export const openTreetop = (
   _tab: Tabs.Tab,
-  info: Action.OnClickData | undefined
+  info: Action.OnClickData | undefined,
 ): void => {
   if (!info) {
     return;

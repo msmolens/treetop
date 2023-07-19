@@ -59,15 +59,15 @@ describe('Options', () => {
       expect(screen.getByLabelText(/^truncate/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/^tooltips/i)).toBeInTheDocument();
       expect(
-        screen.getByLabelText(/^show recently visited/i)
+        screen.getByLabelText(/^show recently visited/i),
       ).toBeInTheDocument();
       expect(screen.getByLabelText(/^light/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/^dark/i)).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: /^attributions$/i })
+        screen.getByRole('link', { name: /^attributions$/i }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('link', { name: /^attributions$/i })
+        screen.getByRole('link', { name: /^attributions$/i }),
       ).toHaveAttribute('href', expect.stringMatching(/^attributions\.txt$/));
     });
   });

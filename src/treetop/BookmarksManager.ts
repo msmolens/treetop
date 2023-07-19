@@ -11,7 +11,7 @@ import * as Treetop from './types';
 export class BookmarksManager {
   constructor(
     private readonly nodeStoreMap: Treetop.NodeStoreMap,
-    private readonly builtInFolderInfo: Treetop.BuiltInFolderInfo
+    private readonly builtInFolderInfo: Treetop.BuiltInFolderInfo,
   ) {}
 
   /**
@@ -27,12 +27,12 @@ export class BookmarksManager {
 
     // Firefox: Exclude Mobile Bookmarks folder
     rootNode.children = rootNode.children?.filter(
-      ({ id }) => id !== MOBILE_BOOKMARKS_GUID
+      ({ id }) => id !== MOBILE_BOOKMARKS_GUID,
     );
 
     // Store built-in folder IDs (e.g. Other Bookmarks)
     this.builtInFolderInfo.builtInFolderIds = rootNode.children!.map(
-      ({ id }) => id
+      ({ id }) => id,
     );
 
     // Initialize node stores for folders
@@ -119,7 +119,7 @@ export class BookmarksManager {
    */
   async handleBookmarkCreated(
     id: string,
-    bookmark: Bookmarks.BookmarkTreeNode
+    bookmark: Bookmarks.BookmarkTreeNode,
   ): Promise<void> {
     if (isFolder(bookmark)) {
       // Add node store for the new folder
@@ -140,7 +140,7 @@ export class BookmarksManager {
    */
   async handleBookmarkRemoved(
     id: string,
-    removeInfo: Bookmarks.OnRemovedRemoveInfoType
+    removeInfo: Bookmarks.OnRemovedRemoveInfoType,
   ): Promise<string[]> {
     const removedNodeIds = [];
 
@@ -183,7 +183,7 @@ export class BookmarksManager {
    */
   async handleBookmarkChanged(
     id: string,
-    _changeInfo: Bookmarks.OnChangedChangeInfoType
+    _changeInfo: Bookmarks.OnChangedChangeInfoType,
   ): Promise<void> {
     if (this.nodeStoreMap.has(id)) {
       // Folder changed. Update its node.
@@ -201,7 +201,7 @@ export class BookmarksManager {
    */
   async handleBookmarkMoved(
     _id: string,
-    moveInfo: Bookmarks.OnMovedMoveInfoType
+    moveInfo: Bookmarks.OnMovedMoveInfoType,
   ): Promise<void> {
     const parentId = moveInfo.parentId;
     const oldParentId = moveInfo.oldParentId;

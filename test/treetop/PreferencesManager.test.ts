@@ -28,7 +28,7 @@ describe('createStore', () => {
       const store = preferencesManager.createStore(name, value);
 
       expect(get(store)).toBe(value);
-    }
+    },
   );
 });
 

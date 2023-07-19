@@ -26,6 +26,6 @@ describe('welcome page', () => {
         reason,
         temporary: false,
       });
-    }
+    },
   );
 });

@@ -22,7 +22,7 @@ it('renders page header', () => {
 
   expect(screen.getByRole('banner')).toHaveTextContent('Treetop');
   expect(screen.getByRole('button', { hidden: true })).toHaveTextContent(
-    'settings'
+    'settings',
   );
 });
 

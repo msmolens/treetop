@@ -18,7 +18,7 @@ describe('truncateMiddle', () => {
     'returns unmodified string if length is less than or equal to max. length: %p/%i',
     (str, maxLength) => {
       expect(truncateMiddle(str, maxLength)).toBe(str);
-    }
+    },
   );
 
   it.each([
@@ -30,6 +30,6 @@ describe('truncateMiddle', () => {
     'returns $expected for $str with max. length $maxLength',
     ({ str, maxLength, expected }) => {
       expect(truncateMiddle(str, maxLength)).toBe(expected);
-    }
+    },
   );
 });

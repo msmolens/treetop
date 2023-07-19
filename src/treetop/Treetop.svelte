@@ -41,7 +41,7 @@
   const tooltips = preferencesManager.createStore('tooltips', true);
   const showRecentlyVisited = preferencesManager.createStore(
     'showRecentlyVisited',
-    true
+    true,
   );
   const colorScheme = preferencesManager.createStore('colorScheme', 'light');
 
@@ -82,7 +82,7 @@
   // Bookmarks manager
   const bookmarksManager = new BookmarksManager(
     nodeStoreMap,
-    builtInFolderInfo
+    builtInFolderInfo,
   );
 
   // History manager
@@ -179,7 +179,7 @@
           promises.push(
             browser.tabs.create({
               url: child.url,
-            })
+            }),
           );
         }
       }
@@ -293,7 +293,7 @@
 
   async function asyncOnBookmarkCreated(
     id: string,
-    bookmark: Bookmarks.BookmarkTreeNode
+    bookmark: Bookmarks.BookmarkTreeNode,
   ) {
     const promises: Promise<void>[] = [];
 
@@ -317,29 +317,29 @@
 
   async function asyncOnBookmarkRemoved(
     id: string,
-    removeInfo: Bookmarks.OnRemovedRemoveInfoType
+    removeInfo: Bookmarks.OnRemovedRemoveInfoType,
   ) {
     const removedNodeIds = await bookmarksManager.handleBookmarkRemoved(
       id,
-      removeInfo
+      removeInfo,
     );
 
     filterManager.beginBatchRemove();
     removedNodeIds.forEach((nodeId) =>
-      filterManager.handleBookmarkRemoved(nodeId)
+      filterManager.handleBookmarkRemoved(nodeId),
     );
     filterManager.endBatchRemove();
 
     if ($showRecentlyVisited) {
       removedNodeIds.forEach((nodeId) =>
-        historyManager.handleBookmarkRemoved(nodeId)
+        historyManager.handleBookmarkRemoved(nodeId),
       );
     }
   }
 
   function onBookmarkRemoved(
     id: string,
-    removeInfo: Bookmarks.OnRemovedRemoveInfoType
+    removeInfo: Bookmarks.OnRemovedRemoveInfoType,
   ) {
     asyncOnBookmarkRemoved(id, removeInfo).catch((err) => {
       console.error(err);
@@ -349,7 +349,7 @@
 
   async function asyncOnBookmarkChanged(
     id: string,
-    changeInfo: Bookmarks.OnChangedChangeInfoType
+    changeInfo: Bookmarks.OnChangedChangeInfoType,
   ) {
     await bookmarksManager.handleBookmarkChanged(id, changeInfo);
 
@@ -362,7 +362,7 @@
 
   function onBookmarkChanged(
     id: string,
-    changeInfo: Bookmarks.OnChangedChangeInfoType
+    changeInfo: Bookmarks.OnChangedChangeInfoType,
   ) {
     asyncOnBookmarkChanged(id, changeInfo).catch((err) => {
       console.error(err);
@@ -372,7 +372,7 @@
 
   async function asyncOnBookmarkMoved(
     id: string,
-    moveInfo: Bookmarks.OnMovedMoveInfoType
+    moveInfo: Bookmarks.OnMovedMoveInfoType,
   ) {
     await bookmarksManager.handleBookmarkMoved(id, moveInfo);
 
@@ -381,7 +381,7 @@
 
   function onBookmarkMoved(
     id: string,
-    moveInfo: Bookmarks.OnMovedMoveInfoType
+    moveInfo: Bookmarks.OnMovedMoveInfoType,
   ) {
     asyncOnBookmarkMoved(id, moveInfo).catch((err) => {
       console.error(err);
@@ -407,7 +407,7 @@
   }
 
   async function asyncOnVisitRemoved(
-    removed: History.OnVisitRemovedRemovedType
+    removed: History.OnVisitRemovedRemovedType,
   ) {
     if ($showRecentlyVisited) {
       await historyManager.handleVisitRemoved(removed);
@@ -557,16 +557,16 @@
         builtInFolderInfo,
         nodeStoreMap,
         filterActive,
-        deleteBookmark
-      )
+        deleteBookmark,
+      ),
     );
     menuManager.registerMenuItem(
       'openAllInTabs',
-      new OpenAllInTabsMenuItem(builtInFolderInfo, nodeStoreMap, openAllInTabs)
+      new OpenAllInTabsMenuItem(builtInFolderInfo, nodeStoreMap, openAllInTabs),
     );
     menuManager.registerMenuItem(
       'properties',
-      new PropertiesMenuItem(builtInFolderInfo, showPropertiesDialog)
+      new PropertiesMenuItem(builtInFolderInfo, showPropertiesDialog),
     );
 
     window.addEventListener('hashchange', onHashChange);

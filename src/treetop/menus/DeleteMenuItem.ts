@@ -12,7 +12,7 @@ export class DeleteMenuItem extends MenuItem {
     private readonly builtInFolderInfo: Treetop.BuiltInFolderInfo,
     private readonly nodeStoreMap: Treetop.NodeStoreMap,
     private readonly filterActive: Writable<boolean>,
-    onClickedCallback: OnClickedCallback
+    onClickedCallback: OnClickedCallback,
   ) {
     super(onClickedCallback);
   }

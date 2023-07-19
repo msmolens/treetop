@@ -8,7 +8,7 @@ import { MenuItem, type OnClickedCallback } from './MenuItem';
 export class PropertiesMenuItem extends MenuItem {
   constructor(
     private readonly builtInFolderInfo: Treetop.BuiltInFolderInfo,
-    onClickedCallback: OnClickedCallback
+    onClickedCallback: OnClickedCallback,
   ) {
     super(onClickedCallback);
   }
