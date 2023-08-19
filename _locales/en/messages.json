@@ -136,6 +136,10 @@
     "message": "Error handling bookmark removal.",
     "description": "Message shown when an error occurs when handling bookmark removal."
   },
+  "errorHandlingContextMenu": {
+    "message": "Error handling context menu.",
+    "description": "Message shown when an error occurs when handling a context menu event."
+  },
   "errorHandlingHistoryVisit": {
     "message": "Error handling history visit.",
     "description": "Message shown when an error occurs when handling a history visit event."
@@ -147,10 +151,6 @@
   "errorHandlingMenuClick": {
     "message": "Error handling menu click.",
     "description": "Message shown when an error occurs when handling a menu click event."
-  },
-  "errorHandlingMenuShown": {
-    "message": "Error handling menu shown.",
-    "description": "Message shown when an error occurs when handling a menu shown event."
   },
   "errorLoadingPreferences": {
     "message": "Error loading preferences.",
