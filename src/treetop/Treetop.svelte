@@ -426,25 +426,19 @@
   //
 
   function onContextMenu(event: Event) {
-    // Record the target element of the context menu
-    if (menuManager && event.target instanceof HTMLElement) {
-      menuManager.activeElement = event.target;
-    }
-  }
-
-  async function asyncOnMenuShown(info: Menus.OnShownInfoType, tab: Tabs.Tab) {
-    await menuManager?.handleMenuShown(info, tab);
-  }
-
-  function onMenuShown(info: Menus.OnShownInfoType, tab: Tabs.Tab) {
-    asyncOnMenuShown(info, tab).catch((err) => {
+    asyncOnContextMenu(event).catch((err) => {
       console.error(err);
-      handleError(browser.i18n.getMessage('errorHandlingMenuShown'));
+      handleError(browser.i18n.getMessage('errorHandlingContextMenu'));
     });
   }
 
-  function onMenuHidden() {
-    menuManager?.handleMenuHidden();
+  async function asyncOnContextMenu(event: Event) {
+    // Record the target element of the context menu
+    if (menuManager && event.target instanceof HTMLElement) {
+      menuManager.activeElement = event.target;
+
+      await menuManager.updateEnabled();
+    }
   }
 
   async function asyncOnMenuClicked(info: Menus.OnClickData, tab?: Tabs.Tab) {
@@ -545,8 +539,6 @@
 
     // Register menu event handlers
     document.addEventListener('contextmenu', onContextMenu);
-    browser.contextMenus.onShown.addListener(onMenuShown);
-    browser.contextMenus.onHidden.addListener(onMenuHidden);
     browser.contextMenus.onClicked.addListener(onMenuClicked);
 
     // Initialize menu manager
@@ -578,8 +570,6 @@
 
     // Unregister menu event handlers
     document.removeEventListener('contextmenu', onContextMenu);
-    browser.contextMenus.onShown.removeListener(onMenuShown);
-    browser.contextMenus.onHidden.removeListener(onMenuHidden);
     browser.contextMenus.onClicked.removeListener(onMenuClicked);
 
     // Destroy menu manager
