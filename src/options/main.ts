@@ -1,5 +1,8 @@
 import Options from './Options.svelte';
 
-new Options({
-  target: document.getElementById('app'),
-});
+const target = document.getElementById('app');
+if (!target) {
+  throw new Error('Missing app element');
+}
+
+new Options({ target });

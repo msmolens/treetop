@@ -12,8 +12,13 @@ import Treetop from './Treetop.svelte';
 // Get root bookmark ID from hash
 const rootBookmarkId = decodeURIComponent(location.hash.substr(1));
 
+const target = document.getElementById('app');
+if (!target) {
+  throw new Error('Missing app element');
+}
+
 new Treetop({
-  target: document.getElementById('app'),
+  target,
   props: {
     rootBookmarkId,
   },
