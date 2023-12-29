@@ -1,9 +1,16 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
 
   import icon from '../icons/generated/icons/icon.svg';
 
   import InfoBox from './InfoBox.svelte';
+
+  let ready = false;
+
+  onMount(() => {
+    ready = true;
+  });
 </script>
 
 <style>
@@ -86,38 +93,42 @@
   </div>
 </header>
 
-<main transition:fade={{ delay: 400, duration: 300 }}>
-  <InfoBox>
-    <span slot="title">Getting started</span>
-    <span slot="detail1">
-      Open Treetop by clicking its icon (<img
-        class="icon"
-        src={icon}
-        alt="Treetop Icon" />) in the toolbar.
-    </span>
-    <span slot="detail2"
-      >Treetop shows all your bookmarks on a single page.</span>
-  </InfoBox>
+{#if ready}
+  <main transition:fade={{ delay: 400, duration: 300 }}>
+    <InfoBox>
+      <span slot="title">Getting started</span>
+      <span slot="detail1">
+        Open Treetop by clicking its icon (<img
+          class="icon"
+          src={icon}
+          alt="Treetop Icon" />) in the toolbar.
+      </span>
+      <span slot="detail2"
+        >Treetop shows all your bookmarks on a single page.</span>
+    </InfoBox>
 
-  <InfoBox>
-    <span slot="title">Always up-to-date</span>
-    <span slot="detail1">Treetop updates automatically as you browse.</span>
-    <span slot="detail2">Recently visited bookmarks have a larger font. </span>
-  </InfoBox>
+    <InfoBox>
+      <span slot="title">Always up-to-date</span>
+      <span slot="detail1">Treetop updates automatically as you browse.</span>
+      <span slot="detail2"
+        >Recently visited bookmarks have a larger font.
+      </span>
+    </InfoBox>
 
-  <InfoBox>
-    <span slot="title">Find and edit your bookmarks</span>
-    <span slot="detail1">Search for bookmarks by name or URL.</span>
-    <span slot="detail2">
-      Right-click to edit or delete bookmarks and folders.
-    </span>
-  </InfoBox>
+    <InfoBox>
+      <span slot="title">Find and edit your bookmarks</span>
+      <span slot="detail1">Search for bookmarks by name or URL.</span>
+      <span slot="detail2">
+        Right-click to edit or delete bookmarks and folders.
+      </span>
+    </InfoBox>
 
-  <InfoBox>
-    <span slot="title">Customize</span>
-    <span slot="detail1">
-      Click the Preferences button to customize Treetop's display.
-    </span>
-    <span slot="detail2">Click on a folder to make it the root folder.</span>
-  </InfoBox>
-</main>
+    <InfoBox>
+      <span slot="title">Customize</span>
+      <span slot="detail1">
+        Click the Preferences button to customize Treetop's display.
+      </span>
+      <span slot="detail2">Click on a folder to make it the root folder.</span>
+    </InfoBox>
+  </main>
+{/if}

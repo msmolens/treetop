@@ -1,5 +1,4 @@
 import { get, writable } from 'svelte/store';
-import browser, { type Bookmarks, type History } from 'webextension-polyfill';
 
 import { isBookmark } from './bookmarktreenode-utils';
 import * as Treetop from './types';
@@ -36,7 +35,7 @@ export class HistoryManager {
 
     // Parallel arrays
     const nodeIds: string[] = [];
-    const promises: Promise<History.VisitItem[]>[] = [];
+    const promises: Promise<chrome.history.VisitItem[]>[] = [];
 
     //
     // Get last visit time of bookmarked URLs
@@ -46,7 +45,7 @@ export class HistoryManager {
       const node: Treetop.FolderNode = get(nodeStore);
       node.children.forEach((child) => {
         if (child.type === Treetop.NodeType.Bookmark) {
-          const promise = browser.history.getVisits({
+          const promise = chrome.history.getVisits({
             url: child.url,
           });
           promises.push(promise);
@@ -83,13 +82,13 @@ export class HistoryManager {
    */
   async handleBookmarkCreated(
     _id: string,
-    bookmark: Bookmarks.BookmarkTreeNode,
+    bookmark: chrome.bookmarks.BookmarkTreeNode,
   ): Promise<void> {
     if (!isBookmark(bookmark)) {
       return;
     }
 
-    const items = await browser.history.getVisits({
+    const items = await chrome.history.getVisits({
       url: bookmark.url!,
     });
 
@@ -110,14 +109,14 @@ export class HistoryManager {
    */
   async handleBookmarkChanged(
     id: string,
-    changeInfo: Bookmarks.OnChangedChangeInfoType,
+    changeInfo: Treetop.BookmarkChangeInfo,
   ): Promise<void> {
     // Ignore changed folders
     if (changeInfo.url === undefined) {
       return;
     }
 
-    const items = await browser.history.getVisits({
+    const items = await chrome.history.getVisits({
       url: changeInfo.url,
     });
 
@@ -129,9 +128,9 @@ export class HistoryManager {
   /**
    * Update the last visit time store when the user visits a bookmarked URL.
    */
-  async handleVisited(result: History.HistoryItem): Promise<void> {
+  async handleVisited(result: chrome.history.HistoryItem): Promise<void> {
     // Update bookmark nodes that match the visited URL
-    const nodes = await browser.bookmarks.search({
+    const nodes = await chrome.bookmarks.search({
       url: result.url,
     });
 
@@ -146,7 +145,7 @@ export class HistoryManager {
    * history.
    */
   async handleVisitRemoved(
-    removed: History.OnVisitRemovedRemovedType,
+    removed: Treetop.HistoryRemovedResult,
   ): Promise<void> {
     if (removed.allHistory) {
       // All history was removed
@@ -154,15 +153,17 @@ export class HistoryManager {
         lastVisitTime.set(0);
       }
     } else {
-      // Get bookmark nodes that match the removed URL
-      const nodes = await browser.bookmarks.search({
-        url: removed.urls[0],
-      });
+      // TODO: Investigate why `removed.urls` is sometimes empty on Chrome
+      const url = removed.urls?.at(0);
+      if (url) {
+        // Get bookmark nodes that match the removed URL
+        const nodes = await chrome.bookmarks.search({ url });
 
-      nodes.forEach((node) => {
-        const lastVisitTime = this.lastVisitTimeMap.get(node.id)!;
-        lastVisitTime.set(0);
-      });
+        nodes.forEach((node) => {
+          const lastVisitTime = this.lastVisitTimeMap.get(node.id)!;
+          lastVisitTime.set(0);
+        });
+      }
     }
   }
 }

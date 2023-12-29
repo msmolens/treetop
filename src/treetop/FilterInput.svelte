@@ -7,13 +7,12 @@
   // TextField styles aren't applied correctly
   import IconButton from '@smui/icon-button';
   import debounce from 'lodash-es/debounce';
-  import * as browser from 'webextension-polyfill';
 
   // Filter string
   let filter = '';
 
   // Icon button
-  let iconButton: InstanceType<typeof IconButton>;
+  let iconButton: IconButton;
 
   // Debounce duration for typing in filter input (ms)
   const FILTER_DEBOUNCE_MS = 275;
@@ -28,6 +27,7 @@
     // Override button's type to disconnect it from the form. Otherwise,
     // pressing enter in the text field to submit the form causes a button
     // click, which clears the form.
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     (iconButton.getElement() as HTMLButtonElement).type = 'button';
   });
 
@@ -95,11 +95,12 @@
 
 <div class="searchBox">
   <form on:submit={handleFilterSubmit}>
+    <!-- svelte-ignore missing-declaration -->
     <TextField
       bind:value={filter}
       on:input={debounceFilterInput}
       on:keydown={onKeyDown}
-      label={browser.i18n.getMessage('search')}>
+      label={chrome.i18n.getMessage('search')}>
       <IconButton
         bind:this={iconButton}
         class="material-icons"

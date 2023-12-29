@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Add Google Chrome support.
+
+### Changed
+
+- Ignore bookmark separators, which aren't available on all browsers.
+- Update Svelte to 4.2.8.
+- Update Svelte Material UI to 7.0.0-beta16.
+- Replace Jest with Vitest as the testing framework.
+- Update development and testing dependencies.
+
 ## [1.7.0] - 2023-08-20
 
 ### Changed

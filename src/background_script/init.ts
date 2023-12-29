@@ -1,5 +1,3 @@
-import browser from 'webextension-polyfill';
-
 import { createContextMenus } from './menus';
 import { openTreetop } from './open-treetop';
 import { openWelcome } from './open-welcome';
@@ -10,13 +8,13 @@ import { setDefaultOptions } from './options';
  */
 export const init = async (): Promise<void> => {
   // Install handler to create context menus when the extension is installed
-  browser.runtime.onInstalled.addListener(createContextMenus);
+  chrome.runtime.onInstalled.addListener(createContextMenus);
 
   // Install handler to open the welcome page when the extension is installed
-  browser.runtime.onInstalled.addListener(openWelcome);
+  chrome.runtime.onInstalled.addListener(openWelcome);
 
-  // Install handler to open Treetop when the browser action is clicked
-  browser.browserAction.onClicked.addListener(openTreetop);
+  // Install handler to open Treetop when the extension's icon is clicked
+  chrome.action.onClicked.addListener(openTreetop);
 
   // Set default options
   const options = {

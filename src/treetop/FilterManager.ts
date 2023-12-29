@@ -1,5 +1,4 @@
 import { get } from 'svelte/store';
-import type { Bookmarks } from 'webextension-polyfill';
 
 import { isBookmark } from './bookmarktreenode-utils';
 import * as Treetop from './types';
@@ -86,7 +85,7 @@ export class FilterManager {
    */
   handleBookmarkCreated(
     _id: string,
-    bookmark: Bookmarks.BookmarkTreeNode,
+    bookmark: chrome.bookmarks.BookmarkTreeNode,
   ): void {
     if (this.filter === null) {
       return;
@@ -151,7 +150,7 @@ export class FilterManager {
    */
   handleBookmarkChanged(
     _id: string,
-    _changeInfo: Bookmarks.OnChangedChangeInfoType,
+    _changeInfo: Treetop.BookmarkChangeInfo,
   ): void {
     this.refreshFilter();
   }
@@ -160,10 +159,7 @@ export class FilterManager {
    * Update the Filterset when a bookmark is moved to a different folder or to a
    * new offset within its folder.
    */
-  handleBookmarkMoved(
-    _id: string,
-    _moveInfo: Bookmarks.OnMovedMoveInfoType,
-  ): void {
+  handleBookmarkMoved(_id: string, _moveInfo: Treetop.BookmarkMoveInfo): void {
     this.refreshFilter();
   }
 

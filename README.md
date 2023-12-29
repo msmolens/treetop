@@ -2,7 +2,7 @@
 
 # ![Treetop logo](src/icons/generated/icons/icon48.png) Treetop
 
-Treetop is a Firefox extension that provides a high-level live view of your bookmarks:
+Treetop is a browser extension that provides a high-level live view of your bookmarks:
 
 ![Screenshot of Treetop](images/screenshots/treetop.png)
 
@@ -37,7 +37,7 @@ Treetop is a Firefox extension that provides a high-level live view of your book
 ### Requirements
 
 - [Node.js](https://nodejs.org/) 18.x or greater
-- Firefox browser
+- Google Chrome or Firefox browser
 
 ### Prerequisites
 
@@ -50,19 +50,21 @@ npm install
 
 ### Commands
 
-| Command                | Description                                                                                                                                                 |
-| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `npm run build:watch`  | Build for development, watching for file changes.                                                                                                           |
-| `npm run build`        | Build for release.                                                                                                                                          |
-| `npm run lint`         | Check code for linting errors.                                                                                                                              |
-| `npm run lint:fix`     | Fix linting errors.                                                                                                                                         |
-| `npm run prettier`     | Check code for formatting errors.                                                                                                                           |
-| `npm run prettier:fix` | Fix formatting errors.                                                                                                                                      |
-| `npm run typecheck`    | Compile with `tsc` to check for TypeScript errors.                                                                                                          |
-| `npm run validate`     | Check for unused CSS, a11y issues, and TypeScript errors with [svelte-check](https://github.com/sveltejs/language-tools/tree/master/packages/svelte-check). |
-| `npm test`             | Run tests.                                                                                                                                                  |
-| `web-ext run`          | Start Firefox and load the extension temporarily.                                                                                                           |
-| `web-ext build`        | Package the extension.                                                                                                                                      |
+| Command                                                  | Description                                                                                                                                               |
+| -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run build:watch`                                    | Build for development, watching for file changes.                                                                                                         |
+| `TREETOP_TARGET=chrome npm run build`                    | Build for Chrome.                                                                                                                                         |
+| `TREETOP_TARGET=firefox npm run build`                   | Build for Firefox.                                                                                                                                        |
+| `npm run check`                                          | Check for unused CSS, a11y issues, and compiler errors with [svelte-check](https://github.com/sveltejs/language-tools/tree/master/packages/svelte-check). |
+| `npm run lint`                                           | Check code for linting errors.                                                                                                                            |
+| `npm run lint:fix`                                       | Fix linting errors.                                                                                                                                       |
+| `npm run prettier`                                       | Check code for formatting errors.                                                                                                                         |
+| `npm run prettier:fix`                                   | Fix formatting errors.                                                                                                                                    |
+| `npm test`                                               | Run tests.                                                                                                                                                |
+| `web-ext run --source-dir dist/chrome --target chromium` | Start Chrome and load the extension temporarily.                                                                                                          |
+| `web-ext run --source-dir dist/firefox`                  | Start Firefox and load the extension temporarily.                                                                                                         |
+| `web-ext build --source-dir dist/chrome`                 | Package the built extension for Chrome.                                                                                                                   |
+| `web-ext build --source-dir dist/firefox`                | Package the built extension for Firefox.                                                                                                                  |
 
 ### Core Technologies
 
@@ -75,13 +77,11 @@ npm install
 - [ESLint](https://eslint.org/): Static analyzer.
 - [Prettier](https://prettier.io/): Code formatter.
 - [web-ext](https://github.com/mozilla/web-ext): Command line tool for web extensions.
-- [webextension-polyfill](https://github.com/mozilla/webextension-polyfill): WebExtension `browser` API polyfill.
 
 #### Testing
 
-- [Jest](https://jestjs.io/): Testing framework.
+- [Vitest](https://vitest.dev/): Testing framework.
 - [DOM Testing Library](https://testing-library.com/): Framework to test Svelte components.
-- [mockzilla-webextension](https://lusito.github.io/mockzilla-webextension/): Mocking toolkit for web extensions.
 
 ## History
 

@@ -1,10 +1,9 @@
 import { type Writable, writable } from 'svelte/store';
-import browser, { type Storage } from 'webextension-polyfill';
 
 import type * as Treetop from './types';
 
 type StorageChangedCallback = Parameters<
-  typeof browser.storage.onChanged.addListener
+  typeof chrome.storage.onChanged.addListener
 >[0];
 
 /**
@@ -22,7 +21,7 @@ export class PreferencesManager {
 
   constructor() {
     // Register storage event handler
-    browser.storage.onChanged.addListener(this.onChanged);
+    chrome.storage.onChanged.addListener(this.onChanged);
   }
 
   /**
@@ -42,7 +41,7 @@ export class PreferencesManager {
    */
   async loadPreferences(): Promise<void> {
     // Get preferences from storage
-    const results = await browser.storage.local.get();
+    const results = await chrome.storage.local.get();
 
     // Initialize stores
     for (const key of Object.keys(results)) {
@@ -59,7 +58,7 @@ export class PreferencesManager {
    * Update preferences stores when storage values change.
    */
   private handleStorageChanged(
-    changes: Record<string, Storage.StorageChange>,
+    changes: Record<string, chrome.storage.StorageChange>,
     _areaName: string,
   ): void {
     for (const key of Object.keys(changes)) {

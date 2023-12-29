@@ -1,48 +1,51 @@
-import browser, { type Menus } from 'webextension-polyfill';
+import type { ChromeEventCallback } from '@Treetop/treetop/types';
+
+type ContextMenuCreateProperties = Parameters<
+  typeof chrome.contextMenus.create
+>[0];
 
 /**
  * Create context menus.
  */
-export const createContextMenus = (): void => {
+export const createContextMenus: ChromeEventCallback<
+  typeof chrome.runtime.onInstalled
+> = () => {
   // Get match pattern for the extension's origin
   // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/permissions#Host_permissions
-  const origin = browser.runtime.getURL('');
+  const origin = chrome.runtime.getURL('');
 
-  const commonMenuParams: {
-    contexts: Menus.ContextType[];
-    documentUrlPatterns: string[];
-  } = {
+  const commonMenuParams: ContextMenuCreateProperties = {
     contexts: ['link'],
     documentUrlPatterns: [`${origin}*`],
   };
 
-  browser.contextMenus.create({
+  chrome.contextMenus.create({
     id: 'openAllInTabs',
-    title: browser.i18n.getMessage('menuItemOpenAllInTabs'),
+    title: chrome.i18n.getMessage('menuItemOpenAllInTabs'),
     ...commonMenuParams,
   });
 
-  browser.contextMenus.create({
+  chrome.contextMenus.create({
     id: 'separator1',
     type: 'separator',
     ...commonMenuParams,
   });
 
-  browser.contextMenus.create({
+  chrome.contextMenus.create({
     id: 'delete',
-    title: browser.i18n.getMessage('menuItemDelete'),
+    title: chrome.i18n.getMessage('menuItemDelete'),
     ...commonMenuParams,
   });
 
-  browser.contextMenus.create({
+  chrome.contextMenus.create({
     id: 'separator2',
     type: 'separator',
     ...commonMenuParams,
   });
 
-  browser.contextMenus.create({
+  chrome.contextMenus.create({
     id: 'properties',
-    title: browser.i18n.getMessage('menuItemProperties'),
+    title: chrome.i18n.getMessage('menuItemProperties'),
     ...commonMenuParams,
   });
 };

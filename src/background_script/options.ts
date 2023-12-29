@@ -1,5 +1,4 @@
 import get from 'lodash-es/get';
-import browser from 'webextension-polyfill';
 
 import type * as Treetop from '@Treetop/treetop/types';
 
@@ -11,7 +10,7 @@ export const setDefaultOptions = async (
 ): Promise<void> => {
   try {
     // Get stored options
-    const storedOptions = await browser.storage.local.get();
+    const storedOptions = await chrome.storage.local.get();
 
     // Remove values that are no longer supported from stored options
     if (get(storedOptions, 'colorScheme') === 'system') {
@@ -25,7 +24,7 @@ export const setDefaultOptions = async (
     };
 
     // Update stored options
-    await browser.storage.local.set(updatedOptions);
+    await chrome.storage.local.set(updatedOptions);
   } catch (err) {
     console.error('Error setting default options:', err);
     throw err;

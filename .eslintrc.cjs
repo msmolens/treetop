@@ -6,7 +6,7 @@ module.exports = {
   },
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 2019,
+    ecmaVersion: 2021,
     sourceType: 'module',
     tsconfigRootDir: __dirname,
     project: true,
@@ -14,27 +14,23 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
+    'plugin:svelte/recommended',
+    'plugin:svelte/prettier',
     'plugin:@typescript-eslint/recommended-type-checked',
     'plugin:@typescript-eslint/stylistic-type-checked',
     'prettier',
   ],
-  plugins: ['@typescript-eslint', 'simple-import-sort', 'svelte3'],
+  plugins: ['@typescript-eslint', 'simple-import-sort'],
   overrides: [
     {
       files: ['*.svelte'],
-      processor: 'svelte3/svelte3',
-      rules: {
-        // Disable rule that gives false positives for store subscriptions
-        // https://github.com/sveltejs/eslint-plugin-svelte3/issues/104
-        '@typescript-eslint/no-unsafe-call': 'off',
+      parser: 'svelte-eslint-parser',
+      parserOptions: {
+        parser: '@typescript-eslint/parser',
       },
     },
   ],
-  settings: {
-    'svelte3/typescript': () => require('typescript'),
-  },
   rules: {
-    '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     'simple-import-sort/imports': [
       'error',

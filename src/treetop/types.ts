@@ -4,7 +4,6 @@ import type { Writable } from 'svelte/store';
 export enum NodeType {
   Bookmark,
   Folder,
-  Separator,
 }
 
 interface BaseNode {
@@ -24,11 +23,7 @@ export interface FolderNode extends BaseNode {
   children: Node[];
 }
 
-export interface SeparatorNode extends BaseNode {
-  type: NodeType.Separator;
-}
-
-export type Node = BookmarkNode | FolderNode | SeparatorNode;
+export type Node = BookmarkNode | FolderNode;
 
 // Map from node ID to a store holding a folder node.
 // Provides access to bookmark data.
@@ -62,3 +57,33 @@ export interface BuiltInFolderInfo {
   // Node IDs of built-in folders under the root bookmark node.
   builtInFolderIds: string[];
 }
+
+//
+// Chrome types
+//
+
+export type ChromeEventCallback<TEvent> = TEvent extends chrome.events.Event<
+  infer TCallback
+>
+  ? TCallback
+  : never;
+
+export type BookmarkChangeInfo = Parameters<
+  ChromeEventCallback<typeof chrome.bookmarks.onChanged>
+>[1];
+
+export type BookmarkCreatedInfo = Parameters<
+  ChromeEventCallback<typeof chrome.bookmarks.onCreated>
+>[1];
+
+export type BookmarkMoveInfo = Parameters<
+  ChromeEventCallback<typeof chrome.bookmarks.onMoved>
+>[1];
+
+export type BookmarkRemoveInfo = Parameters<
+  ChromeEventCallback<typeof chrome.bookmarks.onRemoved>
+>[1];
+
+export type HistoryRemovedResult = Parameters<
+  ChromeEventCallback<typeof chrome.history.onVisitRemoved>
+>[0];

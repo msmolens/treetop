@@ -1,7 +1,6 @@
 import { get, writable } from 'svelte/store';
-import browser, { type Bookmarks } from 'webextension-polyfill';
 
-import { isBookmark, isFolder, isSeparator } from './bookmarktreenode-utils';
+import { isBookmark, isFolder } from './bookmarktreenode-utils';
 import { MOBILE_BOOKMARKS_GUID } from './constants';
 import * as Treetop from './types';
 
@@ -19,7 +18,7 @@ export class BookmarksManager {
    * Initialize built-in folder info.
    */
   async loadBookmarks(): Promise<void> {
-    const nodes = await browser.bookmarks.getTree();
+    const nodes = await chrome.bookmarks.getTree();
 
     // Store root node ID
     const rootNode = nodes[0];
@@ -50,39 +49,39 @@ export class BookmarksManager {
    * Convert a BookmarkTreeNode into a Treetop folder node. Retain the only
    * necessary properties from the original node and its children.
    */
-  private convertNode(node: Bookmarks.BookmarkTreeNode): Treetop.FolderNode {
-    const newNode: Treetop.FolderNode = {
-      id: node.id,
-      parentId: node.parentId,
-      type: Treetop.NodeType.Folder,
-      title: node.title,
-      children: node.children!.map((child): Treetop.Node => {
-        let newChild: Treetop.Node;
+  private convertNode(
+    node: chrome.bookmarks.BookmarkTreeNode,
+  ): Treetop.FolderNode {
+    const children: Treetop.Node[] = node
+      .children!.map((child): Treetop.Node | undefined => {
         if (isBookmark(child)) {
-          newChild = {
+          return {
             id: child.id,
             title: child.title,
             type: Treetop.NodeType.Bookmark,
             url: child.url!,
           };
-        } else if (isFolder(child)) {
-          newChild = {
+        }
+
+        if (isFolder(child)) {
+          return {
             id: child.id,
             title: child.title,
             type: Treetop.NodeType.Folder,
             children: [],
           };
-        } else if (isSeparator(child)) {
-          newChild = {
-            id: child.id,
-            type: Treetop.NodeType.Separator,
-          };
-        } else {
-          throw new TypeError();
         }
 
-        return newChild;
-      }),
+        return undefined;
+      })
+      .filter((child): child is Treetop.Node => Boolean(child));
+
+    const newNode: Treetop.FolderNode = {
+      id: node.id,
+      parentId: node.parentId,
+      type: Treetop.NodeType.Folder,
+      title: node.title,
+      children,
     };
 
     return newNode;
@@ -91,7 +90,7 @@ export class BookmarksManager {
   /**
    * Create and record a node store for the specified bookmark node.
    */
-  private buildNodeStore(node: Bookmarks.BookmarkTreeNode): void {
+  private buildNodeStore(node: chrome.bookmarks.BookmarkTreeNode): void {
     const newNode = this.convertNode(node);
     const nodeStore = writable(newNode);
     this.nodeStoreMap.set(node.id, nodeStore);
@@ -101,13 +100,13 @@ export class BookmarksManager {
    * Update the node store for the specified bookmark ID.
    */
   private async updateNodeStore(nodeId: string): Promise<void> {
-    const [node] = await browser.bookmarks.get(nodeId);
+    const [node] = await chrome.bookmarks.get(nodeId);
 
     if (!isFolder(node)) {
       throw new TypeError();
     }
 
-    node.children = await browser.bookmarks.getChildren(node.id);
+    node.children = await chrome.bookmarks.getChildren(node.id);
 
     const newNode = this.convertNode(node);
     const nodeStore = this.nodeStoreMap.get(nodeId)!;
@@ -119,12 +118,12 @@ export class BookmarksManager {
    */
   async handleBookmarkCreated(
     id: string,
-    bookmark: Bookmarks.BookmarkTreeNode,
+    bookmark: chrome.bookmarks.BookmarkTreeNode,
   ): Promise<void> {
     if (isFolder(bookmark)) {
       // Add node store for the new folder
-      const [node] = await browser.bookmarks.get(id);
-      node.children = await browser.bookmarks.getChildren(id);
+      const [node] = await chrome.bookmarks.get(id);
+      node.children = await chrome.bookmarks.getChildren(id);
       this.buildNodeStore(node);
     }
 
@@ -140,7 +139,7 @@ export class BookmarksManager {
    */
   async handleBookmarkRemoved(
     id: string,
-    removeInfo: Bookmarks.OnRemovedRemoveInfoType,
+    removeInfo: Treetop.BookmarkRemoveInfo,
   ): Promise<string[]> {
     const removedNodeIds = [];
 
@@ -183,14 +182,14 @@ export class BookmarksManager {
    */
   async handleBookmarkChanged(
     id: string,
-    _changeInfo: Bookmarks.OnChangedChangeInfoType,
+    _changeInfo: Treetop.BookmarkChangeInfo,
   ): Promise<void> {
     if (this.nodeStoreMap.has(id)) {
       // Folder changed. Update its node.
       await this.updateNodeStore(id);
     } else {
       // Bookmark changed. Update the parent folder node.
-      const [node] = await browser.bookmarks.get(id);
+      const [node] = await chrome.bookmarks.get(id);
       await this.updateNodeStore(node.parentId!);
     }
   }
@@ -201,7 +200,7 @@ export class BookmarksManager {
    */
   async handleBookmarkMoved(
     _id: string,
-    moveInfo: Bookmarks.OnMovedMoveInfoType,
+    moveInfo: Treetop.BookmarkMoveInfo,
   ): Promise<void> {
     const parentId = moveInfo.parentId;
     const oldParentId = moveInfo.oldParentId;
