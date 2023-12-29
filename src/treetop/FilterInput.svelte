@@ -8,6 +8,9 @@
   import IconButton from '@smui/icon-button';
   import debounce from 'lodash-es/debounce';
 
+  // Input
+  let input: TextField;
+
   // Filter string
   let filter = '';
 
@@ -22,6 +25,11 @@
   // CSS 'visibility' value for the clear button.
   // The button is visible only when text is entered.
   $: clearIconButtonVisibility = filter.length > 0 ? 'visible' : 'hidden';
+
+  export function focus() {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    input.focus();
+  }
 
   onMount(() => {
     // Override button's type to disconnect it from the form. Otherwise,
@@ -97,6 +105,7 @@
   <form on:submit={handleFilterSubmit}>
     <!-- svelte-ignore missing-declaration -->
     <TextField
+      bind:this={input}
       bind:value={filter}
       on:input={debounceFilterInput}
       on:keydown={onKeyDown}

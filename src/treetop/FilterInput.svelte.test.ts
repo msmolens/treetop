@@ -31,6 +31,17 @@ it('renders filter input', () => {
   expect(screen.queryByRole('button')).not.toBeInTheDocument();
 });
 
+it('focus input when focus() method is called', () => {
+  const { component } = setup();
+
+  expect(screen.getByLabelText(/^search$/i)).not.toHaveFocus();
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  component.focus();
+
+  expect(screen.getByLabelText(/^search$/i)).toHaveFocus();
+});
+
 it('dispatches input event when text is typed after debouncing', async () => {
   const { component, user } = setup();
 
