@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [2.0.0] - 2023-12-29
+
 ### Added
 
 - Add Google Chrome support.
@@ -134,7 +136,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Initial release.
 
-[Unreleased]: https://github.com/msmolens/treetop/compare/v1.7.0...HEAD
+[Unreleased]: https://github.com/msmolens/treetop/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/msmolens/treetop/releases/tag/v2.0.0
 [1.7.0]: https://github.com/msmolens/treetop/releases/tag/v1.7.0
 [1.6.0]: https://github.com/msmolens/treetop/releases/tag/v1.6.0
 [1.5.0]: https://github.com/msmolens/treetop/releases/tag/v1.5.0
