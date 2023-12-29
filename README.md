@@ -6,6 +6,12 @@ Treetop is a browser extension that provides a high-level live view of your book
 
 ![Screenshot of Treetop](images/screenshots/treetop.png)
 
+## Installation
+
+- Google Chrome: https://chromewebstore.google.com/detail/treetop/gbjocfinjldepimidjiooalbgajjikpp
+
+- Firefox: https://addons.mozilla.org/firefox/addon/tr/
+
 ## Usage
 
 ### Getting started
