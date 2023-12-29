@@ -36,7 +36,7 @@ Treetop is a browser extension that provides a high-level live view of your book
 
 ### Requirements
 
-- [Node.js](https://nodejs.org/) 18.x or greater
+- [Node.js](https://nodejs.org/) 20.x or greater
 - Google Chrome or Firefox browser
 
 ### Prerequisites
