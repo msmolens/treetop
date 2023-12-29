@@ -5,8 +5,10 @@
   let options: Record<string, any>;
 
   const strings = {
+    general: chrome.i18n.getMessage('optionHeadingGeneral'),
     bookmarks: chrome.i18n.getMessage('optionHeadingBookmarks'),
     appearance: chrome.i18n.getMessage('optionHeadingAppearance'),
+    openInNewTab: chrome.i18n.getMessage('optionOpenInNewTab'),
     truncate: chrome.i18n.getMessage('optionTruncateLongTitles'),
     tooltips: chrome.i18n.getMessage('optionDisplayTooltips'),
     showRecentlyVisited: chrome.i18n.getMessage('optionShowRecentlyVisited'),
@@ -114,6 +116,17 @@
 
 {#if options}
   <main>
+    <h3>{strings.general}</h3>
+    <div>
+      <label>
+        <input
+          type="checkbox"
+          bind:checked={options.openInNewTab}
+          on:change={handleCheckboxChange}
+          data-option-name="openInNewTab" />
+        {strings.openInNewTab}
+      </label>
+    </div>
     <h3>{strings.bookmarks}</h3>
     <div>
       <label>

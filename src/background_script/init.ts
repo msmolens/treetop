@@ -18,9 +18,7 @@ export const init = async (): Promise<void> => {
 
   // Set default options
   const options = {
-    showBookmarksToolbar: true,
-    showBookmarksMenu: true,
-    showOtherBookmarks: true,
+    openInNewTab: true,
     truncate: true,
     tooltips: true,
     showRecentlyVisited: true,
