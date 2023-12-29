@@ -1,31 +1,60 @@
 import faker from 'faker';
-import { expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { openTreetop } from '@Treetop/background_script/open-treetop';
 
-it('opens in current tab', () => {
-  const tab: chrome.tabs.Tab = {
-    active: false,
-    autoDiscardable: false,
-    discarded: false,
-    groupId: 0,
-    highlighted: false,
-    incognito: false,
-    index: 0,
-    pinned: false,
-    selected: false,
-    windowId: 0,
-  };
+describe('open-treetop', () => {
+  let tab: chrome.tabs.Tab;
+  let url: string;
 
-  const url = faker.internet.url();
+  beforeEach(() => {
+    tab = {
+      active: false,
+      autoDiscardable: false,
+      discarded: false,
+      groupId: 0,
+      highlighted: false,
+      incognito: false,
+      index: 0,
+      pinned: false,
+      selected: false,
+      windowId: 0,
+    };
 
-  const update = vi.fn();
-  vi.spyOn(chrome.tabs, 'update').mockImplementation(update);
+    url = faker.internet.url();
+  });
 
-  vi.spyOn(chrome.runtime, 'getURL').mockReturnValue(url);
+  it('opens in current tab', async () => {
+    const get = vi.fn().mockResolvedValue({ openInNewTab: false });
+    vi.spyOn(chrome.storage.local, 'get').mockImplementation(get);
 
-  openTreetop(tab);
+    const update = vi.fn();
+    vi.spyOn(chrome.tabs, 'update').mockImplementation(update);
 
-  expect(update).toHaveBeenCalledOnce();
-  expect(update).toHaveBeenCalledWith({ url });
+    vi.spyOn(chrome.runtime, 'getURL').mockReturnValue(url);
+
+    openTreetop(tab);
+
+    await new Promise((resolve) => setTimeout(resolve));
+
+    expect(update).toHaveBeenCalledOnce();
+    expect(update).toHaveBeenCalledWith({ url });
+  });
+
+  it('opens in new tab', async () => {
+    const get = vi.fn().mockResolvedValue({ openInNewTab: true });
+    vi.spyOn(chrome.storage.local, 'get').mockImplementation(get);
+
+    const create = vi.fn();
+    vi.spyOn(chrome.tabs, 'create').mockImplementation(create);
+
+    vi.spyOn(chrome.runtime, 'getURL').mockReturnValue(url);
+
+    openTreetop(tab);
+
+    await new Promise((resolve) => setTimeout(resolve));
+
+    expect(create).toHaveBeenCalledOnce();
+    expect(create).toHaveBeenCalledWith({ url });
+  });
 });

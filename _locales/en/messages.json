@@ -72,6 +72,10 @@
     "message": "Appearance",
     "description": "Title of group for appearance options."
   },
+  "optionOpenInNewTab": {
+    "message": "Open Treetop in a new tab",
+    "description": "Title of option to open Treetop in a new tab."
+  },
   "optionTruncateLongTitles": {
     "message": "Truncate long titles",
     "description": "Title of option to truncate long bookmark titles."

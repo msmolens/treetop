@@ -23,10 +23,14 @@ describe('Options', () => {
   beforeEach(() => {
     vi.spyOn(chrome.i18n, 'getMessage').mockImplementation((messageName) => {
       switch (messageName) {
+        case 'optionHeadingGeneral':
+          return 'general';
         case 'optionHeadingBookmarks':
           return 'bookmarks';
         case 'optionHeadingAppearance':
           return 'appearance';
+        case 'optionOpenInNewTab':
+          return 'open in new tab';
         case 'optionTruncateLongTitles':
           return 'truncate';
         case 'optionDisplayTooltips':
@@ -52,6 +56,7 @@ describe('Options', () => {
     });
 
     const get = vi.fn().mockResolvedValue({
+      openInNewTab: true,
       truncate: false,
       tooltips: true,
       showRecentlyVisited: true,
@@ -64,8 +69,10 @@ describe('Options', () => {
     setup();
 
     await waitFor(() => {
+      expect(screen.getByText(/^general/i)).toBeInTheDocument();
       expect(screen.getByText(/^bookmarks/i)).toBeInTheDocument();
       expect(screen.getByText(/^appearance/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/^open in new tab/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/^truncate/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/^tooltips/i)).toBeInTheDocument();
       expect(
@@ -86,9 +93,10 @@ describe('Options', () => {
     setup();
 
     await waitFor(() => {
-      expect(screen.getByText(/^bookmarks/i)).toBeInTheDocument();
+      expect(screen.getByText(/^general/i)).toBeInTheDocument();
     });
 
+    expect(screen.getByLabelText(/^open in new tab/i)).toBeChecked();
     expect(screen.getByLabelText(/^truncate/i)).not.toBeChecked();
     expect(screen.getByLabelText(/^tooltips/i)).toBeChecked();
     expect(screen.getByLabelText(/^show recently visited/i)).toBeChecked();
