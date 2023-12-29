@@ -25,6 +25,22 @@ end
     --export-height=640 \
     treetop-social.svg
 
+  inkscape \
+    --export-filename="generated/misc/treetop-promo-small.png" \
+    --export-type="png" \
+    --export-area-page \
+    --export-width=440  \
+    --export-height=280 \
+    treetop-promo-small.svg
+
+  inkscape \
+    --export-filename="generated/misc/treetop-promo-marquee.png" \
+    --export-type="png" \
+    --export-area-page \
+    --export-width=1400  \
+    --export-height=560 \
+    treetop-promo-marquee.svg
+
 # Generate optimized SVG icon.
 # Requires scour: https://github.com/scour-project/scour
 
