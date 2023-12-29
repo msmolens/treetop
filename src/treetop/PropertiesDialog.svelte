@@ -16,6 +16,16 @@
 
   let nameLabel: TextField;
 
+  /**
+   * Save the changes when the user presses Enter.
+   */
+  function onKeyDown(e: CustomEvent | KeyboardEvent) {
+    e = e as KeyboardEvent;
+    if (e.key === 'Enter') {
+      save();
+    }
+  }
+
   function handleOpened() {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     nameLabel.focus();
@@ -99,6 +109,7 @@
         bind:this={nameLabel}
         bind:value={editTitle}
         on:focus={handleTextFieldFocus}
+        on:keydown={onKeyDown}
         label="Name"
         style="width: 100%;" />
     </div>
@@ -107,6 +118,7 @@
         <TextField
           bind:value={editUrl}
           on:focus={handleTextFieldFocus}
+          on:keydown={onKeyDown}
           label="Location"
           style="width: 100%;" />
       </div>
