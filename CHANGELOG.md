@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Add Google Chrome support.
 - Add option to open Treetop in a new tab.
+- Focus search input when pressing '/'.
 
 ### Changed
 

@@ -129,6 +129,12 @@
   let propertiesNode: chrome.bookmarks.BookmarkTreeNode | null = null;
 
   //
+  // Filter input
+  //
+
+  let filterInput: FilterInput;
+
+  //
   // Menu manager
   //
 
@@ -284,6 +290,29 @@
    */
   function onHashChange() {
     window.location.reload();
+  }
+
+  /**
+   * Focus filter input when pressing '/'.
+   * Based on https://justincypret.com/blog/adding-a-keyboard-shortcut-for-global-search.
+   */
+  function onKeyDown(e: KeyboardEvent) {
+    if (e.key !== '/' || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) {
+      return;
+    }
+
+    if (!(e.target instanceof HTMLElement)) {
+      return;
+    }
+
+    if (/^(?:button|input|textarea|select)$/i.test(e.target.tagName)) {
+      return;
+    }
+
+    e.preventDefault();
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    filterInput.focus();
   }
 
   //
@@ -624,6 +653,8 @@
   {/if}
 </svelte:head>
 
+<svelte:body on:keydown={onKeyDown} />
+
 {#await ready}
   <div class="progressContainer">
     <img src={icon} alt="Treetop Icon" />
@@ -637,7 +668,7 @@
     on:error={() => {
       handleError(chrome.i18n.getMessage('errorLoadingPreferences'));
     }}>
-    <FilterInput on:input={applyFilter} />
+    <FilterInput bind:this={filterInput} on:input={applyFilter} />
   </PageHeader>
   <main
     class="treetopContainer"
