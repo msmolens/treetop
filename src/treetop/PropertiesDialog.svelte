@@ -5,7 +5,6 @@
   import Dialog, { Actions, Content, Title } from '@smui/dialog';
   import TextField from '@smui/textfield';
   import truncate from 'lodash-es/truncate';
-  import * as browser from 'webextension-polyfill';
 
   import type * as Treetop from './types';
 
@@ -15,9 +14,10 @@
   export let title: string;
   export let url: string | undefined;
 
-  let nameLabel: InstanceType<typeof TextField>;
+  let nameLabel: TextField;
 
   function handleOpened() {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     nameLabel.focus();
   }
 
@@ -44,8 +44,8 @@
   // Dialog strings
   //
 
-  const cancelLabel = browser.i18n.getMessage('dialogButtonCancel');
-  const saveLabel = browser.i18n.getMessage('dialogButtonSave');
+  const cancelLabel = chrome.i18n.getMessage('dialogButtonCancel');
+  const saveLabel = chrome.i18n.getMessage('dialogButtonSave');
 
   let header: string;
   $: if (title) {
@@ -53,7 +53,7 @@
     const truncatedTitle = truncate(title, {
       length: maxHeaderTitleLength,
     });
-    header = browser.i18n.getMessage(
+    header = chrome.i18n.getMessage(
       'dialogHeadingBookmarkProperties',
       truncatedTitle,
     );

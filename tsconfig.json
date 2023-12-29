@@ -1,6 +1,7 @@
 {
   "extends": "@tsconfig/svelte/tsconfig.json",
   "compilerOptions": {
+    "target": "es2022",
     "baseUrl": "./src",
     "paths": {
       "@Treetop/*": [
@@ -18,20 +19,15 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/types"
-    ],
     "types": [
-      "jest",
+      "chrome-types",
       "@testing-library/jest-dom",
     ]
   },
   "include": [
-    "./src/**/*",
-    "./test/**/*",
+    "./src/**/*.ts",
+    "./src/**/*.svelte",
+    "./test/**/*.ts",
+    "./test/**/*.svelte",
   ],
-  "exclude": [
-    "node_modules/*"
-  ]
 }

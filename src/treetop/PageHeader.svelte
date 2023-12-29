@@ -3,12 +3,12 @@
   import { elasticOut } from 'svelte/easing';
   import { fly } from 'svelte/transition';
   import IconButton from '@smui/icon-button';
-  import * as browser from 'webextension-polyfill';
 
   const dispatch = createEventDispatcher();
 
   function openPreferences(e: CustomEvent) {
-    browser.runtime.openOptionsPage().catch(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    chrome.runtime.openOptionsPage().catch(() => {
       dispatch('error');
     });
 
@@ -77,8 +77,9 @@
   </div>
   <div>
     <div class="preferences">
+      <!-- svelte-ignore missing-declaration -->
       <IconButton
-        aria-label={browser.i18n.getMessage('preferences')}
+        aria-label={chrome.i18n.getMessage('preferences')}
         on:click={openPreferences}
         ripple={false}>
         settings

@@ -1,8 +1,8 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Treetop",
   "description": "__MSG_extensionDescription__",
-  "version": "1.7.0",
+  "version": "",
   "author": "Max Smolens",
   "homepage_url": "https://github.com/msmolens/treetop",
   "default_locale": "en",
@@ -17,7 +17,7 @@
   "background": {
     "scripts": ["background_script.js"]
   },
-  "browser_action": {
+  "action": {
     "default_icon": {
       "32": "icons/icon32.png",
       "48": "icons/icon48.png",
@@ -29,14 +29,13 @@
     "default_title": "Treetop"
   },
   "options_ui": {
-    "page": "options.html",
-    "browser_style": true
+    "page": "options.html"
   },
   "permissions": ["bookmarks", "contextMenus", "history", "storage"],
   "browser_specific_settings": {
     "gecko": {
       "id": "treetop@maxsmolens.org",
-      "strict_min_version": "76.0"
+      "strict_min_version": "118.0"
     }
   }
 }

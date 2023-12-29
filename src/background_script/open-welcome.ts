@@ -1,16 +1,14 @@
-import browser, { type Runtime } from 'webextension-polyfill';
+import type { ChromeEventCallback } from '@Treetop/treetop/types';
 
 /**
  * Open the welcome page when the extension is installed.
  */
-export const openWelcome = ({
-  reason,
-  temporary,
-}: Runtime.OnInstalledDetailsType): void => {
-  if (temporary || reason !== 'install') {
+export const openWelcome: ChromeEventCallback<
+  typeof chrome.runtime.onInstalled
+> = ({ reason }) => {
+  if (reason !== 'install') {
     return;
   }
-
-  const url = browser.runtime.getURL('welcome.html');
-  void browser.tabs.create({ url });
+  const url = chrome.runtime.getURL('welcome.html');
+  void chrome.tabs.create({ url });
 };

@@ -1,5 +1,3 @@
-import browser, { type Menus, type Tabs } from 'webextension-polyfill';
-
 import type { MenuItem } from './MenuItem';
 
 /**
@@ -23,19 +21,19 @@ export class MenuManager {
    * The menu must have been clicked in the current Treetop tab.
    */
   async handleMenuClicked(
-    info: Menus.OnClickData,
-    tab?: Tabs.Tab,
+    info: chrome.contextMenus.OnClickData,
+    tab?: chrome.tabs.Tab,
   ): Promise<void> {
     // Store current active element; it may be cleared while waiting for an
     // asynchronous function call
     const activeElement = this.activeElement;
 
-    if (info.viewType !== 'tab' || !tab) {
+    if (!tab) {
       return;
     }
 
-    const currentTab = await browser.tabs.getCurrent();
-    if (currentTab.id !== tab.id) {
+    const currentTab = await chrome.tabs.getCurrent();
+    if (currentTab?.id !== tab.id) {
       return;
     }
 
@@ -61,9 +59,14 @@ export class MenuManager {
 
     for (const [id, item] of this.menuItems.entries()) {
       const enabled = item.enabled(nodeId);
-      await browser.contextMenus.update(id, { enabled });
+      // eslint-disable-next-line @typescript-eslint/await-thenable
+      await chrome.contextMenus.update(id, { enabled });
     }
 
-    await browser.contextMenus.refresh();
+    if ('refresh' in chrome.contextMenus) {
+      // @ts-expect-error contextMenus.refresh() is available only on Firefox
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      await chrome.contextMenus.refresh();
+    }
   }
 }

@@ -1,10 +1,10 @@
 <script lang="ts">
   // Wrapper component to test Svelte components that use the Context API.
   // See https://github.com/svelte-society/recipes-mvp/blob/master/testing.md#testing-the-context-api
-  import { setContext, SvelteComponent } from 'svelte';
+  import { type ComponentType, setContext } from 'svelte';
 
   // Component
-  export let Component: typeof SvelteComponent;
+  export let Component: ComponentType;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   export let Props: Record<string, any>;
 

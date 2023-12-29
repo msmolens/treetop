@@ -1,4 +1,5 @@
 __mocks__
+bin
 node_modules
 dist
 coverage

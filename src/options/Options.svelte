@@ -1,38 +1,38 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import * as browser from 'webextension-polyfill';
 
-  let options: Awaited<ReturnType<typeof browser.storage.local.get>>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let options: Record<string, any>;
 
   const strings = {
-    bookmarks: browser.i18n.getMessage('optionHeadingBookmarks'),
-    appearance: browser.i18n.getMessage('optionHeadingAppearance'),
-    truncate: browser.i18n.getMessage('optionTruncateLongTitles'),
-    tooltips: browser.i18n.getMessage('optionDisplayTooltips'),
-    showRecentlyVisited: browser.i18n.getMessage('optionShowRecentlyVisited'),
-    colorScheme: browser.i18n.getMessage('optionColorScheme'),
-    colorSchemeLight: browser.i18n.getMessage('optionColorSchemeLight'),
-    colorSchemeDark: browser.i18n.getMessage('optionColorSchemeDark'),
-    optionSourceAttributions: browser.i18n.getMessage('openSourceAttributions'),
+    bookmarks: chrome.i18n.getMessage('optionHeadingBookmarks'),
+    appearance: chrome.i18n.getMessage('optionHeadingAppearance'),
+    truncate: chrome.i18n.getMessage('optionTruncateLongTitles'),
+    tooltips: chrome.i18n.getMessage('optionDisplayTooltips'),
+    showRecentlyVisited: chrome.i18n.getMessage('optionShowRecentlyVisited'),
+    colorScheme: chrome.i18n.getMessage('optionColorScheme'),
+    colorSchemeLight: chrome.i18n.getMessage('optionColorSchemeLight'),
+    colorSchemeDark: chrome.i18n.getMessage('optionColorSchemeDark'),
+    optionSourceAttributions: chrome.i18n.getMessage('openSourceAttributions'),
   };
 
   async function handleCheckboxChange(event: Event) {
     const target = event.target! as HTMLInputElement;
     const optionName = target.dataset.optionName!;
     const value = target.checked;
-    await browser.storage.local.set({ [optionName]: value });
+    await chrome.storage.local.set({ [optionName]: value });
   }
 
   async function handleRadioChange(event: Event) {
     const target = event.target! as HTMLInputElement;
     const optionName = target.name;
     const value = target.value;
-    await browser.storage.local.set({ [optionName]: value });
+    await chrome.storage.local.set({ [optionName]: value });
   }
 
   onMount(() => {
     async function getOptions() {
-      options = await browser.storage.local.get();
+      options = await chrome.storage.local.get();
     }
 
     getOptions().catch((err) => {
@@ -42,11 +42,25 @@
 </script>
 
 <style>
-  /* Based on https://github.com/mozilla/multi-account-containers/blob/f0afc0d/src/css/options.css */
+  /* Based on the following stylesheets:
+     - https://github.com/mozilla/multi-account-containers/blob/f0afc0d/src/css/options.css
+     - https://hg.mozilla.org/mozilla-central/raw-file/a445f1762c895000bcdabd9d95697522359d41ed/browser/components/extensions/extension.css
+  */
   :global(body) {
-    background-color: #fff;
-    color: #202023;
-    margin-bottom: 1rem;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    color: #222426;
+    cursor: default;
+    display: flex;
+    flex-direction: column;
+    font: caption;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+  }
+
+  main {
+    margin: 0px 20px 20px 20px;
   }
 
   a {
@@ -99,66 +113,68 @@
 </style>
 
 {#if options}
-  <h3>{strings.bookmarks}</h3>
-  <div>
-    <label>
-      <input
-        type="checkbox"
-        bind:checked={options.truncate}
-        on:change={handleCheckboxChange}
-        data-option-name="truncate" />
-      {strings.truncate}
-    </label>
-  </div>
-  <div>
-    <label>
-      <input
-        type="checkbox"
-        bind:checked={options.tooltips}
-        on:change={handleCheckboxChange}
-        data-option-name="tooltips" />
-      {strings.tooltips}
-    </label>
-  </div>
-  <div>
-    <label>
-      <input
-        type="checkbox"
-        bind:checked={options.showRecentlyVisited}
-        on:change={handleCheckboxChange}
-        data-option-name="showRecentlyVisited" />
-      {strings.showRecentlyVisited}
-    </label>
-  </div>
+  <main>
+    <h3>{strings.bookmarks}</h3>
+    <div>
+      <label>
+        <input
+          type="checkbox"
+          bind:checked={options.truncate}
+          on:change={handleCheckboxChange}
+          data-option-name="truncate" />
+        {strings.truncate}
+      </label>
+    </div>
+    <div>
+      <label>
+        <input
+          type="checkbox"
+          bind:checked={options.tooltips}
+          on:change={handleCheckboxChange}
+          data-option-name="tooltips" />
+        {strings.tooltips}
+      </label>
+    </div>
+    <div>
+      <label>
+        <input
+          type="checkbox"
+          bind:checked={options.showRecentlyVisited}
+          on:change={handleCheckboxChange}
+          data-option-name="showRecentlyVisited" />
+        {strings.showRecentlyVisited}
+      </label>
+    </div>
 
-  <h3>{strings.appearance}</h3>
-  <h4>{strings.colorScheme}</h4>
-  <div class="group">
-    <div>
-      <label>
-        <input
-          type="radio"
-          name="colorScheme"
-          value="light"
-          bind:group={options.colorScheme}
-          on:change={handleRadioChange} />
-        {strings.colorSchemeLight}
-      </label>
+    <h3>{strings.appearance}</h3>
+    <h4>{strings.colorScheme}</h4>
+    <div class="group">
+      <div>
+        <label>
+          <input
+            type="radio"
+            name="colorScheme"
+            value="light"
+            bind:group={options.colorScheme}
+            on:change={handleRadioChange} />
+          {strings.colorSchemeLight}
+        </label>
+      </div>
+      <div>
+        <label>
+          <input
+            type="radio"
+            name="colorScheme"
+            value="dark"
+            bind:group={options.colorScheme}
+            on:change={handleRadioChange} />
+          {strings.colorSchemeDark}
+        </label>
+      </div>
     </div>
-    <div>
-      <label>
-        <input
-          type="radio"
-          name="colorScheme"
-          value="dark"
-          bind:group={options.colorScheme}
-          on:change={handleRadioChange} />
-        {strings.colorSchemeDark}
-      </label>
+    <div class="attributions">
+      <a href="attributions.txt" target="_blank"
+        >{strings.optionSourceAttributions}</a>
     </div>
-  </div>
-  <div class="attributions">
-    <a href="attributions.txt" target="_blank"
-      >{strings.optionSourceAttributions}</a>
-  </div>
+  </main>
 {/if}

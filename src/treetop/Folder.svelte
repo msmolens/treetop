@@ -1,7 +1,6 @@
 <script lang="ts">
   import { getContext } from 'svelte';
   import { get, type Writable } from 'svelte/store';
-  import * as browser from 'webextension-polyfill';
 
   import Bookmark from './Bookmark.svelte';
   import * as Treetop from './types';
@@ -58,7 +57,7 @@
       key = 'folderNoTitle';
     }
 
-    return browser.i18n.getMessage(key);
+    return chrome.i18n.getMessage(key);
   }
 </script>
 
@@ -108,12 +107,6 @@
     line-height: 1.75;
     margin: 1rem 0 1rem 1rem;
   }
-
-  hr {
-    border: 1px solid #9e9e9e;
-    border-width: 1px;
-    margin: 0.5rem auto;
-  }
 </style>
 
 <svelte:head>
@@ -136,7 +129,8 @@
     </div>
     <div class="contents">
       {#if root && $filterActive && !$filterSet.has(nodeId)}
-        <em>{browser.i18n.getMessage('noResults')}</em>
+        <!-- svelte-ignore missing-declaration -->
+        <em>{chrome.i18n.getMessage('noResults')}</em>
       {/if}
       {#each $node.children as child (child.id)}
         {#if child.type === Treetop.NodeType.Bookmark}
@@ -152,10 +146,11 @@
           {/if}
         {:else if child.type === Treetop.NodeType.Folder}
           <svelte:self nodeId={child.id} />
-        {:else if child.type === Treetop.NodeType.Separator}
-          <hr />
         {/if}
-      {:else}<em>{browser.i18n.getMessage('emptyFolder')}</em>{/each}
+      {:else}
+        <!-- svelte-ignore missing-declaration -->
+        <em>{chrome.i18n.getMessage('emptyFolder')}</em>
+      {/each}
     </div>
   </div>
 {/if}

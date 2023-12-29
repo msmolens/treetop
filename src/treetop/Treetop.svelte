@@ -9,8 +9,6 @@
   import { fade } from 'svelte/transition';
   import LinearProgress from '@smui/linear-progress';
   import Snackbar, { Label } from '@smui/snackbar';
-  import type { Bookmarks, History, Menus, Tabs } from 'webextension-polyfill';
-  import * as browser from 'webextension-polyfill';
 
   import icon from '../icons/generated/icons/icon.svg';
 
@@ -105,7 +103,7 @@
   // Error notification
   //
 
-  let errorSnackbar: InstanceType<typeof Snackbar>;
+  let errorSnackbar: Snackbar;
   let errorMessage: string;
 
   //
@@ -114,10 +112,10 @@
 
   const deleteFolderDialogInfo = {
     open: false,
-    title: browser.i18n.getMessage('dialogHeadingDeleteFolder'),
-    message: browser.i18n.getMessage('dialogMessageDeleteFolder'),
-    cancelLabel: browser.i18n.getMessage('dialogButtonCancel'),
-    confirmLabel: browser.i18n.getMessage('dialogButtonDelete'),
+    title: chrome.i18n.getMessage('dialogHeadingDeleteFolder'),
+    message: chrome.i18n.getMessage('dialogMessageDeleteFolder'),
+    cancelLabel: chrome.i18n.getMessage('dialogButtonCancel'),
+    confirmLabel: chrome.i18n.getMessage('dialogButtonDelete'),
   };
   let deleteFolderId: string | null;
 
@@ -128,7 +126,7 @@
   const propertiesDialogInfo = {
     open: false,
   };
-  let propertiesNode: Bookmarks.BookmarkTreeNode | null = null;
+  let propertiesNode: chrome.bookmarks.BookmarkTreeNode | null = null;
 
   //
   // Menu manager
@@ -157,6 +155,7 @@
    */
   function handleError(err: Error | string) {
     errorMessage = err.toString();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     errorSnackbar.open();
   }
 
@@ -171,13 +170,13 @@
 
     const activeFilterSet = get(filterActive) ? get(filterSet) : undefined;
 
-    const promises: Promise<Tabs.Tab>[] = [];
+    const promises: Promise<chrome.tabs.Tab>[] = [];
 
     node.children.forEach((child) => {
       if (child.type === Treetop.NodeType.Bookmark) {
         if (!activeFilterSet || activeFilterSet.has(child.id)) {
           promises.push(
-            browser.tabs.create({
+            chrome.tabs.create({
               url: child.url,
             }),
           );
@@ -187,12 +186,12 @@
 
     Promise.all(promises).catch((err) => {
       console.error(err);
-      handleError(browser.i18n.getMessage('errorOpeningTab'));
+      handleError(chrome.i18n.getMessage('errorOpeningTab'));
     });
   }
 
   async function asyncShowPropertiesDialog(nodeId: string) {
-    [propertiesNode] = await browser.bookmarks.get(nodeId);
+    [propertiesNode] = await chrome.bookmarks.get(nodeId);
 
     propertiesDialogInfo.open = true;
   }
@@ -203,7 +202,7 @@
   function showPropertiesDialog(nodeId: string) {
     asyncShowPropertiesDialog(nodeId).catch((err) => {
       console.error(err);
-      handleError(browser.i18n.getMessage('errorRetrievingBookmark'));
+      handleError(chrome.i18n.getMessage('errorRetrievingBookmark'));
     });
   }
 
@@ -224,10 +223,10 @@
     const changes = event.detail;
 
     try {
-      await browser.bookmarks.update(propertiesNode!.id, changes);
+      await chrome.bookmarks.update(propertiesNode!.id, changes);
     } catch (err) {
       console.error(err);
-      handleError(browser.i18n.getMessage('errorSavingBookmark'));
+      handleError(chrome.i18n.getMessage('errorSavingBookmark'));
     }
 
     propertiesNode = null;
@@ -243,9 +242,9 @@
       // Folder
       const node = get(nodeStore);
       if (node.children.length === 0) {
-        browser.bookmarks.remove(nodeId).catch((err) => {
+        chrome.bookmarks.remove(nodeId).catch((err) => {
           console.error(err);
-          handleError(browser.i18n.getMessage('errorDeletingFolder'));
+          handleError(chrome.i18n.getMessage('errorDeletingFolder'));
         });
       } else {
         deleteFolderId = nodeId;
@@ -253,9 +252,9 @@
       }
     } else {
       // Bookmark
-      browser.bookmarks.remove(nodeId).catch((err) => {
+      chrome.bookmarks.remove(nodeId).catch((err) => {
         console.error(err);
-        handleError(browser.i18n.getMessage('errorDeletingBookmark'));
+        handleError(chrome.i18n.getMessage('errorDeletingBookmark'));
       });
     }
   }
@@ -273,9 +272,9 @@
    */
   function confirmDeleteBookmark() {
     deleteFolderDialogInfo.open = false;
-    browser.bookmarks.removeTree(deleteFolderId!).catch((err) => {
+    chrome.bookmarks.removeTree(deleteFolderId!).catch((err) => {
       console.error(err);
-      handleError(browser.i18n.getMessage('errorDeletingFolder'));
+      handleError(chrome.i18n.getMessage('errorDeletingFolder'));
     });
     deleteFolderId = null;
   }
@@ -293,7 +292,7 @@
 
   async function asyncOnBookmarkCreated(
     id: string,
-    bookmark: Bookmarks.BookmarkTreeNode,
+    bookmark: chrome.bookmarks.BookmarkTreeNode,
   ) {
     const promises: Promise<void>[] = [];
 
@@ -308,16 +307,19 @@
     filterManager.handleBookmarkCreated(id, bookmark);
   }
 
-  function onBookmarkCreated(id: string, bookmark: Bookmarks.BookmarkTreeNode) {
+  function onBookmarkCreated(
+    id: string,
+    bookmark: chrome.bookmarks.BookmarkTreeNode,
+  ) {
     asyncOnBookmarkCreated(id, bookmark).catch((err) => {
       console.error(err);
-      handleError(browser.i18n.getMessage('errorHandlingBookmarkCreation'));
+      handleError(chrome.i18n.getMessage('errorHandlingBookmarkCreation'));
     });
   }
 
   async function asyncOnBookmarkRemoved(
     id: string,
-    removeInfo: Bookmarks.OnRemovedRemoveInfoType,
+    removeInfo: Treetop.BookmarkRemoveInfo,
   ) {
     const removedNodeIds = await bookmarksManager.handleBookmarkRemoved(
       id,
@@ -339,17 +341,17 @@
 
   function onBookmarkRemoved(
     id: string,
-    removeInfo: Bookmarks.OnRemovedRemoveInfoType,
+    removeInfo: Treetop.BookmarkRemoveInfo,
   ) {
     asyncOnBookmarkRemoved(id, removeInfo).catch((err) => {
       console.error(err);
-      handleError(browser.i18n.getMessage('errorHandlingBookmarkRemoval'));
+      handleError(chrome.i18n.getMessage('errorHandlingBookmarkRemoval'));
     });
   }
 
   async function asyncOnBookmarkChanged(
     id: string,
-    changeInfo: Bookmarks.OnChangedChangeInfoType,
+    changeInfo: Treetop.BookmarkChangeInfo,
   ) {
     await bookmarksManager.handleBookmarkChanged(id, changeInfo);
 
@@ -362,30 +364,27 @@
 
   function onBookmarkChanged(
     id: string,
-    changeInfo: Bookmarks.OnChangedChangeInfoType,
+    changeInfo: Treetop.BookmarkChangeInfo,
   ) {
     asyncOnBookmarkChanged(id, changeInfo).catch((err) => {
       console.error(err);
-      handleError(browser.i18n.getMessage('errorHandlingBookmarkChange'));
+      handleError(chrome.i18n.getMessage('errorHandlingBookmarkChange'));
     });
   }
 
   async function asyncOnBookmarkMoved(
     id: string,
-    moveInfo: Bookmarks.OnMovedMoveInfoType,
+    moveInfo: Treetop.BookmarkMoveInfo,
   ) {
     await bookmarksManager.handleBookmarkMoved(id, moveInfo);
 
     filterManager.handleBookmarkMoved(id, moveInfo);
   }
 
-  function onBookmarkMoved(
-    id: string,
-    moveInfo: Bookmarks.OnMovedMoveInfoType,
-  ) {
+  function onBookmarkMoved(id: string, moveInfo: Treetop.BookmarkMoveInfo) {
     asyncOnBookmarkMoved(id, moveInfo).catch((err) => {
       console.error(err);
-      handleError(browser.i18n.getMessage('errorHandlingBookmarkMove'));
+      handleError(chrome.i18n.getMessage('errorHandlingBookmarkMove'));
     });
   }
 
@@ -393,31 +392,29 @@
   // History event handlers
   //
 
-  async function asyncOnVisited(result: History.HistoryItem) {
+  async function asyncOnVisited(result: chrome.history.HistoryItem) {
     if ($showRecentlyVisited) {
       await historyManager.handleVisited(result);
     }
   }
 
-  function onVisited(result: History.HistoryItem) {
+  function onVisited(result: chrome.history.HistoryItem) {
     asyncOnVisited(result).catch((err) => {
       console.error(err);
-      handleError(browser.i18n.getMessage('errorHandlingHistoryVisit'));
+      handleError(chrome.i18n.getMessage('errorHandlingHistoryVisit'));
     });
   }
 
-  async function asyncOnVisitRemoved(
-    removed: History.OnVisitRemovedRemovedType,
-  ) {
+  async function asyncOnVisitRemoved(removed: Treetop.HistoryRemovedResult) {
     if ($showRecentlyVisited) {
       await historyManager.handleVisitRemoved(removed);
     }
   }
 
-  function onVisitRemoved(removed: History.OnVisitRemovedRemovedType) {
+  function onVisitRemoved(removed: Treetop.HistoryRemovedResult) {
     asyncOnVisitRemoved(removed).catch((err) => {
       console.error(err);
-      handleError(browser.i18n.getMessage('errorHandlingHistoryVisitRemoval'));
+      handleError(chrome.i18n.getMessage('errorHandlingHistoryVisitRemoval'));
     });
   }
 
@@ -428,7 +425,7 @@
   function onContextMenu(event: Event) {
     asyncOnContextMenu(event).catch((err) => {
       console.error(err);
-      handleError(browser.i18n.getMessage('errorHandlingContextMenu'));
+      handleError(chrome.i18n.getMessage('errorHandlingContextMenu'));
     });
   }
 
@@ -441,14 +438,20 @@
     }
   }
 
-  async function asyncOnMenuClicked(info: Menus.OnClickData, tab?: Tabs.Tab) {
+  async function asyncOnMenuClicked(
+    info: chrome.contextMenus.OnClickData,
+    tab?: chrome.tabs.Tab,
+  ) {
     await menuManager?.handleMenuClicked(info, tab);
   }
 
-  function onMenuClicked(info: Menus.OnClickData, tab?: Tabs.Tab) {
+  function onMenuClicked(
+    info: chrome.contextMenus.OnClickData,
+    tab?: chrome.tabs.Tab,
+  ) {
     asyncOnMenuClicked(info, tab).catch((err) => {
       console.error(err);
-      handleError(browser.i18n.getMessage('errorHandlingMenuClick'));
+      handleError(chrome.i18n.getMessage('errorHandlingMenuClick'));
     });
   }
 
@@ -481,25 +484,25 @@
       await preferencesManager.loadPreferences();
     } catch (err) {
       console.error(err);
-      handleError(browser.i18n.getMessage('errorLoadingPreferences'));
+      handleError(chrome.i18n.getMessage('errorLoadingPreferences'));
     }
 
     // Register bookmark event handlers
-    browser.bookmarks.onCreated.addListener(onBookmarkCreated);
-    browser.bookmarks.onRemoved.addListener(onBookmarkRemoved);
-    browser.bookmarks.onChanged.addListener(onBookmarkChanged);
-    browser.bookmarks.onMoved.addListener(onBookmarkMoved);
+    chrome.bookmarks.onCreated.addListener(onBookmarkCreated);
+    chrome.bookmarks.onRemoved.addListener(onBookmarkRemoved);
+    chrome.bookmarks.onChanged.addListener(onBookmarkChanged);
+    chrome.bookmarks.onMoved.addListener(onBookmarkMoved);
 
     // Register history event handlers
-    browser.history.onVisited.addListener(onVisited);
-    browser.history.onVisitRemoved.addListener(onVisitRemoved);
+    chrome.history.onVisited.addListener(onVisited);
+    chrome.history.onVisitRemoved.addListener(onVisitRemoved);
 
     // Load bookmarks
     try {
       await bookmarksManager.loadBookmarks();
     } catch (err) {
       console.error(err);
-      handleError(browser.i18n.getMessage('errorLoadingBookmarks'));
+      handleError(chrome.i18n.getMessage('errorLoadingBookmarks'));
     }
 
     // Load history
@@ -510,7 +513,7 @@
       }
     } catch (err) {
       console.error(err);
-      handleError(browser.i18n.getMessage('errorLoadingHistory'));
+      handleError(chrome.i18n.getMessage('errorLoadingHistory'));
     }
 
     // Initialize or reset history manager when 'showRecentlyVisited' preference changes
@@ -518,7 +521,7 @@
       if (value) {
         historyManager.loadHistory(nodeStoreMap).catch((err) => {
           console.error(err);
-          handleError(browser.i18n.getMessage('errorLoadingHistory'));
+          handleError(chrome.i18n.getMessage('errorLoadingHistory'));
         });
       } else {
         historyManager.unloadHistory();
@@ -539,7 +542,7 @@
 
     // Register menu event handlers
     document.addEventListener('contextmenu', onContextMenu);
-    browser.contextMenus.onClicked.addListener(onMenuClicked);
+    chrome.contextMenus.onClicked.addListener(onMenuClicked);
 
     // Initialize menu manager
     menuManager = new MenuManager();
@@ -570,7 +573,7 @@
 
     // Unregister menu event handlers
     document.removeEventListener('contextmenu', onContextMenu);
-    browser.contextMenus.onClicked.removeListener(onMenuClicked);
+    chrome.contextMenus.onClicked.removeListener(onMenuClicked);
 
     // Destroy menu manager
     menuManager = null;
@@ -629,9 +632,10 @@
     </div>
   </div>
 {:then rootNodeId}
+  <!-- svelte-ignore missing-declaration -->
   <PageHeader
     on:error={() => {
-      handleError(browser.i18n.getMessage('errorLoadingPreferences'));
+      handleError(chrome.i18n.getMessage('errorLoadingPreferences'));
     }}>
     <FilterInput on:input={applyFilter} />
   </PageHeader>
