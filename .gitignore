@@ -4,3 +4,7 @@
 /src/treetop/generated/*.css
 /web-ext-artifacts/
 /.vscode/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
