@@ -21,6 +21,13 @@
   // Maximum length of displayed bookmark titles and, in tooltips, URLs.
   const maxLength = 78;
 
+  const faviconSize = 16;
+
+  // Favicon
+  const faviconUrl = `/_favicon/?pageUrl=${encodeURIComponent(
+    new URL(url).origin,
+  )}&size=${faviconSize}`;
+
   let name: string;
   $: {
     // Set name, truncating based on preference setting.
@@ -100,6 +107,15 @@
     }
   }
 
+  span {
+    white-space: nowrap;
+  }
+
+  img {
+    vertical-align: middle;
+    padding-right: 3px;
+  }
+
   a:link,
   a:visited {
     color: inherit;
@@ -149,6 +165,13 @@
   }
 </style>
 
-<a href={url} data-node-id={nodeId} title={tooltip} class={visitedClass}>
-  {name}
-</a>
+<span>
+  <img
+    aria-hidden={true}
+    src={faviconUrl}
+    height={faviconSize}
+    width={faviconSize} />
+  <a href={url} data-node-id={nodeId} title={tooltip} class={visitedClass}>
+    {name}
+  </a>
+</span>

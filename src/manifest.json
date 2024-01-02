@@ -31,7 +31,7 @@
   "options_ui": {
     "page": "options.html"
   },
-  "permissions": ["bookmarks", "contextMenus", "history", "storage"],
+  "permissions": ["bookmarks", "contextMenus", "favicon", "history", "storage"],
   "browser_specific_settings": {
     "gecko": {
       "id": "treetop@maxsmolens.org",
