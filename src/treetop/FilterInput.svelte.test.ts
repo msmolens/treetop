@@ -7,7 +7,11 @@ import FilterInput from '@Treetop/treetop/FilterInput.svelte';
 
 const setup = () => {
   return {
-    user: userEvent.setup({ delay: null }),
+    user: userEvent.setup({
+      advanceTimers: (delay) => {
+        vi.advanceTimersByTime(delay);
+      },
+    }),
     ...render(FilterInput),
   };
 };
