@@ -10,7 +10,7 @@ import './main.css';
 import Treetop from './Treetop.svelte';
 
 // Get root bookmark ID from hash
-const rootBookmarkId = decodeURIComponent(location.hash.substr(1));
+const rootBookmarkId = decodeURIComponent(location.hash.substring(1));
 
 const target = document.getElementById('app');
 if (!target) {

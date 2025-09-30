@@ -19,7 +19,7 @@ const asyncOpenTreetop = async (): Promise<void> => {
 export const openTreetop: ChromeEventCallback<
   typeof chrome.action.onClicked
 > = () => {
-  asyncOpenTreetop().catch((err) => {
+  asyncOpenTreetop().catch((err: unknown) => {
     console.error(err);
   });
 };

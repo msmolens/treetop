@@ -367,7 +367,7 @@ describe('handleBookmarkRemoved', () => {
       getFolderNode(nodeStoreMap.get(folderNode2.id)).children.length,
     ).toBe(1);
 
-    bookmarkNode1;
+    void bookmarkNode1;
   });
 
   it('removed bookmark', async () => {
@@ -634,7 +634,7 @@ describe('handleBookmarkMoved', () => {
     expect(
       getFolderNode(nodeStoreMap.get(folderNode1.id)).children.length,
     ).toBe(2);
-    bookmarkNode1;
+    void bookmarkNode1;
   });
 
   it('moved within folder', async () => {

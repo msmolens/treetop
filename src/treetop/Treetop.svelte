@@ -141,7 +141,7 @@
   let menuManager: MenuManager | null = null;
 
   // Body element
-  let body: HTMLElement;
+  let body: HTMLElement | undefined;
 
   // Manually update class for body element
   // See https://github.com/sveltejs/svelte/issues/3105
@@ -190,7 +190,7 @@
       }
     });
 
-    Promise.all(promises).catch((err) => {
+    Promise.all(promises).catch((err: unknown) => {
       console.error(err);
       handleError(chrome.i18n.getMessage('errorOpeningTab'));
     });
@@ -206,7 +206,7 @@
    * Show the properties dialog for a bookmark or folder.
    */
   function showPropertiesDialog(nodeId: string) {
-    asyncShowPropertiesDialog(nodeId).catch((err) => {
+    asyncShowPropertiesDialog(nodeId).catch((err: unknown) => {
       console.error(err);
       handleError(chrome.i18n.getMessage('errorRetrievingBookmark'));
     });
@@ -230,7 +230,7 @@
 
     try {
       await chrome.bookmarks.update(propertiesNode!.id, changes);
-    } catch (err) {
+    } catch (err: unknown) {
       console.error(err);
       handleError(chrome.i18n.getMessage('errorSavingBookmark'));
     }
@@ -248,7 +248,7 @@
       // Folder
       const node = get(nodeStore);
       if (node.children.length === 0) {
-        chrome.bookmarks.remove(nodeId).catch((err) => {
+        chrome.bookmarks.remove(nodeId).catch((err: unknown) => {
           console.error(err);
           handleError(chrome.i18n.getMessage('errorDeletingFolder'));
         });
@@ -258,7 +258,7 @@
       }
     } else {
       // Bookmark
-      chrome.bookmarks.remove(nodeId).catch((err) => {
+      chrome.bookmarks.remove(nodeId).catch((err: unknown) => {
         console.error(err);
         handleError(chrome.i18n.getMessage('errorDeletingBookmark'));
       });
@@ -278,7 +278,7 @@
    */
   function confirmDeleteBookmark() {
     deleteFolderDialogInfo.open = false;
-    chrome.bookmarks.removeTree(deleteFolderId!).catch((err) => {
+    chrome.bookmarks.removeTree(deleteFolderId!).catch((err: unknown) => {
       console.error(err);
       handleError(chrome.i18n.getMessage('errorDeletingFolder'));
     });
@@ -340,7 +340,7 @@
     id: string,
     bookmark: chrome.bookmarks.BookmarkTreeNode,
   ) {
-    asyncOnBookmarkCreated(id, bookmark).catch((err) => {
+    asyncOnBookmarkCreated(id, bookmark).catch((err: unknown) => {
       console.error(err);
       handleError(chrome.i18n.getMessage('errorHandlingBookmarkCreation'));
     });
@@ -356,15 +356,15 @@
     );
 
     filterManager.beginBatchRemove();
-    removedNodeIds.forEach((nodeId) =>
-      filterManager.handleBookmarkRemoved(nodeId),
-    );
+    removedNodeIds.forEach((nodeId) => {
+      filterManager.handleBookmarkRemoved(nodeId);
+    });
     filterManager.endBatchRemove();
 
     if ($showRecentlyVisited) {
-      removedNodeIds.forEach((nodeId) =>
-        historyManager.handleBookmarkRemoved(nodeId),
-      );
+      removedNodeIds.forEach((nodeId) => {
+        historyManager.handleBookmarkRemoved(nodeId);
+      });
     }
   }
 
@@ -372,7 +372,7 @@
     id: string,
     removeInfo: Treetop.BookmarkRemoveInfo,
   ) {
-    asyncOnBookmarkRemoved(id, removeInfo).catch((err) => {
+    asyncOnBookmarkRemoved(id, removeInfo).catch((err: unknown) => {
       console.error(err);
       handleError(chrome.i18n.getMessage('errorHandlingBookmarkRemoval'));
     });
@@ -395,7 +395,7 @@
     id: string,
     changeInfo: Treetop.BookmarkChangeInfo,
   ) {
-    asyncOnBookmarkChanged(id, changeInfo).catch((err) => {
+    asyncOnBookmarkChanged(id, changeInfo).catch((err: unknown) => {
       console.error(err);
       handleError(chrome.i18n.getMessage('errorHandlingBookmarkChange'));
     });
@@ -411,7 +411,7 @@
   }
 
   function onBookmarkMoved(id: string, moveInfo: Treetop.BookmarkMoveInfo) {
-    asyncOnBookmarkMoved(id, moveInfo).catch((err) => {
+    asyncOnBookmarkMoved(id, moveInfo).catch((err: unknown) => {
       console.error(err);
       handleError(chrome.i18n.getMessage('errorHandlingBookmarkMove'));
     });
@@ -428,7 +428,7 @@
   }
 
   function onVisited(result: chrome.history.HistoryItem) {
-    asyncOnVisited(result).catch((err) => {
+    asyncOnVisited(result).catch((err: unknown) => {
       console.error(err);
       handleError(chrome.i18n.getMessage('errorHandlingHistoryVisit'));
     });
@@ -441,7 +441,7 @@
   }
 
   function onVisitRemoved(removed: Treetop.HistoryRemovedResult) {
-    asyncOnVisitRemoved(removed).catch((err) => {
+    asyncOnVisitRemoved(removed).catch((err: unknown) => {
       console.error(err);
       handleError(chrome.i18n.getMessage('errorHandlingHistoryVisitRemoval'));
     });
@@ -452,7 +452,7 @@
   //
 
   function onContextMenu(event: Event) {
-    asyncOnContextMenu(event).catch((err) => {
+    asyncOnContextMenu(event).catch((err: unknown) => {
       console.error(err);
       handleError(chrome.i18n.getMessage('errorHandlingContextMenu'));
     });
@@ -478,7 +478,7 @@
     info: chrome.contextMenus.OnClickData,
     tab?: chrome.tabs.Tab,
   ) {
-    asyncOnMenuClicked(info, tab).catch((err) => {
+    asyncOnMenuClicked(info, tab).catch((err: unknown) => {
       console.error(err);
       handleError(chrome.i18n.getMessage('errorHandlingMenuClick'));
     });
@@ -511,7 +511,7 @@
   async function init() {
     try {
       await preferencesManager.loadPreferences();
-    } catch (err) {
+    } catch (err: unknown) {
       console.error(err);
       handleError(chrome.i18n.getMessage('errorLoadingPreferences'));
     }
@@ -529,7 +529,7 @@
     // Load bookmarks
     try {
       await bookmarksManager.loadBookmarks();
-    } catch (err) {
+    } catch (err: unknown) {
       console.error(err);
       handleError(chrome.i18n.getMessage('errorLoadingBookmarks'));
     }
@@ -540,7 +540,7 @@
       if ($showRecentlyVisited) {
         await historyManager.loadHistory(nodeStoreMap);
       }
-    } catch (err) {
+    } catch (err: unknown) {
       console.error(err);
       handleError(chrome.i18n.getMessage('errorLoadingHistory'));
     }
@@ -548,7 +548,7 @@
     // Initialize or reset history manager when 'showRecentlyVisited' preference changes
     unsubscribeShowRecentlyVisited = showRecentlyVisited.subscribe((value) => {
       if (value) {
-        historyManager.loadHistory(nodeStoreMap).catch((err) => {
+        historyManager.loadHistory(nodeStoreMap).catch((err: unknown) => {
           console.error(err);
           handleError(chrome.i18n.getMessage('errorLoadingHistory'));
         });

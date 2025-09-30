@@ -8,7 +8,10 @@
 
   import type * as Treetop from './types';
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<{
+    cancel: null;
+    save: Treetop.PropertiesChanges;
+  }>();
 
   export let open = false;
   export let title: string;
@@ -45,7 +48,7 @@
     // Select all text in the focused input element
     const labelElement = e.currentTarget as HTMLLabelElement;
     const inputElement = labelElement.control as HTMLInputElement;
-    inputElement?.select();
+    inputElement.select();
   }
 
   const maxHeaderTitleLength = 58;

@@ -59,13 +59,13 @@ export class MenuManager {
 
     for (const [id, item] of this.menuItems.entries()) {
       const enabled = item.enabled(nodeId);
-      // eslint-disable-next-line @typescript-eslint/await-thenable
+      // eslint-disable-next-line @typescript-eslint/await-thenable, @typescript-eslint/no-confusing-void-expression
       await chrome.contextMenus.update(id, { enabled });
     }
 
     if ('refresh' in chrome.contextMenus) {
       // @ts-expect-error contextMenus.refresh() is available only on Firefox
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       await chrome.contextMenus.refresh();
     }
   }

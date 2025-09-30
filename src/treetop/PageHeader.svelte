@@ -4,10 +4,9 @@
   import { fly } from 'svelte/transition';
   import IconButton from '@smui/icon-button';
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<{ error: null }>();
 
   function openPreferences(e: CustomEvent) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     chrome.runtime.openOptionsPage().catch(() => {
       dispatch('error');
     });

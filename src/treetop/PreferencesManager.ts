@@ -16,8 +16,9 @@ export class PreferencesManager {
   >();
 
   // Bound event handler
-  private readonly onChanged: StorageChangedCallback = (changes, areaName) =>
+  private readonly onChanged: StorageChangedCallback = (changes, areaName) => {
     this.handleStorageChanged(changes, areaName);
+  };
 
   constructor() {
     // Register storage event handler
