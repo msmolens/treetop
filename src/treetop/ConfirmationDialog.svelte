@@ -4,7 +4,10 @@
   import Button, { Label } from '@smui/button';
   import Dialog, { Actions, Content, InitialFocus, Title } from '@smui/dialog';
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<{
+    confirm: null;
+    cancel: null;
+  }>();
 
   export let open = false;
   export let title: string;

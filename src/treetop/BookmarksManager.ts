@@ -147,6 +147,7 @@ export class BookmarksManager {
       const nodeStore = this.nodeStoreMap.get(id)!;
       const nodes: [Treetop.FolderNode] = [get(nodeStore)];
 
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       while (nodes.length) {
         const node = nodes.pop()!;
         this.nodeStoreMap.delete(node.id);

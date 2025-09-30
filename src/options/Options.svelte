@@ -37,7 +37,7 @@
       options = await chrome.storage.local.get();
     }
 
-    getOptions().catch((err) => {
+    getOptions().catch((err: unknown) => {
       console.error(err);
     });
   });

@@ -284,7 +284,7 @@ describe('handleBookmarkCreated', () => {
       baseNode.id = folderNode1.id;
 
       const bookmarkNode = createBrowserBookmarkNode(baseNode);
-      bookmarkNode.url += filter;
+      bookmarkNode.url! += filter;
 
       filterManager.handleBookmarkCreated(bookmarkNode.id, bookmarkNode);
 
@@ -603,9 +603,9 @@ describe('handleBookmarkRemoved', () => {
       folderNode4.children = [];
 
       filterManager.beginBatchRemove();
-      removedNodeIds.forEach((nodeId) =>
-        filterManager.handleBookmarkRemoved(nodeId),
-      );
+      removedNodeIds.forEach((nodeId) => {
+        filterManager.handleBookmarkRemoved(nodeId);
+      });
       filterManager.endBatchRemove();
 
       expect(filterSet.size).toBe(0);
@@ -625,9 +625,9 @@ describe('handleBookmarkRemoved', () => {
       folderNode4.children = [];
 
       filterManager.beginBatchRemove();
-      removedNodeIds.forEach((nodeId) =>
-        filterManager.handleBookmarkRemoved(nodeId),
-      );
+      removedNodeIds.forEach((nodeId) => {
+        filterManager.handleBookmarkRemoved(nodeId);
+      });
       filterManager.endBatchRemove();
 
       expect(filterSet.size).toBe(0);

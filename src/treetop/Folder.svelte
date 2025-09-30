@@ -115,7 +115,7 @@
   {/if}
 </svelte:head>
 
-{#if $node && (root || !$filterActive || $filterSet.has($node.id))}
+{#if root || !$filterActive || $filterSet.has($node.id)}
   <div class="folder" class:root>
     <div class="heading">
       <div class="title">
