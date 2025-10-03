@@ -62,11 +62,8 @@ export interface BuiltInFolderInfo {
 // Chrome types
 //
 
-export type ChromeEventCallback<TEvent> = TEvent extends chrome.events.Event<
-  infer TCallback
->
-  ? TCallback
-  : never;
+export type ChromeEventCallback<TEvent> =
+  TEvent extends chrome.events.Event<infer TCallback> ? TCallback : never;
 
 export type BookmarkChangeInfo = Parameters<
   ChromeEventCallback<typeof chrome.bookmarks.onChanged>
