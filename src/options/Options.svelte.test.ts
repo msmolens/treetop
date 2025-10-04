@@ -1,11 +1,5 @@
-import {
-  cleanup,
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-} from '@testing-library/svelte';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { fireEvent, render, screen, waitFor } from '@testing-library/svelte';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import Options from '@Treetop/options/Options.svelte';
 
@@ -49,10 +43,6 @@ describe('Options', () => {
           throw new Error(`Unhandled message name: '${messageName}'`);
           break;
       }
-    });
-
-    afterEach(() => {
-      cleanup();
     });
 
     const get = vi.fn().mockResolvedValue({

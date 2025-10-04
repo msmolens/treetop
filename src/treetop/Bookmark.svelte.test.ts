@@ -1,8 +1,8 @@
 import { type Writable, writable } from 'svelte/store';
-import { cleanup, render, screen } from '@testing-library/svelte';
+import { render, screen } from '@testing-library/svelte';
 import faker from 'faker';
 import escapeRegExp from 'lodash-es/escapeRegExp';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import Bookmark from '@Treetop/treetop/Bookmark.svelte';
 import type * as Treetop from '@Treetop/treetop/types';
@@ -48,8 +48,6 @@ beforeEach(() => {
   truncate = writable(false);
   tooltips = writable(false);
 });
-
-afterEach(cleanup);
 
 it('renders link with expected attributes', () => {
   setup();

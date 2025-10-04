@@ -1,9 +1,9 @@
 /* eslint no-irregular-whitespace: ["error", { "skipComments": true }] */
 
 import { get, type Writable, writable } from 'svelte/store';
-import { cleanup, render, screen } from '@testing-library/svelte';
+import { render, screen } from '@testing-library/svelte';
 import type { MockInstance } from 'vitest';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import Folder from '@Treetop/treetop/Folder.svelte';
 import type * as Treetop from '@Treetop/treetop/types';
@@ -113,10 +113,6 @@ beforeEach(() => {
   filterSet = writable(new Set()) as Treetop.FilterSet;
   truncate = writable(false);
   tooltips = writable(false);
-});
-
-afterEach(() => {
-  cleanup();
 });
 
 describe('rooted at bookmarks root', () => {
