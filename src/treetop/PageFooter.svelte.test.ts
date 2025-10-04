@@ -1,5 +1,5 @@
-import { cleanup, render, screen } from '@testing-library/svelte';
-import { afterEach, beforeEach, expect, it } from 'vitest';
+import { render, screen } from '@testing-library/svelte';
+import { beforeEach, expect, it } from 'vitest';
 
 import PageFooter from '@Treetop/treetop/PageFooter.svelte';
 
@@ -9,10 +9,6 @@ const setup = () => {
 
 beforeEach(() => {
   setup();
-});
-
-afterEach(() => {
-  cleanup();
 });
 
 it('renders page footer', () => {

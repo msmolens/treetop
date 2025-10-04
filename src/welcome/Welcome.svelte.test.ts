@@ -1,5 +1,5 @@
-import { cleanup, render, screen, waitFor } from '@testing-library/svelte';
-import { afterEach, beforeEach, expect, it } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/svelte';
+import { beforeEach, expect, it } from 'vitest';
 
 import Welcome from '@Treetop/welcome/Welcome.svelte';
 
@@ -9,10 +9,6 @@ const setup = () => {
 
 beforeEach(() => {
   setup();
-});
-
-afterEach(() => {
-  cleanup();
 });
 
 it('renders welcome page', async () => {

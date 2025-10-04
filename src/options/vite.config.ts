@@ -2,7 +2,8 @@ import merge from 'lodash/merge';
 import { resolve } from 'path';
 import { type UserConfig, defineConfig } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
-import sveltePreprocess from 'svelte-preprocess';
+import { svelteTesting } from '@testing-library/svelte/vite';
+import { sveltePreprocess } from 'svelte-preprocess';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { developmentConfig } from '../../vite.common-development.config.js';
 import { getTreetopDistName } from '../../vite.common.config.js';
@@ -17,6 +18,7 @@ export default defineConfig(({ mode }) => {
       svelte({
         preprocess: sveltePreprocess(),
       }),
+      svelteTesting(),
     ],
     build: {
       outDir: resolve(__dirname, '../../', dist),

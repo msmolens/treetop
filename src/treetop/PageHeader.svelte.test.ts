@@ -1,7 +1,7 @@
-import { cleanup, render, screen } from '@testing-library/svelte';
+import { render, screen } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import type { MockInstance } from 'vitest';
-import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { beforeEach, expect, it, vi } from 'vitest';
 
 import PageHeader from '@Treetop/treetop/PageHeader.svelte';
 
@@ -18,10 +18,6 @@ beforeEach(() => {
   getMessage = vi
     .spyOn(chrome.i18n, 'getMessage')
     .mockReturnValue('Preferences');
-});
-
-afterEach(() => {
-  cleanup();
 });
 
 it('renders page header', () => {
