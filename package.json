@@ -48,7 +48,7 @@
     "@tsconfig/svelte": "~5.0.5",
     "@types/faker": "5.5.9",
     "@types/lodash-es": "~4.17.12",
-    "chrome-types": "~0.1.246",
+    "chrome-types": "~0.1.380",
     "concurrently": "~8.2.2",
     "eslint": "~9.37.0",
     "eslint-config-prettier": "~10.1.8",

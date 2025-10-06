@@ -46,6 +46,8 @@ const createTab = (): chrome.tabs.Tab => {
     discarded: false,
     autoDiscardable: false,
     groupId: 0,
+    lastAccessed: faker.datatype.datetime().getTime(),
+    frozen: false,
   };
 };
 

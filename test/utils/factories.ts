@@ -48,6 +48,7 @@ export const createBrowserBookmarkNode = (
     parentId: parent.id,
     title: faker.random.words(TITLE_NUM_RANDOM_WORDS),
     url: faker.internet.url(),
+    syncing: false,
   };
   parent.children!.push(node);
   return node;
@@ -60,6 +61,7 @@ export const createBrowserFolderNode = (
     id: faker.datatype.uuid(),
     parentId: parent.id,
     title: faker.random.words(TITLE_NUM_RANDOM_WORDS),
+    syncing: false,
     children: [],
   };
   parent.children!.push(node);
@@ -72,6 +74,7 @@ export const createBookmarksToolbarNode =
       id: BOOKMARKS_TOOLBAR_GUID,
       parentId: BOOKMARKS_ROOT_GUID,
       title: 'Bookmarks Toolbar',
+      syncing: false,
       children: [],
     };
   };
@@ -82,6 +85,7 @@ export const createOtherBookmarksNode =
       id: OTHER_BOOKMARKS_GUID,
       parentId: BOOKMARKS_ROOT_GUID,
       title: 'Other Bookmarks',
+      syncing: false,
       children: [],
     };
   };
@@ -93,6 +97,7 @@ export const createBookmarksRootNode =
       parentId: undefined,
       url: undefined,
       title: '',
+      syncing: false,
       children: [createBookmarksToolbarNode(), createOtherBookmarksNode()],
     };
   };
