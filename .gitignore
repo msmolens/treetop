@@ -3,4 +3,5 @@
 /node_modules/
 /src/treetop/generated/*.css
 /web-ext-artifacts/
+/.vitest/
 /.vscode/
