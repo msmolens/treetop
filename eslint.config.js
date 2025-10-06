@@ -22,7 +22,6 @@ export default defineConfig(
     'coverage/',
     'eslint.config.js',
     'svelte.config.js',
-    'vitest.workspace.ts',
     '**/vite.*.ts',
   ]),
   {

@@ -1,6 +1,5 @@
-import merge from 'lodash/merge';
 import { resolve } from 'path';
-import { type UserConfig, defineConfig } from 'vite';
+import { type ViteUserConfig, defineProject, mergeConfig } from 'vitest/config';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { svelteTesting } from '@testing-library/svelte/vite';
 import copy from 'rollup-plugin-copy';
@@ -12,8 +11,8 @@ import { getTreetopDistName } from '../../vite.common.config.js';
 const dist = getTreetopDistName();
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
-  const commonConfig: UserConfig = {
+export default defineProject(({ mode }) => {
+  const commonConfig: ViteUserConfig = {
     plugins: [
       copy({
         targets: [
@@ -52,7 +51,13 @@ export default defineConfig(({ mode }) => {
         '../../test/vitest-setup.ts',
       ],
     },
+    cacheDir: process.env.VITEST
+      ? resolve(__dirname, '../../', '.vitest')
+      : undefined,
   };
 
-  return merge(commonConfig, mode === 'development' && developmentConfig);
+  return mergeConfig(
+    commonConfig,
+    mode === 'development' ? developmentConfig : {},
+  );
 });
