@@ -1,7 +1,3 @@
-import preprocess from 'svelte-preprocess';
-
-const config = {
-  preprocess: preprocess(),
-};
+const config = {};
 
 export default config;

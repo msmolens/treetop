@@ -12,6 +12,8 @@
     "allowSyntheticDefaultImports": true,
     "checkJs": true,
     "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
     "noEmitOnError": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
@@ -22,7 +24,8 @@
     "types": [
       "chrome-types",
       "@testing-library/jest-dom",
-    ]
+    ],
+    "verbatimModuleSyntax": true
   },
   "include": [
     "./src/**/*.ts",
