@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { OnClickedCallback } from '@Treetop/treetop/menus/MenuItem';
@@ -35,8 +35,8 @@ const createOnClickData = (
 
 const createTab = (): chrome.tabs.Tab => {
   return {
-    id: faker.datatype.number(),
-    index: faker.datatype.number(),
+    id: faker.number.int(),
+    index: faker.number.int(),
     highlighted: false,
     active: false,
     pinned: false,
@@ -46,7 +46,7 @@ const createTab = (): chrome.tabs.Tab => {
     discarded: false,
     autoDiscardable: false,
     groupId: 0,
-    lastAccessed: faker.datatype.datetime().getTime(),
+    lastAccessed: faker.date.past().getTime(),
     frozen: false,
   };
 };
@@ -54,7 +54,7 @@ const createTab = (): chrome.tabs.Tab => {
 const createElement = (withNodeId = true) => {
   return {
     dataset: {
-      ...(withNodeId && { nodeId: faker.random.alphaNumeric(8) }),
+      ...(withNodeId && { nodeId: faker.string.alphanumeric(8) }),
     },
   };
 };

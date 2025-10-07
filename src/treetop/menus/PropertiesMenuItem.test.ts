@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { beforeEach, expect, it } from 'vitest';
 
 import type { OnClickedCallback } from '@Treetop/treetop/menus/MenuItem';
@@ -29,6 +29,6 @@ it('is disabled for built-in folders', () => {
 });
 
 it('is enabled for normal bookmark node IDs', () => {
-  const nodeId = faker.random.alphaNumeric(8);
+  const nodeId = faker.string.alphanumeric(8);
   expect(menuItem.enabled(nodeId)).toBe(true);
 });

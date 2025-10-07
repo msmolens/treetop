@@ -32,6 +32,7 @@
   "license": "MIT",
   "devDependencies": {
     "@eslint/js": "~9.37.0",
+    "@faker-js/faker": "~10.0.0",
     "@fontsource/inter": "~5.2.8",
     "@fontsource/material-icons": "~5.2.7",
     "@fontsource/news-cycle": "~5.2.7",
@@ -46,7 +47,6 @@
     "@testing-library/svelte": "~5.2.8",
     "@testing-library/user-event": "~14.6.1",
     "@tsconfig/svelte": "~5.0.5",
-    "@types/faker": "5.5.9",
     "@types/lodash-es": "~4.17.12",
     "chrome-types": "~0.1.380",
     "concurrently": "~9.2.1",
@@ -54,7 +54,6 @@
     "eslint-config-prettier": "~10.1.8",
     "eslint-plugin-simple-import-sort": "~12.1.1",
     "eslint-plugin-svelte": "~3.12.4",
-    "faker": "5.5.3",
     "jsdom": "~27.0.0",
     "lodash-es": "~4.17.21",
     "normalize.css": "~8.0.1",

@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { openTreetop } from '@Treetop/background_script/open-treetop';
@@ -17,7 +17,7 @@ describe('open-treetop', () => {
       highlighted: false,
       incognito: false,
       index: 0,
-      lastAccessed: faker.datatype.datetime().getTime(),
+      lastAccessed: faker.date.recent().getTime(),
       pinned: false,
       selected: false,
       windowId: 0,

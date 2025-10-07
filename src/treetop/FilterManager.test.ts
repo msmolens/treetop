@@ -1,7 +1,7 @@
 /* eslint no-irregular-whitespace: ["error", { "skipComments": true }] */
 
 import { get, writable } from 'svelte/store';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { FilterManager } from '@Treetop/treetop/FilterManager';
@@ -19,7 +19,7 @@ const NUM_RANDOM_WORDS = 3;
 
 // Generate a random string that contains the specified string.
 const randomStringContaining = (str: string) => {
-  return `${faker.random.words(NUM_RANDOM_WORDS)}${str}${faker.random.words(
+  return `${faker.word.words(NUM_RANDOM_WORDS)}${str}${faker.word.words(
     NUM_RANDOM_WORDS,
   )}`;
 };
@@ -123,7 +123,7 @@ beforeEach(() => {
 
 describe('setFilter', () => {
   it('no matches', () => {
-    filterManager.setFilter(faker.random.words(NUM_RANDOM_WORDS));
+    filterManager.setFilter(faker.word.words(NUM_RANDOM_WORDS));
 
     const filterSet = get(fs);
     expect(filterSet.size).toBe(0);
@@ -151,7 +151,7 @@ describe('setFilter', () => {
   });
 
   it('multiple matches in root folder', () => {
-    const filter = faker.random.words(NUM_RANDOM_WORDS);
+    const filter = faker.word.words(NUM_RANDOM_WORDS);
     (folderNode1.children[0] as Treetop.BookmarkNode).title =
       randomStringContaining(filter);
     (folderNode1.children[1] as Treetop.BookmarkNode).title =
@@ -166,7 +166,7 @@ describe('setFilter', () => {
   });
 
   it('match in root folder and in nested folder', () => {
-    const filter = faker.random.words(NUM_RANDOM_WORDS);
+    const filter = faker.word.words(NUM_RANDOM_WORDS);
     (folderNode1.children[1] as Treetop.BookmarkNode).title =
       randomStringContaining(filter);
     (folderNode2.children[1] as Treetop.BookmarkNode).title =
@@ -193,7 +193,7 @@ describe('setFilter', () => {
   });
 
   it('multiple matches in nested folder', () => {
-    const filter = faker.random.words(NUM_RANDOM_WORDS);
+    const filter = faker.word.words(NUM_RANDOM_WORDS);
     (folderNode2.children[0] as Treetop.BookmarkNode).title =
       randomStringContaining(filter);
     (folderNode2.children[1] as Treetop.BookmarkNode).title =
@@ -221,7 +221,7 @@ describe('setFilter', () => {
   });
 
   it('multiple matches in deeply nested folder', () => {
-    const filter = faker.random.words(NUM_RANDOM_WORDS);
+    const filter = faker.word.words(NUM_RANDOM_WORDS);
     (folderNode4.children[0] as Treetop.BookmarkNode).title =
       randomStringContaining(filter);
     (folderNode4.children[2] as Treetop.BookmarkNode).title =
@@ -238,7 +238,7 @@ describe('setFilter', () => {
   });
 
   it('matches in multiple nested folders', () => {
-    const filter = faker.random.words(NUM_RANDOM_WORDS);
+    const filter = faker.word.words(NUM_RANDOM_WORDS);
     (folderNode2.children[0] as Treetop.BookmarkNode).title =
       randomStringContaining(filter);
     (folderNode6.children[0] as Treetop.BookmarkNode).title =
@@ -259,7 +259,7 @@ describe('setFilter', () => {
 describe('handleBookmarkCreated', () => {
   describe('when filter is set', () => {
     it('new matching bookmark in root folder', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       filterManager.setFilter(filter);
 
       const baseNode = createOtherBookmarksNode();
@@ -277,7 +277,7 @@ describe('handleBookmarkCreated', () => {
     });
 
     it('new matching bookmark URL in root folder', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       filterManager.setFilter(filter);
 
       const baseNode = createOtherBookmarksNode();
@@ -295,7 +295,7 @@ describe('handleBookmarkCreated', () => {
     });
 
     it('new non-matching bookmark in root folder', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       filterManager.setFilter(filter);
 
       const baseNode = createOtherBookmarksNode();
@@ -310,7 +310,7 @@ describe('handleBookmarkCreated', () => {
     });
 
     it('new matching bookmark in nested folder', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       filterManager.setFilter(filter);
 
       const baseNode = createOtherBookmarksNode();
@@ -332,7 +332,7 @@ describe('handleBookmarkCreated', () => {
     });
 
     it('new non-matching bookmark in nested folder', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       filterManager.setFilter(filter);
 
       const baseNode = createOtherBookmarksNode();
@@ -350,7 +350,7 @@ describe('handleBookmarkCreated', () => {
     });
 
     it('ignores new folders', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       filterManager.setFilter(filter);
 
       const baseNode = createOtherBookmarksNode();
@@ -390,7 +390,7 @@ describe('handleBookmarkCreated', () => {
 describe('handleBookmarkRemoved', () => {
   describe('when filter is set', () => {
     it('removed matching bookmark in root folder', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode = folderNode1.children[0] as Treetop.BookmarkNode;
       bookmarkNode.title += filter;
       filterManager.setFilter(filter);
@@ -410,7 +410,7 @@ describe('handleBookmarkRemoved', () => {
     });
 
     it('removed matching bookmark in root folder when sibling bookmark matches', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode1 = folderNode1.children[0] as Treetop.BookmarkNode;
       const bookmarkNode2 = folderNode1.children[1] as Treetop.BookmarkNode;
       bookmarkNode1.title += filter;
@@ -436,7 +436,7 @@ describe('handleBookmarkRemoved', () => {
     });
 
     it('removed matching bookmark in root folder when nested bookmark matches', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode1 = folderNode1.children[0] as Treetop.BookmarkNode;
       const bookmarkNode2 = folderNode2.children[0] as Treetop.BookmarkNode;
       bookmarkNode1.title += filter;
@@ -464,7 +464,7 @@ describe('handleBookmarkRemoved', () => {
     });
 
     it('removed matching bookmark in nested folder', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode = folderNode3.children[0] as Treetop.BookmarkNode;
       bookmarkNode.title += filter;
       filterManager.setFilter(filter);
@@ -492,7 +492,7 @@ describe('handleBookmarkRemoved', () => {
     });
 
     it('removed matching bookmark in nested folder when sibling bookmark matches', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode1 = folderNode2.children[0] as Treetop.BookmarkNode;
       const bookmarkNode2 = folderNode2.children[1] as Treetop.BookmarkNode;
       bookmarkNode1.title += filter;
@@ -520,7 +520,7 @@ describe('handleBookmarkRemoved', () => {
     });
 
     it('removed matching bookmark in nested folder when nested bookmark matches', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode1 = folderNode2.children[0] as Treetop.BookmarkNode;
       const bookmarkNode2 = folderNode3.children[0] as Treetop.BookmarkNode;
       bookmarkNode1.title += filter;
@@ -550,7 +550,7 @@ describe('handleBookmarkRemoved', () => {
     });
 
     it('removed non-matching bookmark in root folder', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode = folderNode1.children[0] as Treetop.BookmarkNode;
       filterManager.setFilter(filter);
 
@@ -567,7 +567,7 @@ describe('handleBookmarkRemoved', () => {
     });
 
     it('removed non-matching bookmark in nested folder', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode = folderNode2.children[0] as Treetop.BookmarkNode;
       filterManager.setFilter(filter);
 
@@ -584,7 +584,7 @@ describe('handleBookmarkRemoved', () => {
     });
 
     it('removed folder containing a matching bookmark', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode = folderNode4.children[0] as Treetop.BookmarkNode;
       bookmarkNode.title += filter;
       filterManager.setFilter(filter);
@@ -612,7 +612,7 @@ describe('handleBookmarkRemoved', () => {
     });
 
     it('removed folder not containing a matching bookmark', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       filterManager.setFilter(filter);
 
       const filterSet = get(fs);
@@ -658,7 +658,7 @@ describe('handleBookmarkRemoved', () => {
 describe('handleBookmarkChanged', () => {
   describe('when filter is set', () => {
     it('non-matching bookmark title now matches', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       filterManager.setFilter(filter);
 
       const filterSet = get(fs);
@@ -679,7 +679,7 @@ describe('handleBookmarkChanged', () => {
     });
 
     it('non-matching bookmark URL now matches', () => {
-      const filter = faker.random.alphaNumeric(8);
+      const filter = faker.string.alphanumeric(8);
       filterManager.setFilter(filter);
 
       const filterSet = get(fs);
@@ -701,7 +701,7 @@ describe('handleBookmarkChanged', () => {
     });
 
     it('non-matching bookmark title now matches when sibling matches', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode1 = folderNode2.children[0] as Treetop.BookmarkNode;
       const bookmarkNode2 = folderNode2.children[1] as Treetop.BookmarkNode;
       bookmarkNode2.title += filter;
@@ -729,7 +729,7 @@ describe('handleBookmarkChanged', () => {
     });
 
     it('non-matching bookmark title now matches when nested bookmark matches', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode1 = folderNode2.children[0] as Treetop.BookmarkNode;
       const bookmarkNode2 = folderNode3.children[1] as Treetop.BookmarkNode;
       bookmarkNode2.title += filter;
@@ -759,7 +759,7 @@ describe('handleBookmarkChanged', () => {
     });
 
     it('previously matching bookmark title no longer matches', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode = folderNode2.children[0] as Treetop.BookmarkNode;
       bookmarkNode.title += filter;
       filterManager.setFilter(filter);
@@ -772,7 +772,7 @@ describe('handleBookmarkChanged', () => {
 
       bookmarkNode.title = bookmarkNode.title.replace(
         filter,
-        faker.random.word(),
+        faker.word.sample(),
       );
 
       const changeInfo: Treetop.BookmarkChangeInfo = {
@@ -784,7 +784,7 @@ describe('handleBookmarkChanged', () => {
     });
 
     it('previously matching bookmark URL no longer matches', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode = folderNode2.children[0] as Treetop.BookmarkNode;
       bookmarkNode.url += filter;
       filterManager.setFilter(filter);
@@ -795,7 +795,7 @@ describe('handleBookmarkChanged', () => {
       expect(filterSet.has(folderNode2.id)).toBe(true);
       expect(filterSet.size).toBe(3);
 
-      bookmarkNode.url = bookmarkNode.url.replace(filter, faker.random.word());
+      bookmarkNode.url = bookmarkNode.url.replace(filter, faker.word.sample());
 
       const changeInfo: Treetop.BookmarkChangeInfo = {
         title: bookmarkNode.title,
@@ -807,7 +807,7 @@ describe('handleBookmarkChanged', () => {
     });
 
     it('previously matching bookmark no longer matches when sibling matches', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode1 = folderNode2.children[0] as Treetop.BookmarkNode;
       const bookmarkNode2 = folderNode2.children[1] as Treetop.BookmarkNode;
       bookmarkNode1.title += filter;
@@ -823,7 +823,7 @@ describe('handleBookmarkChanged', () => {
 
       bookmarkNode1.title = bookmarkNode1.title.replace(
         filter,
-        faker.random.word(),
+        faker.word.sample(),
       );
 
       const changeInfo: Treetop.BookmarkChangeInfo = {
@@ -839,7 +839,7 @@ describe('handleBookmarkChanged', () => {
     });
 
     it('previously matching bookmark no longer matches when nested bookmark matches', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode1 = folderNode2.children[0] as Treetop.BookmarkNode;
       const bookmarkNode2 = folderNode3.children[0] as Treetop.BookmarkNode;
       bookmarkNode1.title += filter;
@@ -856,7 +856,7 @@ describe('handleBookmarkChanged', () => {
 
       bookmarkNode1.title = bookmarkNode1.title.replace(
         filter,
-        faker.random.word(),
+        faker.word.sample(),
       );
 
       const changeInfo: Treetop.BookmarkChangeInfo = {
@@ -877,7 +877,7 @@ describe('handleBookmarkChanged', () => {
     it('ignores bookmarks', () => {
       const bookmarkNode = folderNode1.children[0] as Treetop.BookmarkNode;
       const changeInfo: Treetop.BookmarkChangeInfo = {
-        title: faker.random.words(),
+        title: faker.word.words(),
       };
       filterManager.handleBookmarkChanged(bookmarkNode.id, changeInfo);
 
@@ -887,7 +887,7 @@ describe('handleBookmarkChanged', () => {
 
     it('ignores folders', () => {
       const changeInfo: Treetop.BookmarkChangeInfo = {
-        title: faker.random.words(),
+        title: faker.word.words(),
       };
       filterManager.handleBookmarkChanged(folderNode2.id, changeInfo);
 
@@ -900,7 +900,7 @@ describe('handleBookmarkChanged', () => {
 describe('handleBookmarkMoved', () => {
   describe('when filter is set', () => {
     it('moved within folder', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode1 = folderNode2.children[0] as Treetop.BookmarkNode;
       const bookmarkNode2 = folderNode2.children[1] as Treetop.BookmarkNode;
       bookmarkNode1.title += filter;
@@ -935,7 +935,7 @@ describe('handleBookmarkMoved', () => {
     });
 
     it('moved to parent folder', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode = folderNode3.children[0] as Treetop.BookmarkNode;
       bookmarkNode.title += filter;
       filterManager.setFilter(filter);
@@ -969,7 +969,7 @@ describe('handleBookmarkMoved', () => {
     });
 
     it('moved to parent folder when sibling matches', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode1 = folderNode3.children[0] as Treetop.BookmarkNode;
       const bookmarkNode2 = folderNode3.children[1] as Treetop.BookmarkNode;
       bookmarkNode1.title += filter;
@@ -1008,7 +1008,7 @@ describe('handleBookmarkMoved', () => {
     });
 
     it('moved to child folder', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode = folderNode2.children[0] as Treetop.BookmarkNode;
       bookmarkNode.title += filter;
       filterManager.setFilter(filter);
@@ -1042,7 +1042,7 @@ describe('handleBookmarkMoved', () => {
     });
 
     it('moved to child folder when sibling matches', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode1 = folderNode2.children[0] as Treetop.BookmarkNode;
       const bookmarkNode2 = folderNode2.children[1] as Treetop.BookmarkNode;
       bookmarkNode1.title += filter;
@@ -1080,7 +1080,7 @@ describe('handleBookmarkMoved', () => {
     });
 
     it('moved to sibling folder', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode = folderNode2.children[0] as Treetop.BookmarkNode;
       bookmarkNode.title += filter;
       filterManager.setFilter(filter);
@@ -1113,7 +1113,7 @@ describe('handleBookmarkMoved', () => {
     });
 
     it('moved to sibling folder when sibling matches', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode1 = folderNode2.children[0] as Treetop.BookmarkNode;
       const bookmarkNode2 = folderNode2.children[1] as Treetop.BookmarkNode;
       bookmarkNode1.title += filter;
@@ -1151,7 +1151,7 @@ describe('handleBookmarkMoved', () => {
     });
 
     it('moved to distant folder', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode = folderNode3.children[0] as Treetop.BookmarkNode;
       bookmarkNode.title += filter;
       filterManager.setFilter(filter);
@@ -1186,7 +1186,7 @@ describe('handleBookmarkMoved', () => {
     });
 
     it('moved to distant folder when sibling matches', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode1 = folderNode3.children[0] as Treetop.BookmarkNode;
       const bookmarkNode2 = folderNode3.children[1] as Treetop.BookmarkNode;
       bookmarkNode1.title += filter;
@@ -1227,7 +1227,7 @@ describe('handleBookmarkMoved', () => {
     });
 
     it('folder moved within folder', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode = folderNode2.children[0] as Treetop.BookmarkNode;
       bookmarkNode.title += filter;
       filterManager.setFilter(filter);
@@ -1268,7 +1268,7 @@ describe('handleBookmarkMoved', () => {
     });
 
     it('folder moved to a parent folder', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode = folderNode3.children[0] as Treetop.BookmarkNode;
       bookmarkNode.title += filter;
       filterManager.setFilter(filter);
@@ -1310,7 +1310,7 @@ describe('handleBookmarkMoved', () => {
     });
 
     it('folder moved to a distant folder', () => {
-      const filter = faker.random.words(NUM_RANDOM_WORDS);
+      const filter = faker.word.words(NUM_RANDOM_WORDS);
       const bookmarkNode = folderNode3.children[0] as Treetop.BookmarkNode;
       bookmarkNode.title += filter;
       filterManager.setFilter(filter);

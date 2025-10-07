@@ -1,6 +1,6 @@
 import { type Writable, writable } from 'svelte/store';
+import { faker } from '@faker-js/faker';
 import { render, screen } from '@testing-library/svelte';
-import faker from 'faker';
 import escapeRegExp from 'lodash-es/escapeRegExp';
 import { beforeEach, describe, expect, it } from 'vitest';
 
@@ -38,8 +38,8 @@ const setup = () => {
 };
 
 beforeEach(() => {
-  nodeId = faker.datatype.uuid();
-  title = faker.random.words();
+  nodeId = faker.string.uuid();
+  title = faker.word.words();
   url = faker.internet.url();
 
   lastVisitTimeMap = new Map() as Treetop.LastVisitTimeMap;
@@ -80,7 +80,7 @@ describe('truncate option', () => {
   });
 
   it('truncates long title', () => {
-    title = faker.random.alphaNumeric(maxLength + 1);
+    title = faker.string.alphanumeric(maxLength + 1);
     expect(title.length).toBeGreaterThan(maxLength);
 
     setup();
@@ -92,7 +92,7 @@ describe('truncate option', () => {
   });
 
   it('truncates long title at a space when possible', () => {
-    title = faker.random.words(15);
+    title = faker.word.words(15);
     expect(title.length).toBeGreaterThan(maxLength);
 
     setup();
@@ -106,7 +106,7 @@ describe('truncate option', () => {
 
   it('truncates URL when title is empty', () => {
     title = '';
-    url += `/${faker.random.alphaNumeric(maxLength)}`;
+    url += `/${faker.string.alphanumeric(maxLength)}`;
     expect(url.length).toBeGreaterThan(maxLength);
 
     setup();
@@ -117,7 +117,7 @@ describe('truncate option', () => {
   });
 
   it("doesn't truncate short title", () => {
-    title = faker.random.alphaNumeric(Math.floor(maxLength / 2));
+    title = faker.string.alphanumeric(Math.floor(maxLength / 2));
 
     setup();
 
@@ -142,7 +142,7 @@ describe('tooltips option', () => {
   });
 
   it('long URL is truncated in the middle', () => {
-    url += `/${faker.random.alphaNumeric(maxLength)}`;
+    url += `/${faker.string.alphanumeric(maxLength)}`;
 
     setup();
 
