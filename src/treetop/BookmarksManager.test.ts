@@ -1,7 +1,7 @@
 /* eslint no-irregular-whitespace: ["error", { "skipComments": true }] */
 
 import { get, type Writable } from 'svelte/store';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { BookmarksManager } from '@Treetop/treetop/BookmarksManager';
@@ -512,7 +512,7 @@ describe('handleBookmarkChanged', () => {
     ).toBe(bookmarkNode1.url);
     const initialNodeStoreMapSize = nodeStoreMap.size;
 
-    bookmarkNode1.title = faker.random.words();
+    bookmarkNode1.title = faker.word.words();
     bookmarkNode1.url = faker.internet.url();
     folderNode1.children![0] = bookmarkNode1;
 
@@ -568,7 +568,7 @@ describe('handleBookmarkChanged', () => {
     );
     const initialNodeStoreMapSize = nodeStoreMap.size;
 
-    folderNode1.title = faker.random.words();
+    folderNode1.title = faker.word.words();
 
     const get = vi.fn().mockResolvedValue([folderNode1]);
     vi.spyOn(chrome.bookmarks, 'get').mockImplementation(get);

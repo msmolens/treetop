@@ -1,6 +1,6 @@
+import { faker } from '@faker-js/faker';
 import { render, screen, waitFor } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
-import faker from 'faker';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 
 import FilterInput from '@Treetop/treetop/FilterInput.svelte';
@@ -57,7 +57,7 @@ it('dispatches input event when text is typed after debouncing', async () => {
 
   const input = screen.getByLabelText(/^search$/i);
 
-  const words = faker.random.words();
+  const words = faker.word.words();
   await user.type(input, words);
 
   expect(callback).not.toHaveBeenCalled();
@@ -93,7 +93,7 @@ it('dispatches input event when enter is pressed', async () => {
 
   const input = screen.getByLabelText(/^search$/i);
 
-  const words = faker.random.words();
+  const words = faker.word.words();
   await user.type(input, words);
   await user.keyboard('[Enter]');
 
@@ -112,7 +112,7 @@ it('shows the clear button when text is entered', async () => {
 
   const input = screen.getByLabelText(/^search$/i);
 
-  const words = faker.random.words();
+  const words = faker.word.words();
   await user.type(input, words);
 
   vi.runAllTimers();
@@ -137,7 +137,7 @@ it('clears the input when the clear button is pressed', async () => {
 
   const input = screen.getByLabelText(/^search$/i);
 
-  const words = faker.random.words();
+  const words = faker.word.words();
   await user.type(input, words);
   await user.keyboard('[Enter]');
 
@@ -172,7 +172,7 @@ it('clears the input when the escape is pressed', async () => {
 
   const input = screen.getByLabelText(/^search$/i);
 
-  const words = faker.random.words();
+  const words = faker.word.words();
   await user.type(input, words);
   await user.keyboard('[Enter]');
 

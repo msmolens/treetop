@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 
 import * as Treetop from '@Treetop/treetop/types';
 
@@ -16,9 +16,9 @@ export const createBookmarkNode = (
   withProperties?: Partial<Omit<Treetop.BookmarkNode, 'type'>>,
 ): Treetop.BookmarkNode => {
   return {
-    id: faker.datatype.uuid(),
+    id: faker.string.uuid(),
     type: Treetop.NodeType.Bookmark,
-    title: faker.random.words(TITLE_NUM_RANDOM_WORDS),
+    title: faker.word.words(TITLE_NUM_RANDOM_WORDS),
     url: faker.internet.url(),
     ...withProperties,
   };
@@ -28,9 +28,9 @@ export const createFolderNode = (
   withProperties?: Partial<Omit<Treetop.FolderNode, 'type'>>,
 ): Treetop.FolderNode => {
   return {
-    id: faker.datatype.uuid(),
+    id: faker.string.uuid(),
     type: Treetop.NodeType.Folder,
-    title: faker.random.words(TITLE_NUM_RANDOM_WORDS),
+    title: faker.word.words(TITLE_NUM_RANDOM_WORDS),
     children: [],
     ...withProperties,
   };
@@ -44,9 +44,9 @@ export const createBrowserBookmarkNode = (
   parent: chrome.bookmarks.BookmarkTreeNode,
 ): chrome.bookmarks.BookmarkTreeNode => {
   const node: chrome.bookmarks.BookmarkTreeNode = {
-    id: faker.datatype.uuid(),
+    id: faker.string.uuid(),
     parentId: parent.id,
-    title: faker.random.words(TITLE_NUM_RANDOM_WORDS),
+    title: faker.word.words(TITLE_NUM_RANDOM_WORDS),
     url: faker.internet.url(),
     syncing: false,
   };
@@ -58,9 +58,9 @@ export const createBrowserFolderNode = (
   parent: chrome.bookmarks.BookmarkTreeNode,
 ): chrome.bookmarks.BookmarkTreeNode => {
   const node: chrome.bookmarks.BookmarkTreeNode = {
-    id: faker.datatype.uuid(),
+    id: faker.string.uuid(),
     parentId: parent.id,
-    title: faker.random.words(TITLE_NUM_RANDOM_WORDS),
+    title: faker.word.words(TITLE_NUM_RANDOM_WORDS),
     syncing: false,
     children: [],
   };
@@ -114,18 +114,18 @@ export const createBrowserBookmarksTree =
 
 export const createHistoryItem = (): chrome.history.HistoryItem => {
   return {
-    id: faker.datatype.uuid(),
+    id: faker.string.uuid(),
     url: faker.internet.url(),
-    lastVisitTime: faker.datatype.number(),
+    lastVisitTime: faker.date.past().getTime(),
   };
 };
 
 export const createVisitItem = (): chrome.history.VisitItem => {
   return {
-    id: faker.datatype.uuid(),
-    visitId: faker.datatype.uuid(),
-    visitTime: faker.datatype.number(),
-    referringVisitId: faker.datatype.uuid(),
+    id: faker.string.uuid(),
+    visitId: faker.string.uuid(),
+    visitTime: faker.date.past().getTime(),
+    referringVisitId: faker.string.uuid(),
     transition: 'link',
     isLocal: true,
   };

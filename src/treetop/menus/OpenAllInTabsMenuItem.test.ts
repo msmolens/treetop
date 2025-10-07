@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import type { OnClickedCallback } from '@Treetop/treetop/menus/MenuItem';
@@ -38,7 +38,7 @@ it('is disabled for the bookmarks root', () => {
 });
 
 it('is disabled for bookmarks', () => {
-  const nodeId = faker.random.alphaNumeric(8);
+  const nodeId = faker.string.alphanumeric(8);
   expect(menuItem.enabled(nodeId)).toBe(false);
 });
 

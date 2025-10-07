@@ -1,6 +1,6 @@
 /* eslint no-irregular-whitespace: ["error", { "skipComments": true }] */
 import { get, writable } from 'svelte/store';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { HistoryManager } from '@Treetop/treetop/HistoryManager';
@@ -151,13 +151,13 @@ describe('loadHistory', () => {
 describe('unloadHistory', () => {
   it('resets all last visit times', () => {
     const nodeIds = [
-      faker.datatype.uuid(),
-      faker.datatype.uuid(),
-      faker.datatype.uuid(),
+      faker.string.uuid(),
+      faker.string.uuid(),
+      faker.string.uuid(),
     ];
 
     for (const nodeId of nodeIds) {
-      lastVisitTimeMap.set(nodeId, writable(faker.datatype.number()));
+      lastVisitTimeMap.set(nodeId, writable(faker.date.past().getTime()));
     }
 
     historyManager.unloadHistory();
@@ -290,7 +290,7 @@ describe('handleBookmarkChanged', () => {
     const baseNode = createOtherBookmarksNode();
     const folderNode = createBrowserFolderNode(baseNode);
     const changeInfo: Treetop.BookmarkChangeInfo = {
-      title: faker.random.words(),
+      title: faker.word.words(),
     };
 
     await historyManager.handleBookmarkChanged(folderNode.id, changeInfo);
@@ -394,8 +394,14 @@ describe('handleVisitRemoved', () => {
     const baseNode = createOtherBookmarksNode();
     const bookmarkNode1 = createBrowserBookmarkNode(baseNode);
     const bookmarkNode2 = createBrowserBookmarkNode(baseNode);
-    lastVisitTimeMap.set(bookmarkNode1.id, writable(faker.datatype.number()));
-    lastVisitTimeMap.set(bookmarkNode2.id, writable(faker.datatype.number()));
+    lastVisitTimeMap.set(
+      bookmarkNode1.id,
+      writable(faker.date.past().getTime()),
+    );
+    lastVisitTimeMap.set(
+      bookmarkNode2.id,
+      writable(faker.date.past().getTime()),
+    );
 
     const removeInfo: Treetop.HistoryRemovedResult = {
       allHistory: true,

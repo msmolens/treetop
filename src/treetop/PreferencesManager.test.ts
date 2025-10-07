@@ -1,5 +1,5 @@
 import { get, type Writable } from 'svelte/store';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import EventEmitter from 'node:events';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -34,7 +34,7 @@ describe('createStore', () => {
   it.each(['value', 2, false, true, ['value'], [2], [false], [true]])(
     'creates and returns a store for value: %p',
     (value: Treetop.PreferenceValue) => {
-      const name = faker.random.word();
+      const name = faker.word.sample();
       const store = preferencesManager.createStore(name, value);
 
       expect(get(store)).toBe(value);
