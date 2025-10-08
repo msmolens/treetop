@@ -6,7 +6,7 @@
 
   import InfoBox from './InfoBox.svelte';
 
-  let ready = false;
+  let ready = $state(false);
 
   onMount(() => {
     ready = true;
@@ -96,39 +96,58 @@
 {#if ready}
   <main transition:fade={{ delay: 400, duration: 300 }}>
     <InfoBox>
-      <span slot="title">Getting started</span>
-      <span slot="detail1">
-        Open Treetop by clicking its icon (<img
-          class="icon"
-          src={icon}
-          alt="Treetop Icon" />) in the toolbar.
-      </span>
-      <span slot="detail2"
-        >Treetop shows all your bookmarks on a single page.</span>
+      {#snippet title()}
+        <span>Getting started</span>
+      {/snippet}
+      {#snippet detail1()}
+        <span>
+          Open Treetop by clicking its icon (<img
+            class="icon"
+            src={icon}
+            alt="Treetop Icon" />) in the toolbar.
+        </span>
+      {/snippet}
+      {#snippet detail2()}
+        <span>Treetop shows all your bookmarks on a single page.</span>
+      {/snippet}
     </InfoBox>
 
     <InfoBox>
-      <span slot="title">Always up-to-date</span>
-      <span slot="detail1">Treetop updates automatically as you browse.</span>
-      <span slot="detail2"
-        >Recently visited bookmarks have a larger font.
-      </span>
+      {#snippet title()}
+        <span>Always up-to-date</span>
+      {/snippet}
+      {#snippet detail1()}
+        <span>Treetop updates automatically as you browse.</span>
+      {/snippet}
+      {#snippet detail2()}
+        <span>Recently visited bookmarks have a larger font. </span>
+      {/snippet}
     </InfoBox>
 
     <InfoBox>
-      <span slot="title">Find and edit your bookmarks</span>
-      <span slot="detail1">Search for bookmarks by name or URL.</span>
-      <span slot="detail2">
-        Right-click to edit or delete bookmarks and folders.
-      </span>
+      {#snippet title()}
+        <span>Find and edit your bookmarks</span>
+      {/snippet}
+      {#snippet detail1()}
+        <span>Search for bookmarks by name or URL.</span>
+      {/snippet}
+      {#snippet detail2()}
+        <span> Right-click to edit or delete bookmarks and folders. </span>
+      {/snippet}
     </InfoBox>
 
     <InfoBox>
-      <span slot="title">Customize</span>
-      <span slot="detail1">
-        Click the Preferences button to customize Treetop's display.
-      </span>
-      <span slot="detail2">Click on a folder to make it the root folder.</span>
+      {#snippet title()}
+        <span>Customize</span>
+      {/snippet}
+      {#snippet detail1()}
+        <span>
+          Click the Preferences button to customize Treetop's display.
+        </span>
+      {/snippet}
+      {#snippet detail2()}
+        <span>Click on a folder to make it the root folder.</span>
+      {/snippet}
     </InfoBox>
   </main>
 {/if}
