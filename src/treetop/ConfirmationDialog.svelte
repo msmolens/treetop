@@ -1,23 +1,39 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
   import type { MDCDialogCloseEvent } from '@material/dialog';
   import Button, { Label } from '@smui/button';
   import Dialog, { Actions, Content, InitialFocus, Title } from '@smui/dialog';
 
-  const dispatch = createEventDispatcher<{
-    confirm: null;
-    cancel: null;
-  }>();
+  interface Props {
+    open?: boolean;
+    title: string;
+    message: string;
+    cancelLabel: string;
+    confirmLabel: string;
+    onConfirm: () => void;
+    onCancel: () => void;
+  }
 
-  export let open = false;
-  export let title: string;
-  export let message: string;
-  export let cancelLabel: string;
-  export let confirmLabel: string;
+  let {
+    open = $bindable(false),
+    title,
+    message,
+    cancelLabel,
+    confirmLabel,
+    onConfirm,
+    onCancel,
+  }: Props = $props();
 
   function handleClosed(e: MDCDialogCloseEvent) {
-    const message = e.detail.action === 'confirm' ? 'confirm' : 'cancel';
-    dispatch(message);
+    switch (e.detail.action) {
+      case 'confirm':
+        onConfirm();
+        break;
+      case 'cancel':
+        onCancel();
+        break;
+      default:
+        break;
+    }
   }
 </script>
 
@@ -26,7 +42,7 @@
   class="treetopDialog"
   aria-labelledby="dialog-title"
   aria-describedby="dialog-content"
-  on:SMUIDialog:closed={handleClosed}>
+  onSMUIDialogClosed={handleClosed}>
   <Title id="dialog-title">{title}</Title>
   <Content id="dialog-content">{message}</Content>
   <Actions>

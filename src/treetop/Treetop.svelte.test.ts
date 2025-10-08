@@ -101,19 +101,22 @@ describe('Treetop', () => {
 
     expect(getMessage).toHaveBeenCalledTimes(8 + numEmptyFolders);
 
+    // Folder contents
+    expect(getMessage).toHaveBeenCalledWith('emptyFolder');
+
     // Delete folder confirmation dialog
-    expect(getMessage).toHaveBeenNthCalledWith(1, 'dialogHeadingDeleteFolder');
-    expect(getMessage).toHaveBeenNthCalledWith(2, 'dialogMessageDeleteFolder');
-    expect(getMessage).toHaveBeenNthCalledWith(3, 'dialogButtonCancel');
-    expect(getMessage).toHaveBeenNthCalledWith(4, 'dialogButtonDelete');
+    expect(getMessage).toHaveBeenCalledWith('dialogHeadingDeleteFolder');
+    expect(getMessage).toHaveBeenCalledWith('dialogMessageDeleteFolder');
+    expect(getMessage).toHaveBeenCalledWith('dialogButtonCancel');
+    expect(getMessage).toHaveBeenCalledWith('dialogButtonDelete');
 
     // Page header
-    expect(getMessage).toHaveBeenNthCalledWith(5, 'search');
-    expect(getMessage).toHaveBeenNthCalledWith(6, 'preferences');
+    expect(getMessage).toHaveBeenCalledWith('search');
+    expect(getMessage).toHaveBeenCalledWith('preferences');
 
     // Properties dialog
-    expect(getMessage).toHaveBeenNthCalledWith(7, 'dialogButtonCancel');
-    expect(getMessage).toHaveBeenNthCalledWith(8, 'dialogButtonSave');
+    expect(getMessage).toHaveBeenCalledWith('dialogButtonCancel');
+    expect(getMessage).toHaveBeenCalledWith('dialogButtonSave');
 
     //
     // onMount
@@ -138,11 +141,6 @@ describe('Treetop', () => {
     // History event handlers
     expect(historyOnVisitedAddListener).toHaveBeenCalledOnce();
     expect(historyOnVisitRemovedAddListener).toHaveBeenCalledOnce();
-
-    // Expect all bookmark root folders to be empty
-    for (let i = 0; i < numEmptyFolders; i++) {
-      expect(getMessage).toHaveBeenNthCalledWith(9 + i, 'emptyFolder');
-    }
 
     //
     // onDestroy

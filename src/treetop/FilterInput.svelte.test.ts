@@ -1,3 +1,4 @@
+import type { ComponentProps } from 'svelte';
 import { faker } from '@faker-js/faker';
 import { render, screen, waitFor } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
@@ -5,14 +6,20 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 
 import FilterInput from '@Treetop/treetop/FilterInput.svelte';
 
-const setup = () => {
+type Props = ComponentProps<typeof FilterInput>;
+
+const setup = (
+  props: Props = {
+    onInput: vi.fn(),
+  },
+) => {
   return {
     user: userEvent.setup({
       advanceTimers: (delay) => {
         vi.advanceTimersByTime(delay);
       },
     }),
-    ...render(FilterInput),
+    ...render(FilterInput, props),
   };
 };
 
@@ -45,51 +52,39 @@ it('focus input when focus() method is called', () => {
 });
 
 it('dispatches input event when text is typed after debouncing', async () => {
-  const { component, user } = setup();
+  const onInput = vi.fn();
 
-  let lastFilter = '';
-
-  const callback = vi.fn().mockImplementation((e) => {
-    const filterInputEvent = e as CustomEvent<{ filter: string }>;
-    lastFilter = filterInputEvent.detail.filter;
-  });
-  component.$on('input', callback);
+  const { user } = setup({ onInput });
 
   const input = screen.getByLabelText(/^search$/i);
 
   const words = faker.word.words();
   await user.type(input, words);
 
-  expect(callback).not.toHaveBeenCalled();
+  expect(onInput).not.toHaveBeenCalled();
   vi.runAllTimers();
-  expect(callback).toHaveBeenCalledTimes(1);
-  expect(lastFilter).toBe(words);
+  expect(onInput).toHaveBeenCalledTimes(1);
+  expect(onInput).toHaveBeenLastCalledWith(words);
 
   await user.type(input, '{backspace}');
 
-  expect(callback).toHaveBeenCalledTimes(1);
+  expect(onInput).toHaveBeenCalledTimes(1);
   vi.runAllTimers();
-  expect(callback).toHaveBeenCalledTimes(2);
-  expect(lastFilter).toBe(words.slice(0, words.length - 1));
+  expect(onInput).toHaveBeenCalledTimes(2);
+  expect(onInput).toHaveBeenLastCalledWith(words.slice(0, words.length - 1));
 
   await user.clear(input);
 
-  expect(callback).toHaveBeenCalledTimes(2);
+  expect(onInput).toHaveBeenCalledTimes(2);
   vi.runAllTimers();
-  expect(callback).toHaveBeenCalledTimes(3);
-  expect(lastFilter).toBe('');
+  expect(onInput).toHaveBeenCalledTimes(3);
+  expect(onInput).toHaveBeenLastCalledWith('');
 });
 
 it('dispatches input event when enter is pressed', async () => {
-  const { component, user } = setup();
+  const onInput = vi.fn();
 
-  let lastFilter = '';
-
-  const callback = vi.fn().mockImplementation((e) => {
-    const filterInputEvent = e as CustomEvent<{ filter: string }>;
-    lastFilter = filterInputEvent.detail.filter;
-  });
-  component.$on('input', callback);
+  const { user } = setup({ onInput });
 
   const input = screen.getByLabelText(/^search$/i);
 
@@ -98,13 +93,13 @@ it('dispatches input event when enter is pressed', async () => {
   await user.keyboard('[Enter]');
 
   // Check that the event fired immediately
-  expect(callback).toHaveBeenCalledTimes(1);
-  expect(lastFilter).toBe(words);
+  expect(onInput).toHaveBeenCalledTimes(1);
+  expect(onInput).toHaveBeenLastCalledWith(words);
 
   // Check that the debounce was cancelled and the event didn't fire a second
   // time
   vi.runAllTimers();
-  expect(callback).toHaveBeenCalledTimes(1);
+  expect(onInput).toHaveBeenCalledTimes(1);
 });
 
 it('shows the clear button when text is entered', async () => {
@@ -125,15 +120,9 @@ it('shows the clear button when text is entered', async () => {
 });
 
 it('clears the input when the clear button is pressed', async () => {
-  const { component, user } = setup();
+  const onInput = vi.fn();
 
-  let lastFilter = '';
-
-  const callback = vi.fn().mockImplementation((e) => {
-    const filterInputEvent = e as CustomEvent<{ filter: string }>;
-    lastFilter = filterInputEvent.detail.filter;
-  });
-  component.$on('input', callback);
+  const { user } = setup({ onInput });
 
   const input = screen.getByLabelText(/^search$/i);
 
@@ -145,14 +134,14 @@ it('clears the input when the clear button is pressed', async () => {
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
-  expect(callback).toHaveBeenCalledTimes(1);
+  expect(onInput).toHaveBeenCalledTimes(1);
 
   screen.getByRole('button').click();
 
   await waitFor(() => {
-    expect(callback).toHaveBeenCalledTimes(2);
+    expect(onInput).toHaveBeenCalledTimes(2);
   });
-  expect(lastFilter).toBe('');
+  expect(onInput).toHaveBeenLastCalledWith('');
 
   await waitFor(() => {
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
@@ -160,15 +149,9 @@ it('clears the input when the clear button is pressed', async () => {
 });
 
 it('clears the input when the escape is pressed', async () => {
-  const { component, user } = setup();
+  const onInput = vi.fn();
 
-  let lastFilter = '';
-
-  const callback = vi.fn().mockImplementation((e) => {
-    const filterInputEvent = e as CustomEvent<{ filter: string }>;
-    lastFilter = filterInputEvent.detail.filter;
-  });
-  component.$on('input', callback);
+  const { user } = setup({ onInput });
 
   const input = screen.getByLabelText(/^search$/i);
 
@@ -180,14 +163,14 @@ it('clears the input when the escape is pressed', async () => {
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
-  expect(callback).toHaveBeenCalledTimes(1);
+  expect(onInput).toHaveBeenCalledTimes(1);
 
   await user.keyboard('{Escape}');
 
   await waitFor(() => {
-    expect(callback).toHaveBeenCalledTimes(2);
+    expect(onInput).toHaveBeenCalledTimes(2);
   });
-  expect(lastFilter).toBe('');
+  expect(onInput).toHaveBeenLastCalledWith('');
 
   await waitFor(() => {
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
