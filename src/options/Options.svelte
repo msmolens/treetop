@@ -122,7 +122,7 @@
         <input
           type="checkbox"
           bind:checked={options.openInNewTab}
-          on:change={handleCheckboxChange}
+          onchange={handleCheckboxChange}
           data-option-name="openInNewTab" />
         {strings.openInNewTab}
       </label>
@@ -133,7 +133,7 @@
         <input
           type="checkbox"
           bind:checked={options.truncate}
-          on:change={handleCheckboxChange}
+          onchange={handleCheckboxChange}
           data-option-name="truncate" />
         {strings.truncate}
       </label>
@@ -143,7 +143,7 @@
         <input
           type="checkbox"
           bind:checked={options.tooltips}
-          on:change={handleCheckboxChange}
+          onchange={handleCheckboxChange}
           data-option-name="tooltips" />
         {strings.tooltips}
       </label>
@@ -153,7 +153,7 @@
         <input
           type="checkbox"
           bind:checked={options.showRecentlyVisited}
-          on:change={handleCheckboxChange}
+          onchange={handleCheckboxChange}
           data-option-name="showRecentlyVisited" />
         {strings.showRecentlyVisited}
       </label>
@@ -169,7 +169,7 @@
             name="colorScheme"
             value="light"
             bind:group={options.colorScheme}
-            on:change={handleRadioChange} />
+            onchange={handleRadioChange} />
           {strings.colorSchemeLight}
         </label>
       </div>
@@ -180,7 +180,7 @@
             name="colorScheme"
             value="dark"
             bind:group={options.colorScheme}
-            on:change={handleRadioChange} />
+            onchange={handleRadioChange} />
           {strings.colorSchemeDark}
         </label>
       </div>
