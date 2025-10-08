@@ -1,14 +1,19 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import type { Snippet } from 'svelte';
   import { elasticOut } from 'svelte/easing';
   import { fly } from 'svelte/transition';
   import IconButton from '@smui/icon-button';
 
-  const dispatch = createEventDispatcher<{ error: null }>();
+  interface Props {
+    children?: Snippet;
+    onError: () => void;
+  }
 
-  function openPreferences(e: CustomEvent) {
+  let { children, onError }: Props = $props();
+
+  function openPreferences(e: MouseEvent) {
     chrome.runtime.openOptionsPage().catch(() => {
-      dispatch('error');
+      onError();
     });
 
     const element = e.currentTarget as HTMLElement;
@@ -72,14 +77,13 @@
     Treetop
   </div>
   <div class="slot">
-    <slot />
+    {@render children?.()}
   </div>
   <div>
     <div class="preferences">
-      <!-- svelte-ignore missing-declaration -->
       <IconButton
         aria-label={chrome.i18n.getMessage('preferences')}
-        on:click={openPreferences}
+        onclick={openPreferences}
         ripple={false}>
         settings
       </IconButton>

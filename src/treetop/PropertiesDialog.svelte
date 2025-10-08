@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
   import type { MDCDialogCloseEvent } from '@material/dialog';
   import Button, { Label } from '@smui/button';
   import Dialog, { Actions, Content, Title } from '@smui/dialog';
@@ -8,14 +7,21 @@
 
   import type * as Treetop from './types';
 
-  const dispatch = createEventDispatcher<{
-    cancel: null;
-    save: Treetop.PropertiesChanges;
-  }>();
+  interface Props {
+    open?: boolean;
+    title: string;
+    url: string | undefined;
+    onSave: (changes: Treetop.PropertiesChanges) => void;
+    onCancel: () => void;
+  }
 
-  export let open = false;
-  export let title: string;
-  export let url: string | undefined;
+  let {
+    open = $bindable(false),
+    title,
+    url,
+    onSave,
+    onCancel,
+  }: Props = $props();
 
   let nameLabel: TextField;
 
@@ -38,7 +44,7 @@
     if (e.detail.action === 'save') {
       save();
     } else {
-      dispatch('cancel');
+      onCancel();
     }
   }
 
@@ -60,27 +66,27 @@
   const cancelLabel = chrome.i18n.getMessage('dialogButtonCancel');
   const saveLabel = chrome.i18n.getMessage('dialogButtonSave');
 
-  let header: string;
-  $: if (title) {
-    // Truncate bookmark title
-    const truncatedTitle = truncate(title, {
-      length: maxHeaderTitleLength,
-    });
-    header = chrome.i18n.getMessage(
-      'dialogHeadingBookmarkProperties',
-      truncatedTitle,
-    );
-  }
+  const header = $derived.by(() => {
+    if (title) {
+      // Truncate bookmark title
+      const truncatedTitle = truncate(title, {
+        length: maxHeaderTitleLength,
+      });
+      return chrome.i18n.getMessage(
+        'dialogHeadingBookmarkProperties',
+        truncatedTitle,
+      );
+    }
+
+    return undefined;
+  });
 
   //
   // Bookmark properties
   //
 
-  let editTitle: string;
-  $: editTitle = title;
-
-  let editUrl: string | undefined;
-  $: editUrl = url;
+  let editTitle = $derived(title);
+  let editUrl = $derived(url);
 
   // Dispatch event to save changes
   function save() {
@@ -94,7 +100,7 @@
       changes.url = editUrl;
     }
 
-    dispatch('save', changes);
+    onSave(changes);
   }
 </script>
 
@@ -103,16 +109,16 @@
   class="treetopDialog"
   aria-labelledby="dialog-title"
   aria-describedby="dialog-content"
-  on:SMUIDialog:opened={handleOpened}
-  on:SMUIDialog:closed={handleClosed}>
+  onSMUIDialogOpened={handleOpened}
+  onSMUIDialogClosed={handleClosed}>
   <Title id="dialog-title">{header}</Title>
   <Content id="dialog-content">
     <div>
       <TextField
         bind:this={nameLabel}
         bind:value={editTitle}
-        on:focus={handleTextFieldFocus}
-        on:keydown={onKeyDown}
+        onfocus={handleTextFieldFocus}
+        onkeydown={onKeyDown}
         label="Name"
         style="width: 100%;" />
     </div>
@@ -120,8 +126,8 @@
       <div>
         <TextField
           bind:value={editUrl}
-          on:focus={handleTextFieldFocus}
-          on:keydown={onKeyDown}
+          onfocus={handleTextFieldFocus}
+          onkeydown={onKeyDown}
           label="Location"
           style="width: 100%;" />
       </div>

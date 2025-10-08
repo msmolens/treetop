@@ -7,9 +7,13 @@
   import type * as Treetop from './types';
   import { truncateMiddle } from './utils';
 
-  export let nodeId: string;
-  export let title: string;
-  export let url: string;
+  interface Props {
+    nodeId: string;
+    title: string;
+    url: string;
+  }
+
+  let { nodeId, title, url }: Props = $props();
 
   const lastVisitTimeMap: Treetop.LastVisitTimeMap =
     getContext('lastVisitTimeMap');
@@ -21,30 +25,22 @@
   // Maximum length of displayed bookmark titles and, in tooltips, URLs.
   const maxLength = 78;
 
-  let name: string;
-  $: {
-    // Set name, truncating based on preference setting.
-    // Fall back to URL if title is blank.
-    if ($truncate) {
-      name = lodashTruncate(title || url, {
-        length: maxLength,
-        separator: ' ',
-      });
-    } else {
-      name = title || url;
-    }
-  }
+  // Set name, truncating based on preference setting.
+  // Fall back to URL if title is blank.
+  const name = $derived(
+    $truncate
+      ? lodashTruncate(title || url, {
+          length: maxLength,
+          separator: ' ',
+        })
+      : title || url,
+  );
 
-  let tooltip: string | undefined;
-  $: {
-    // Set tooltip if preference is enabled.
-    // Display title and URL on separate lines, truncating long URLs in the middle.
-    if ($tooltips) {
-      tooltip = `${title}\n${truncateMiddle(url, maxLength)}`;
-    } else {
-      tooltip = undefined;
-    }
-  }
+  // Set tooltip if preference is enabled.
+  // Display title and URL on separate lines, truncating long URLs in the middle.
+  const tooltip = $derived(
+    $tooltips ? `${title}\n${truncateMiddle(url, maxLength)}` : undefined,
+  );
 
   // Number of milliseconds in a day
   const MILLISECONDS_PER_DAY =
@@ -54,25 +50,18 @@
     24; // hours per day
 
   // Approximate number of days since last visit
-  let lastVisitTimeDays: number;
-  $: lastVisitTimeDays =
-    ($clock.getTime() - $lastVisitTime) / MILLISECONDS_PER_DAY;
+  const lastVisitTimeDays = $derived(
+    ($clock.getTime() - $lastVisitTime) / MILLISECONDS_PER_DAY,
+  );
 
   // Set visited class based on number of days since last visit
-  let visitedClass: string;
-  $: {
-    if (lastVisitTimeDays < 1) {
-      visitedClass = 'visitedPastDay';
-    } else if (lastVisitTimeDays < 2) {
-      visitedClass = 'visitedPastTwoDays';
-    } else if (lastVisitTimeDays < 3) {
-      visitedClass = 'visitedPastThreeDays';
-    } else if (lastVisitTimeDays < 7) {
-      visitedClass = 'visitedPastWeek';
-    } else {
-      visitedClass = '';
-    }
-  }
+  const visitedClass = $derived.by(() => {
+    if (lastVisitTimeDays < 1) return 'visitedPastDay';
+    if (lastVisitTimeDays < 2) return 'visitedPastTwoDays';
+    if (lastVisitTimeDays < 3) return 'visitedPastThreeDays';
+    if (lastVisitTimeDays < 7) return 'visitedPastWeek';
+    return '';
+  });
 </script>
 
 <style>
@@ -108,6 +97,7 @@
     text-decoration-line: underline;
     text-decoration-style: solid;
     text-decoration-thickness: 1px;
+    text-underline-offset: 0.1em;
   }
 
   a:hover {

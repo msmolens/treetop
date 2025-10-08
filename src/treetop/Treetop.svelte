@@ -28,7 +28,11 @@
   import PropertiesDialog from './PropertiesDialog.svelte';
   import * as Treetop from './types';
 
-  export let rootBookmarkId: string | null;
+  interface Props {
+    rootBookmarkId: string | null;
+  }
+
+  let { rootBookmarkId }: Props = $props();
 
   //
   // Init preferences
@@ -104,35 +108,35 @@
   //
 
   let errorSnackbar: Snackbar;
-  let errorMessage: string;
+  let errorMessage: string | undefined = $state();
 
   //
   // Delete folder confirmation dialog
   //
 
-  const deleteFolderDialogInfo = {
+  const deleteFolderDialogInfo = $state({
     open: false,
     title: chrome.i18n.getMessage('dialogHeadingDeleteFolder'),
     message: chrome.i18n.getMessage('dialogMessageDeleteFolder'),
     cancelLabel: chrome.i18n.getMessage('dialogButtonCancel'),
     confirmLabel: chrome.i18n.getMessage('dialogButtonDelete'),
-  };
+  });
   let deleteFolderId: string | null;
 
   //
   // Properties dialog
   //
 
-  const propertiesDialogInfo = {
+  const propertiesDialogInfo = $state({
     open: false,
-  };
-  let propertiesNode: chrome.bookmarks.BookmarkTreeNode | null = null;
+  });
+  let propertiesNode: chrome.bookmarks.BookmarkTreeNode | null = $state(null);
 
   //
   // Filter input
   //
 
-  let filterInput: FilterInput;
+  let filterInput: FilterInput | undefined = $state();
 
   //
   // Menu manager
@@ -141,20 +145,22 @@
   let menuManager: MenuManager | null = null;
 
   // Body element
-  let body: HTMLElement | undefined;
+  let body: HTMLElement | undefined = $state();
 
   // Manually update class for body element
   // See https://github.com/sveltejs/svelte/issues/3105
-  $: if (body) {
-    body.classList.remove('colorSchemeLight');
-    body.classList.remove('colorSchemeDark');
+  $effect(() => {
+    if (body) {
+      body.classList.remove('colorSchemeLight');
+      body.classList.remove('colorSchemeDark');
 
-    if ($colorScheme === 'light') {
-      body.classList.add('colorSchemeLight');
-    } else if ($colorScheme === 'dark') {
-      body.classList.add('colorSchemeDark');
+      if ($colorScheme === 'light') {
+        body.classList.add('colorSchemeLight');
+      } else if ($colorScheme === 'dark') {
+        body.classList.add('colorSchemeDark');
+      }
     }
-  }
+  });
 
   /**
    * Show an error notification.
@@ -223,10 +229,8 @@
   /**
    * Properties dialog save handler.
    */
-  async function saveProperties(event: CustomEvent<Treetop.PropertiesChanges>) {
+  async function saveProperties(changes: Treetop.PropertiesChanges) {
     propertiesDialogInfo.open = false;
-
-    const changes = event.detail;
 
     try {
       await chrome.bookmarks.update(propertiesNode!.id, changes);
@@ -312,7 +316,7 @@
     e.preventDefault();
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    filterInput.focus();
+    filterInput?.focus();
   }
 
   //
@@ -491,13 +495,13 @@
   /**
    * Apply the current filter string.
    */
-  function applyFilter(event: CustomEvent<{ filter: string }>) {
+  function applyFilter(filter: string) {
     // Clear any previous filtering
     filterManager.clearFilter();
     filterActive.set(false);
 
     // Set the current filter if the string is not empty
-    const value = event.detail.filter.trim();
+    const value = filter.trim();
     if (value && value.length > 0) {
       filterManager.setFilter(value);
       filterActive.set(true);
@@ -653,7 +657,7 @@
   {/if}
 </svelte:head>
 
-<svelte:body on:keydown={onKeyDown} />
+<svelte:body onkeydown={onKeyDown} />
 
 {#await ready}
   <div class="progressContainer">
@@ -663,12 +667,11 @@
     </div>
   </div>
 {:then rootNodeId}
-  <!-- svelte-ignore missing-declaration -->
   <PageHeader
-    on:error={() => {
+    onError={() => {
       handleError(chrome.i18n.getMessage('errorLoadingPreferences'));
     }}>
-    <FilterInput bind:this={filterInput} on:input={applyFilter} />
+    <FilterInput bind:this={filterInput} onInput={applyFilter} />
   </PageHeader>
   <main
     class="treetopContainer"
@@ -680,16 +683,16 @@
   <!-- Delete folder confirmation dialog -->
   <ConfirmationDialog
     {...deleteFolderDialogInfo}
-    on:cancel={cancelDeleteBookmark}
-    on:confirm={confirmDeleteBookmark} />
+    onCancel={cancelDeleteBookmark}
+    onConfirm={confirmDeleteBookmark} />
 
   <!-- Bookmark properties dialog -->
   <PropertiesDialog
     {...propertiesDialogInfo}
     title={propertiesNode ? propertiesNode.title : ''}
     url={propertiesNode ? propertiesNode.url : ''}
-    on:cancel={cancelProperties}
-    on:save={saveProperties} />
+    onCancel={cancelProperties}
+    onSave={saveProperties} />
 {/await}
 
 <!-- Error notification -->

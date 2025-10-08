@@ -8,6 +8,7 @@ import 'normalize.css/normalize.css';
 import './main.css';
 
 import Treetop from './Treetop.svelte';
+import { mount } from 'svelte';
 
 // Get root bookmark ID from hash
 const rootBookmarkId = decodeURIComponent(location.hash.substring(1));
@@ -17,7 +18,7 @@ if (!target) {
   throw new Error('Missing app element');
 }
 
-new Treetop({
+mount(Treetop, {
   target,
   props: {
     rootBookmarkId,

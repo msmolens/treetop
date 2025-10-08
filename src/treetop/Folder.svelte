@@ -3,10 +3,15 @@
   import { get, type Writable } from 'svelte/store';
 
   import Bookmark from './Bookmark.svelte';
+  import Folder from './Folder.svelte';
   import * as Treetop from './types';
 
-  export let nodeId: string;
-  export let root = false;
+  interface Props {
+    nodeId: string;
+    root?: boolean;
+  }
+
+  let { nodeId, root = false }: Props = $props();
 
   const builtInFolderInfo: Treetop.BuiltInFolderInfo =
     getContext('builtInFolderInfo');
@@ -19,16 +24,7 @@
   // Nodes for the folder heading.
   // For the root folder, get the folder nodes from bookmarks root to the selected root.
   // Otherwise, include only the folder node itself.
-  let folderNodes: Treetop.FolderNode[];
-  $: if (root) {
-    folderNodes = getFolderNodes($node);
-  } else {
-    folderNodes = [$node];
-  }
-
-  // Include selected root title in document title.
-  // Don't use fallback title.
-  $: documentTitle = $node.title ? `Treetop: ${$node.title}` : 'Treetop';
+  const folderNodes = $derived(root ? getFolderNodes($node) : [$node]);
 
   /**
    * Get folder nodes from bookmarks root to the selected root.
@@ -59,6 +55,12 @@
 
     return chrome.i18n.getMessage(key);
   }
+
+  // Include selected root title in document title.
+  // Don't use fallback title.
+  const documentTitle = $derived(
+    $node.title ? `Treetop: ${$node.title}` : 'Treetop',
+  );
 </script>
 
 <style>
@@ -129,7 +131,6 @@
     </div>
     <div class="contents">
       {#if root && $filterActive && !$filterSet.has(nodeId)}
-        <!-- svelte-ignore missing-declaration -->
         <em>{chrome.i18n.getMessage('noResults')}</em>
       {/if}
       {#each $node.children as child (child.id)}
@@ -145,10 +146,9 @@
             <Bookmark nodeId={id} {title} {url} />
           {/if}
         {:else if child.type === Treetop.NodeType.Folder}
-          <svelte:self nodeId={child.id} />
+          <Folder nodeId={child.id} />
         {/if}
       {:else}
-        <!-- svelte-ignore missing-declaration -->
         <em>{chrome.i18n.getMessage('emptyFolder')}</em>
       {/each}
     </div>

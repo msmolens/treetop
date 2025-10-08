@@ -3,7 +3,6 @@ import { type ViteUserConfig, defineProject, mergeConfig } from 'vitest/config';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { svelteTesting } from '@testing-library/svelte/vite';
 import copy from 'rollup-plugin-copy';
-import { sveltePreprocess } from 'svelte-preprocess';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { developmentConfig } from '../../vite.common-development.config.js';
 import { getTreetopDistName } from '../../vite.common.config.js';
@@ -24,9 +23,7 @@ export default defineProject(({ mode }) => {
         verbose: true,
       }),
       tsconfigPaths(),
-      svelte({
-        preprocess: sveltePreprocess(),
-      }),
+      svelte(),
       svelteTesting(),
     ],
     build: {
@@ -36,14 +33,6 @@ export default defineProject(({ mode }) => {
       },
     },
     test: {
-      // Work around onMount not being called when running tests
-      // https://github.com/vitest-dev/vitest/issues/2834#issuecomment-1439576110
-      alias: [
-        {
-          find: /^svelte$/,
-          replacement: 'svelte/internal',
-        },
-      ],
       environment: 'jsdom',
       restoreMocks: true,
       setupFiles: [
