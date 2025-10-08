@@ -1,4 +1,13 @@
 <script lang="ts">
+  import type { Snippet } from 'svelte';
+
+  interface Props {
+    title: Snippet;
+    detail1: Snippet;
+    detail2?: Snippet;
+  }
+
+  let { title, detail1, detail2 }: Props = $props();
 </script>
 
 <style>
@@ -27,17 +36,17 @@
 <div class="container">
   <div class="content">
     <div class="title">
-      <slot name="title" />
+      {@render title()}
     </div>
     <hr />
     <div class="detail">
       &bull;
-      <slot name="detail1" />
+      {@render detail1()}
     </div>
-    {#if $$slots.detail2}
+    {#if detail2}
       <div class="detail">
         &bull;
-        <slot name="detail2" />
+        {@render detail2()}
       </div>
     {/if}
   </div>
