@@ -23,6 +23,7 @@ export default defineConfig(
     'eslint.config.js',
     'svelte.config.js',
     '**/vite.*.ts',
+    './test/utils/ContextWrapper.svelte',
   ]),
   {
     languageOptions: {
