@@ -17,6 +17,7 @@
   import { OpenAllInTabsMenuItem } from './menus/OpenAllInTabsMenuItem';
   import { PropertiesMenuItem } from './menus/PropertiesMenuItem';
   import { BookmarksManager } from './BookmarksManager';
+  import { createClock } from './clock.svelte';
   import ConfirmationDialog from './ConfirmationDialog.svelte';
   import FilterInput from './FilterInput.svelte';
   import { FilterManager } from './FilterManager';
@@ -96,12 +97,16 @@
   // Store for whether filter is active.
   const filterActive = writable(false);
 
+  // Clock to age recently visited bookmarks
+  const clock = createClock();
+
   // Make bookmark data available to other components
   setContext('builtInFolderInfo', builtInFolderInfo);
   setContext('nodeStoreMap', nodeStoreMap);
   setContext('lastVisitTimeMap', lastVisitTimeMap);
   setContext('filterActive', filterActive);
   setContext('filterSet', filterSet);
+  setContext('clock', clock);
 
   //
   // Error notification
