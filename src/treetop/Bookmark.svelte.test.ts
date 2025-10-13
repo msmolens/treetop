@@ -1,3 +1,4 @@
+import { SvelteDate } from 'svelte/reactivity';
 import { type Writable, writable } from 'svelte/store';
 import { faker } from '@faker-js/faker';
 import { render, screen } from '@testing-library/svelte';
@@ -12,6 +13,7 @@ import ContextWrapper from '../../test/utils/ContextWrapper.svelte';
 let lastVisitTimeMap: Treetop.LastVisitTimeMap;
 let truncate: Writable<boolean>;
 let tooltips: Writable<boolean>;
+let clock: SvelteDate;
 let nodeId: string;
 let title: string;
 let url: string;
@@ -33,6 +35,7 @@ const setup = () => {
       lastVisitTimeMap,
       truncate,
       tooltips,
+      clock,
     },
   });
 };
@@ -47,6 +50,8 @@ beforeEach(() => {
 
   truncate = writable(false);
   tooltips = writable(false);
+
+  clock = new SvelteDate();
 });
 
 it('renders link with expected attributes', () => {

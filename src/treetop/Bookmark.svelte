@@ -1,9 +1,9 @@
 <script lang="ts">
   import { getContext } from 'svelte';
+  import type { SvelteDate } from 'svelte/reactivity';
   import type { Writable } from 'svelte/store';
   import lodashTruncate from 'lodash-es/truncate';
 
-  import { clock } from './clock';
   import type * as Treetop from './types';
   import { truncateMiddle } from './utils';
 
@@ -19,6 +19,7 @@
     getContext('lastVisitTimeMap');
   const truncate = getContext<Writable<boolean>>('truncate');
   const tooltips = getContext<Writable<boolean>>('tooltips');
+  const clock = getContext<SvelteDate>('clock');
 
   let lastVisitTime = lastVisitTimeMap.get(nodeId)!;
 
@@ -51,7 +52,7 @@
 
   // Approximate number of days since last visit
   const lastVisitTimeDays = $derived(
-    ($clock.getTime() - $lastVisitTime) / MILLISECONDS_PER_DAY,
+    (clock.getTime() - $lastVisitTime) / MILLISECONDS_PER_DAY,
   );
 
   // Set visited class based on number of days since last visit
