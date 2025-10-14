@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onDestroy, onMount, setContext } from 'svelte';
+  import { SvelteSet } from 'svelte/reactivity';
   import {
     get,
     type Unsubscriber,
@@ -74,7 +75,7 @@
   >();
 
   // Set of node IDs that match the active filter.
-  const filterSet: Treetop.FilterSet = writable(new Set());
+  const filterSet: Treetop.FilterSet = new SvelteSet();
 
   // Built-in folder info
   const builtInFolderInfo: Treetop.BuiltInFolderInfo = {
@@ -185,7 +186,7 @@
     const nodeStore = nodeStoreMap.get(nodeId)!;
     const node: Treetop.FolderNode = get(nodeStore);
 
-    const activeFilterSet = get(filterActive) ? get(filterSet) : undefined;
+    const activeFilterSet = get(filterActive) ? filterSet : undefined;
 
     const promises: Promise<chrome.tabs.Tab>[] = [];
 

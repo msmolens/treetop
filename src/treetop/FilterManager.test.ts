@@ -1,6 +1,7 @@
 /* eslint no-irregular-whitespace: ["error", { "skipComments": true }] */
 
-import { get, writable } from 'svelte/store';
+import { SvelteSet } from 'svelte/reactivity';
+import { writable } from 'svelte/store';
 import { faker } from '@faker-js/faker';
 import { beforeEach, describe, expect, it } from 'vitest';
 
@@ -25,7 +26,7 @@ const randomStringContaining = (str: string) => {
 };
 
 let nodeStoreMap: Treetop.NodeStoreMap;
-let fs: Treetop.FilterSet;
+let filterSet: Treetop.FilterSet;
 let filterManager: FilterManager;
 let folderNode1: Treetop.FolderNode;
 let folderNode2: Treetop.FolderNode;
@@ -36,8 +37,8 @@ let folderNode6: Treetop.FolderNode;
 
 beforeEach(() => {
   nodeStoreMap = new Map() as Treetop.NodeStoreMap;
-  fs = writable(new Set<string>());
-  filterManager = new FilterManager(fs, nodeStoreMap);
+  filterSet = new SvelteSet();
+  filterManager = new FilterManager(filterSet, nodeStoreMap);
 
   // Create node tree:
   // folderNode1
@@ -125,7 +126,6 @@ describe('setFilter', () => {
   it('no matches', () => {
     filterManager.setFilter(faker.word.words(NUM_RANDOM_WORDS));
 
-    const filterSet = get(fs);
     expect(filterSet.size).toBe(0);
   });
 
@@ -133,7 +133,6 @@ describe('setFilter', () => {
     const filter = (folderNode1.children[1] as Treetop.BookmarkNode).title;
     filterManager.setFilter(filter);
 
-    const filterSet = get(fs);
     expect(filterSet.size).toBe(2);
     expect(filterSet.has(folderNode1.id)).toBe(true);
     expect(filterSet.has(folderNode1.children[1].id)).toBe(true);
@@ -144,7 +143,6 @@ describe('setFilter', () => {
     const filter = new URL(url).hostname;
     filterManager.setFilter(filter);
 
-    const filterSet = get(fs);
     expect(filterSet.size).toBe(2);
     expect(filterSet.has(folderNode1.id)).toBe(true);
     expect(filterSet.has(folderNode1.children[1].id)).toBe(true);
@@ -158,7 +156,6 @@ describe('setFilter', () => {
       randomStringContaining(filter);
     filterManager.setFilter(filter);
 
-    const filterSet = get(fs);
     expect(filterSet.size).toBe(3);
     expect(filterSet.has(folderNode1.id)).toBe(true);
     expect(filterSet.has(folderNode1.children[0].id)).toBe(true);
@@ -173,7 +170,6 @@ describe('setFilter', () => {
       randomStringContaining(filter);
     filterManager.setFilter(filter);
 
-    const filterSet = get(fs);
     expect(filterSet.size).toBe(4);
     expect(filterSet.has(folderNode1.id)).toBe(true);
     expect(filterSet.has(folderNode2.id)).toBe(true);
@@ -185,7 +181,6 @@ describe('setFilter', () => {
     const filter = (folderNode2.children[1] as Treetop.BookmarkNode).title;
     filterManager.setFilter(filter);
 
-    const filterSet = get(fs);
     expect(filterSet.size).toBe(3);
     expect(filterSet.has(folderNode1.id)).toBe(true);
     expect(filterSet.has(folderNode2.id)).toBe(true);
@@ -200,7 +195,6 @@ describe('setFilter', () => {
       randomStringContaining(filter);
     filterManager.setFilter(filter);
 
-    const filterSet = get(fs);
     expect(filterSet.size).toBe(4);
     expect(filterSet.has(folderNode1.id)).toBe(true);
     expect(filterSet.has(folderNode2.id)).toBe(true);
@@ -212,7 +206,6 @@ describe('setFilter', () => {
     const filter = (folderNode4.children[1] as Treetop.BookmarkNode).title;
     filterManager.setFilter(filter);
 
-    const filterSet = get(fs);
     expect(filterSet.size).toBe(4);
     expect(filterSet.has(folderNode1.id)).toBe(true);
     expect(filterSet.has(folderNode2.id)).toBe(true);
@@ -228,7 +221,6 @@ describe('setFilter', () => {
       randomStringContaining(filter);
     filterManager.setFilter(filter);
 
-    const filterSet = get(fs);
     expect(filterSet.size).toBe(5);
     expect(filterSet.has(folderNode1.id)).toBe(true);
     expect(filterSet.has(folderNode2.id)).toBe(true);
@@ -245,7 +237,6 @@ describe('setFilter', () => {
       randomStringContaining(filter);
     filterManager.setFilter(filter);
 
-    const filterSet = get(fs);
     expect(filterSet.size).toBe(6);
     expect(filterSet.has(folderNode1.id)).toBe(true);
     expect(filterSet.has(folderNode2.id)).toBe(true);
@@ -270,7 +261,6 @@ describe('handleBookmarkCreated', () => {
 
       filterManager.handleBookmarkCreated(bookmarkNode.id, bookmarkNode);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode.id)).toBe(true);
       expect(filterSet.has(baseNode.id)).toBe(true);
       expect(filterSet.size).toBe(2);
@@ -288,7 +278,6 @@ describe('handleBookmarkCreated', () => {
 
       filterManager.handleBookmarkCreated(bookmarkNode.id, bookmarkNode);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode.id)).toBe(true);
       expect(filterSet.has(baseNode.id)).toBe(true);
       expect(filterSet.size).toBe(2);
@@ -305,7 +294,6 @@ describe('handleBookmarkCreated', () => {
 
       filterManager.handleBookmarkCreated(bookmarkNode.id, bookmarkNode);
 
-      const filterSet = get(fs);
       expect(filterSet.size).toBe(0);
     });
 
@@ -324,7 +312,6 @@ describe('handleBookmarkCreated', () => {
 
       filterManager.handleBookmarkCreated(bookmarkNode.id, bookmarkNode);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode.id)).toBe(true);
       expect(filterSet.has(folderNode.id)).toBe(true);
       expect(filterSet.has(baseNode.id)).toBe(true);
@@ -345,7 +332,6 @@ describe('handleBookmarkCreated', () => {
 
       filterManager.handleBookmarkCreated(bookmarkNode.id, bookmarkNode);
 
-      const filterSet = get(fs);
       expect(filterSet.size).toBe(0);
     });
 
@@ -359,7 +345,6 @@ describe('handleBookmarkCreated', () => {
 
       filterManager.handleBookmarkCreated(folderNode.id, folderNode);
 
-      const filterSet = get(fs);
       expect(filterSet.size).toBe(0);
     });
   });
@@ -371,7 +356,6 @@ describe('handleBookmarkCreated', () => {
 
       filterManager.handleBookmarkCreated(bookmarkNode.id, bookmarkNode);
 
-      const filterSet = get(fs);
       expect(filterSet.size).toBe(0);
     });
 
@@ -381,7 +365,6 @@ describe('handleBookmarkCreated', () => {
 
       filterManager.handleBookmarkCreated(folderNode.id, folderNode);
 
-      const filterSet = get(fs);
       expect(filterSet.size).toBe(0);
     });
   });
@@ -395,7 +378,6 @@ describe('handleBookmarkRemoved', () => {
       bookmarkNode.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
       expect(filterSet.size).toBe(2);
@@ -417,7 +399,6 @@ describe('handleBookmarkRemoved', () => {
       bookmarkNode2.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode1.id)).toBe(true);
       expect(filterSet.has(bookmarkNode2.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
@@ -443,7 +424,6 @@ describe('handleBookmarkRemoved', () => {
       bookmarkNode2.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode1.id)).toBe(true);
       expect(filterSet.has(bookmarkNode2.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
@@ -469,7 +449,6 @@ describe('handleBookmarkRemoved', () => {
       bookmarkNode.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
       expect(filterSet.has(folderNode2.id)).toBe(true);
@@ -499,7 +478,6 @@ describe('handleBookmarkRemoved', () => {
       bookmarkNode2.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode1.id)).toBe(true);
       expect(filterSet.has(bookmarkNode2.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
@@ -527,7 +505,6 @@ describe('handleBookmarkRemoved', () => {
       bookmarkNode2.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode1.id)).toBe(true);
       expect(filterSet.has(bookmarkNode2.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
@@ -554,7 +531,6 @@ describe('handleBookmarkRemoved', () => {
       const bookmarkNode = folderNode1.children[0] as Treetop.BookmarkNode;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.size).toBe(0);
 
       folderNode1.children = folderNode1.children.filter(
@@ -571,7 +547,6 @@ describe('handleBookmarkRemoved', () => {
       const bookmarkNode = folderNode2.children[0] as Treetop.BookmarkNode;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.size).toBe(0);
 
       folderNode2.children = folderNode2.children.filter(
@@ -589,7 +564,6 @@ describe('handleBookmarkRemoved', () => {
       bookmarkNode.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
       expect(filterSet.has(folderNode2.id)).toBe(true);
@@ -615,7 +589,6 @@ describe('handleBookmarkRemoved', () => {
       const filter = faker.word.words(NUM_RANDOM_WORDS);
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.size).toBe(0);
 
       const removedNodeIds = [
@@ -640,7 +613,6 @@ describe('handleBookmarkRemoved', () => {
       const bookmarkNode = createBrowserBookmarkNode(baseNode);
       filterManager.handleBookmarkRemoved(bookmarkNode.id);
 
-      const filterSet = get(fs);
       expect(filterSet.size).toBe(0);
     });
 
@@ -649,7 +621,6 @@ describe('handleBookmarkRemoved', () => {
       const folderNode = createBrowserFolderNode(baseNode);
       filterManager.handleBookmarkRemoved(folderNode.id);
 
-      const filterSet = get(fs);
       expect(filterSet.size).toBe(0);
     });
   });
@@ -661,7 +632,6 @@ describe('handleBookmarkChanged', () => {
       const filter = faker.word.words(NUM_RANDOM_WORDS);
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.size).toBe(0);
 
       const bookmarkNode = folderNode2.children[0] as Treetop.BookmarkNode;
@@ -682,7 +652,6 @@ describe('handleBookmarkChanged', () => {
       const filter = faker.string.alphanumeric(8);
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.size).toBe(0);
 
       const bookmarkNode = folderNode2.children[0] as Treetop.BookmarkNode;
@@ -707,7 +676,6 @@ describe('handleBookmarkChanged', () => {
       bookmarkNode2.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode1.id)).toBe(false);
       expect(filterSet.has(bookmarkNode2.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
@@ -735,7 +703,6 @@ describe('handleBookmarkChanged', () => {
       bookmarkNode2.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode1.id)).toBe(false);
       expect(filterSet.has(bookmarkNode2.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
@@ -764,7 +731,6 @@ describe('handleBookmarkChanged', () => {
       bookmarkNode.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
       expect(filterSet.has(folderNode2.id)).toBe(true);
@@ -789,7 +755,6 @@ describe('handleBookmarkChanged', () => {
       bookmarkNode.url += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
       expect(filterSet.has(folderNode2.id)).toBe(true);
@@ -814,7 +779,6 @@ describe('handleBookmarkChanged', () => {
       bookmarkNode2.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode1.id)).toBe(true);
       expect(filterSet.has(bookmarkNode2.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
@@ -846,7 +810,6 @@ describe('handleBookmarkChanged', () => {
       bookmarkNode2.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode1.id)).toBe(true);
       expect(filterSet.has(bookmarkNode2.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
@@ -881,7 +844,6 @@ describe('handleBookmarkChanged', () => {
       };
       filterManager.handleBookmarkChanged(bookmarkNode.id, changeInfo);
 
-      const filterSet = get(fs);
       expect(filterSet.size).toBe(0);
     });
 
@@ -891,7 +853,6 @@ describe('handleBookmarkChanged', () => {
       };
       filterManager.handleBookmarkChanged(folderNode2.id, changeInfo);
 
-      const filterSet = get(fs);
       expect(filterSet.size).toBe(0);
     });
   });
@@ -907,7 +868,6 @@ describe('handleBookmarkMoved', () => {
       bookmarkNode2.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode1.id)).toBe(true);
       expect(filterSet.has(bookmarkNode2.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
@@ -940,7 +900,6 @@ describe('handleBookmarkMoved', () => {
       bookmarkNode.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
       expect(filterSet.has(folderNode2.id)).toBe(true);
@@ -976,7 +935,6 @@ describe('handleBookmarkMoved', () => {
       bookmarkNode2.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode1.id)).toBe(true);
       expect(filterSet.has(bookmarkNode2.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
@@ -1013,7 +971,6 @@ describe('handleBookmarkMoved', () => {
       bookmarkNode.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
       expect(filterSet.has(folderNode2.id)).toBe(true);
@@ -1049,7 +1006,6 @@ describe('handleBookmarkMoved', () => {
       bookmarkNode2.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode1.id)).toBe(true);
       expect(filterSet.has(bookmarkNode2.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
@@ -1085,7 +1041,6 @@ describe('handleBookmarkMoved', () => {
       bookmarkNode.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
       expect(filterSet.has(folderNode2.id)).toBe(true);
@@ -1120,7 +1075,6 @@ describe('handleBookmarkMoved', () => {
       bookmarkNode2.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode1.id)).toBe(true);
       expect(filterSet.has(bookmarkNode2.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
@@ -1156,7 +1110,6 @@ describe('handleBookmarkMoved', () => {
       bookmarkNode.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
       expect(filterSet.has(folderNode2.id)).toBe(true);
@@ -1193,7 +1146,6 @@ describe('handleBookmarkMoved', () => {
       bookmarkNode2.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode1.id)).toBe(true);
       expect(filterSet.has(bookmarkNode2.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
@@ -1232,7 +1184,6 @@ describe('handleBookmarkMoved', () => {
       bookmarkNode.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
       expect(filterSet.has(folderNode2.id)).toBe(true);
@@ -1273,7 +1224,6 @@ describe('handleBookmarkMoved', () => {
       bookmarkNode.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
       expect(filterSet.has(folderNode2.id)).toBe(true);
@@ -1315,7 +1265,6 @@ describe('handleBookmarkMoved', () => {
       bookmarkNode.title += filter;
       filterManager.setFilter(filter);
 
-      const filterSet = get(fs);
       expect(filterSet.has(bookmarkNode.id)).toBe(true);
       expect(filterSet.has(folderNode1.id)).toBe(true);
       expect(filterSet.has(folderNode2.id)).toBe(true);
@@ -1370,7 +1319,6 @@ describe('handleBookmarkMoved', () => {
 
       filterManager.handleBookmarkMoved(bookmarkNode.id, moveInfo);
 
-      const filterSet = get(fs);
       expect(filterSet.size).toBe(0);
     });
 
@@ -1398,7 +1346,6 @@ describe('handleBookmarkMoved', () => {
 
       filterManager.handleBookmarkMoved(folderNode2.id, moveInfo);
 
-      const filterSet = get(fs);
       expect(filterSet.size).toBe(0);
     });
   });

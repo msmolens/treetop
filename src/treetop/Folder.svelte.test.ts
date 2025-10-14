@@ -1,7 +1,7 @@
 /* eslint no-irregular-whitespace: ["error", { "skipComments": true }] */
 
-import { SvelteDate } from 'svelte/reactivity';
-import { get, type Writable, writable } from 'svelte/store';
+import { SvelteDate, SvelteSet } from 'svelte/reactivity';
+import { type Writable, writable } from 'svelte/store';
 import { render, screen } from '@testing-library/svelte';
 import type { MockInstance } from 'vitest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -113,7 +113,7 @@ beforeEach(() => {
   nodeStoreMap = new Map() as Treetop.NodeStoreMap;
   lastVisitTimeMap = new Map() as Treetop.LastVisitTimeMap;
   filterActive = writable(false);
-  filterSet = writable(new Set()) as Treetop.FilterSet;
+  filterSet = new SvelteSet();
   truncate = writable(false);
   tooltips = writable(false);
   clock = new SvelteDate();
@@ -682,7 +682,7 @@ describe('filter active', () => {
         .spyOn(chrome.i18n, 'getMessage')
         .mockReturnValue('No results');
 
-      expect(get(filterSet).size).toBe(0);
+      expect(filterSet.size).toBe(0);
 
       setup();
 
@@ -693,12 +693,9 @@ describe('filter active', () => {
     });
 
     it('match in folderNode1', () => {
-      filterSet.update((fs) => {
-        fs.add(rootNode.id);
-        fs.add(folderNode1.id);
-        fs.add(bookmarkNode1.id);
-        return fs;
-      });
+      filterSet.add(rootNode.id);
+      filterSet.add(folderNode1.id);
+      filterSet.add(bookmarkNode1.id);
 
       setup();
 
@@ -734,12 +731,9 @@ describe('filter active', () => {
     });
 
     it('match in folderNode2', () => {
-      filterSet.update((fs) => {
-        fs.add(rootNode.id);
-        fs.add(folderNode2.id);
-        fs.add(bookmarkNode3.id);
-        return fs;
-      });
+      filterSet.add(rootNode.id);
+      filterSet.add(folderNode2.id);
+      filterSet.add(bookmarkNode3.id);
 
       setup();
 
@@ -775,14 +769,11 @@ describe('filter active', () => {
     });
 
     it('match in folderNode1 and folderNode2', () => {
-      filterSet.update((fs) => {
-        fs.add(rootNode.id);
-        fs.add(folderNode1.id);
-        fs.add(folderNode2.id);
-        fs.add(bookmarkNode1.id);
-        fs.add(bookmarkNode3.id);
-        return fs;
-      });
+      filterSet.add(rootNode.id);
+      filterSet.add(folderNode1.id);
+      filterSet.add(folderNode2.id);
+      filterSet.add(bookmarkNode1.id);
+      filterSet.add(bookmarkNode3.id);
 
       setup();
 
@@ -818,13 +809,10 @@ describe('filter active', () => {
     });
 
     it('match in folderNode3', () => {
-      filterSet.update((fs) => {
-        fs.add(rootNode.id);
-        fs.add(folderNode2.id);
-        fs.add(folderNode3.id);
-        fs.add(bookmarkNode5.id);
-        return fs;
-      });
+      filterSet.add(rootNode.id);
+      filterSet.add(folderNode2.id);
+      filterSet.add(folderNode3.id);
+      filterSet.add(bookmarkNode5.id);
 
       setup();
 
@@ -860,15 +848,12 @@ describe('filter active', () => {
     });
 
     it('match in folderNode1 and folderNode3', () => {
-      filterSet.update((fs) => {
-        fs.add(rootNode.id);
-        fs.add(folderNode1.id);
-        fs.add(folderNode2.id);
-        fs.add(folderNode3.id);
-        fs.add(bookmarkNode1.id);
-        fs.add(bookmarkNode5.id);
-        return fs;
-      });
+      filterSet.add(rootNode.id);
+      filterSet.add(folderNode1.id);
+      filterSet.add(folderNode2.id);
+      filterSet.add(folderNode3.id);
+      filterSet.add(bookmarkNode1.id);
+      filterSet.add(bookmarkNode5.id);
 
       setup();
 
@@ -903,16 +888,13 @@ describe('filter active', () => {
     });
 
     it('match in folderNode1, folderNode2, and folderNode3', () => {
-      filterSet.update((fs) => {
-        fs.add(rootNode.id);
-        fs.add(folderNode1.id);
-        fs.add(folderNode2.id);
-        fs.add(folderNode3.id);
-        fs.add(bookmarkNode1.id);
-        fs.add(bookmarkNode4.id);
-        fs.add(bookmarkNode5.id);
-        return fs;
-      });
+      filterSet.add(rootNode.id);
+      filterSet.add(folderNode1.id);
+      filterSet.add(folderNode2.id);
+      filterSet.add(folderNode3.id);
+      filterSet.add(bookmarkNode1.id);
+      filterSet.add(bookmarkNode4.id);
+      filterSet.add(bookmarkNode5.id);
 
       setup();
 
@@ -947,13 +929,10 @@ describe('filter active', () => {
     });
 
     it('multiple matches in folderNode1', () => {
-      filterSet.update((fs) => {
-        fs.add(rootNode.id);
-        fs.add(folderNode1.id);
-        fs.add(bookmarkNode1.id);
-        fs.add(bookmarkNode2.id);
-        return fs;
-      });
+      filterSet.add(rootNode.id);
+      filterSet.add(folderNode1.id);
+      filterSet.add(bookmarkNode1.id);
+      filterSet.add(bookmarkNode2.id);
 
       setup();
 
@@ -999,7 +978,7 @@ describe('filter active', () => {
         .spyOn(chrome.i18n, 'getMessage')
         .mockReturnValue('No results');
 
-      expect(get(filterSet).size).toBe(0);
+      expect(filterSet.size).toBe(0);
 
       setup();
 
@@ -1010,12 +989,9 @@ describe('filter active', () => {
     });
 
     it('match in folderNode1', () => {
-      filterSet.update((fs) => {
-        fs.add(rootNode.id);
-        fs.add(folderNode1.id);
-        fs.add(bookmarkNode1.id);
-        return fs;
-      });
+      filterSet.add(rootNode.id);
+      filterSet.add(folderNode1.id);
+      filterSet.add(bookmarkNode1.id);
 
       const getMessage = vi
         .spyOn(chrome.i18n, 'getMessage')
@@ -1030,12 +1006,9 @@ describe('filter active', () => {
     });
 
     it('match in folderNode2', () => {
-      filterSet.update((fs) => {
-        fs.add(rootNode.id);
-        fs.add(folderNode2.id);
-        fs.add(bookmarkNode3.id);
-        return fs;
-      });
+      filterSet.add(rootNode.id);
+      filterSet.add(folderNode2.id);
+      filterSet.add(bookmarkNode3.id);
 
       setup();
 
@@ -1071,14 +1044,11 @@ describe('filter active', () => {
     });
 
     it('match in folderNode1 and folderNode2', () => {
-      filterSet.update((fs) => {
-        fs.add(rootNode.id);
-        fs.add(folderNode1.id);
-        fs.add(folderNode2.id);
-        fs.add(bookmarkNode1.id);
-        fs.add(bookmarkNode3.id);
-        return fs;
-      });
+      filterSet.add(rootNode.id);
+      filterSet.add(folderNode1.id);
+      filterSet.add(folderNode2.id);
+      filterSet.add(bookmarkNode1.id);
+      filterSet.add(bookmarkNode3.id);
 
       setup();
 
@@ -1114,13 +1084,10 @@ describe('filter active', () => {
     });
 
     it('match in folderNode3', () => {
-      filterSet.update((fs) => {
-        fs.add(rootNode.id);
-        fs.add(folderNode2.id);
-        fs.add(folderNode3.id);
-        fs.add(bookmarkNode5.id);
-        return fs;
-      });
+      filterSet.add(rootNode.id);
+      filterSet.add(folderNode2.id);
+      filterSet.add(folderNode3.id);
+      filterSet.add(bookmarkNode5.id);
 
       setup();
 
@@ -1156,15 +1123,12 @@ describe('filter active', () => {
     });
 
     it('match in folderNode1 and folderNode3', () => {
-      filterSet.update((fs) => {
-        fs.add(rootNode.id);
-        fs.add(folderNode1.id);
-        fs.add(folderNode2.id);
-        fs.add(folderNode3.id);
-        fs.add(bookmarkNode1.id);
-        fs.add(bookmarkNode5.id);
-        return fs;
-      });
+      filterSet.add(rootNode.id);
+      filterSet.add(folderNode1.id);
+      filterSet.add(folderNode2.id);
+      filterSet.add(folderNode3.id);
+      filterSet.add(bookmarkNode1.id);
+      filterSet.add(bookmarkNode5.id);
 
       setup();
 
@@ -1200,16 +1164,13 @@ describe('filter active', () => {
     });
 
     it('match in folderNode1, folderNode2, and folderNode3', () => {
-      filterSet.update((fs) => {
-        fs.add(rootNode.id);
-        fs.add(folderNode1.id);
-        fs.add(folderNode2.id);
-        fs.add(folderNode3.id);
-        fs.add(bookmarkNode1.id);
-        fs.add(bookmarkNode4.id);
-        fs.add(bookmarkNode5.id);
-        return fs;
-      });
+      filterSet.add(rootNode.id);
+      filterSet.add(folderNode1.id);
+      filterSet.add(folderNode2.id);
+      filterSet.add(folderNode3.id);
+      filterSet.add(bookmarkNode1.id);
+      filterSet.add(bookmarkNode4.id);
+      filterSet.add(bookmarkNode5.id);
 
       setup();
 
@@ -1245,13 +1206,10 @@ describe('filter active', () => {
     });
 
     it('multiple matches in folderNode2', () => {
-      filterSet.update((fs) => {
-        fs.add(rootNode.id);
-        fs.add(folderNode2.id);
-        fs.add(bookmarkNode3.id);
-        fs.add(bookmarkNode4.id);
-        return fs;
-      });
+      filterSet.add(rootNode.id);
+      filterSet.add(folderNode2.id);
+      filterSet.add(bookmarkNode3.id);
+      filterSet.add(bookmarkNode4.id);
 
       setup();
 
