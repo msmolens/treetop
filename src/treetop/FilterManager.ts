@@ -26,28 +26,27 @@ export class FilterManager {
   setFilter(filter: string): void {
     this.filter = filter.toLowerCase();
 
-    const filterSet = get(this.filterSet);
-
     // Pass 1:
     // Add bookmarks that match the filter string to the FilterSet.
     // Additionally, add their immediate parent folders to the FilterSet.
     for (const nodeStore of this.nodeStoreMap.values()) {
-      const startFilterSetSize = filterSet.size;
+      let addedChild = false;
 
       const folderNode: Treetop.FolderNode = get(nodeStore);
-      folderNode.children.forEach((child) => {
+      for (const child of folderNode.children) {
         if (child.type === Treetop.NodeType.Bookmark) {
           if (
             this.matchesFilter(child.title) ||
             this.matchesFilter(child.url)
           ) {
-            filterSet.add(child.id);
+            this.filterSet.add(child.id);
+            addedChild = true;
           }
         }
-      });
+      }
 
-      if (filterSet.size > startFilterSetSize) {
-        filterSet.add(folderNode.id);
+      if (addedChild) {
+        this.filterSet.add(folderNode.id);
       }
     }
 
@@ -56,16 +55,14 @@ export class FilterManager {
     // folder.
     for (const nodeStore of this.nodeStoreMap.values()) {
       const node: Treetop.FolderNode = get(nodeStore);
-      if (filterSet.has(node.id)) {
+      if (this.filterSet.has(node.id)) {
         let curNode = node;
         while (curNode.parentId) {
           curNode = get(this.nodeStoreMap.get(curNode.parentId)!);
-          filterSet.add(curNode.id);
+          this.filterSet.add(curNode.id);
         }
       }
     }
-
-    this.filterSet.set(filterSet);
   }
 
   /**
@@ -74,10 +71,7 @@ export class FilterManager {
   clearFilter(): void {
     this.filter = null;
 
-    this.filterSet.update((filterSet) => {
-      filterSet.clear();
-      return filterSet;
-    });
+    this.filterSet.clear();
   }
 
   /**
@@ -102,20 +96,16 @@ export class FilterManager {
       return;
     }
 
-    const filterSet = get(this.filterSet);
-
     // Add the bookmark to the FilterSet
-    filterSet.add(bookmark.id);
+    this.filterSet.add(bookmark.id);
 
     // Add the folders on the path to the root folder to the FilterSet
     let parentId = bookmark.parentId;
     while (parentId) {
       const node = get(this.nodeStoreMap.get(parentId)!);
-      filterSet.add(node.id);
+      this.filterSet.add(node.id);
       parentId = node.parentId;
     }
-
-    this.filterSet.set(filterSet);
   }
 
   /**
