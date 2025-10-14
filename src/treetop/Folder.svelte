@@ -16,7 +16,7 @@
   const builtInFolderInfo: Treetop.BuiltInFolderInfo =
     getContext('builtInFolderInfo');
   const nodeStoreMap: Treetop.NodeStoreMap = getContext('nodeStoreMap');
-  const filterActive = getContext<Writable<boolean>>('filterActive');
+  const filterActive = getContext<() => boolean>('filterActive');
   const filterSet = getContext<Treetop.FilterSet>('filterSet');
 
   let node: Writable<Treetop.FolderNode> = nodeStoreMap.get(nodeId)!;
@@ -117,7 +117,7 @@
   {/if}
 </svelte:head>
 
-{#if root || !$filterActive || filterSet.has($node.id)}
+{#if root || !filterActive() || filterSet.has($node.id)}
   <div class="folder" class:root>
     <div class="heading">
       <div class="title">
@@ -130,7 +130,7 @@
       </div>
     </div>
     <div class="contents">
-      {#if root && $filterActive && !filterSet.has(nodeId)}
+      {#if root && filterActive() && !filterSet.has(nodeId)}
         <em>{chrome.i18n.getMessage('noResults')}</em>
       {/if}
       {#each $node.children as child (child.id)}
@@ -142,7 +142,7 @@
             Unsafe argument of type `any` assigned to a parameter of type `string`  @typescript-eslint/no-unsafe-argument
           -->
           {@const { id, title, url } = child}
-          {#if !$filterActive || filterSet.has(id)}
+          {#if !filterActive() || filterSet.has(id)}
             <Bookmark nodeId={id} {title} {url} />
           {/if}
         {:else if child.type === Treetop.NodeType.Folder}

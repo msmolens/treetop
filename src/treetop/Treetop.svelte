@@ -1,12 +1,7 @@
 <script lang="ts">
   import { onDestroy, onMount, setContext } from 'svelte';
   import { SvelteSet } from 'svelte/reactivity';
-  import {
-    get,
-    type Unsubscriber,
-    type Writable,
-    writable,
-  } from 'svelte/store';
+  import { get, type Unsubscriber, type Writable } from 'svelte/store';
   import { fade } from 'svelte/transition';
   import LinearProgress from '@smui/linear-progress';
   import Snackbar, { Label } from '@smui/snackbar';
@@ -95,8 +90,8 @@
   // Filter manager
   const filterManager = new FilterManager(filterSet, nodeStoreMap);
 
-  // Store for whether filter is active.
-  const filterActive = writable(false);
+  // Whether the filter is active.
+  let filterActive = $state(false);
 
   // Clock to age recently visited bookmarks
   const clock = createClock();
@@ -105,7 +100,7 @@
   setContext('builtInFolderInfo', builtInFolderInfo);
   setContext('nodeStoreMap', nodeStoreMap);
   setContext('lastVisitTimeMap', lastVisitTimeMap);
-  setContext('filterActive', filterActive);
+  setContext('filterActive', () => filterActive);
   setContext('filterSet', filterSet);
   setContext('clock', clock);
 
@@ -186,7 +181,7 @@
     const nodeStore = nodeStoreMap.get(nodeId)!;
     const node: Treetop.FolderNode = get(nodeStore);
 
-    const activeFilterSet = get(filterActive) ? filterSet : undefined;
+    const activeFilterSet = filterActive ? filterSet : undefined;
 
     const promises: Promise<chrome.tabs.Tab>[] = [];
 
@@ -504,13 +499,13 @@
   function applyFilter(filter: string) {
     // Clear any previous filtering
     filterManager.clearFilter();
-    filterActive.set(false);
+    filterActive = false;
 
     // Set the current filter if the string is not empty
     const value = filter.trim();
     if (value && value.length > 0) {
       filterManager.setFilter(value);
-      filterActive.set(true);
+      filterActive = true;
     }
   }
 
@@ -590,7 +585,7 @@
       new DeleteMenuItem(
         builtInFolderInfo,
         nodeStoreMap,
-        filterActive,
+        () => filterActive,
         deleteBookmark,
       ),
     );
