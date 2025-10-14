@@ -1,4 +1,4 @@
-import { type Writable, writable } from 'svelte/store';
+import { writable } from 'svelte/store';
 import { faker } from '@faker-js/faker';
 import { beforeEach, describe, expect, it } from 'vitest';
 
@@ -10,7 +10,8 @@ import { createFolderNode } from '../../../test/utils/factories';
 
 let menuItem: DeleteMenuItem;
 let nodeStoreMap: Treetop.NodeStoreMap;
-let filterActive: Writable<boolean>;
+let currentFilterActive: boolean;
+const filterActive = () => currentFilterActive;
 
 const BUILT_IN_FOLDER_INFO: Treetop.BuiltInFolderInfo = {
   rootNodeId: 'bookmarks-root-id',
@@ -19,7 +20,7 @@ const BUILT_IN_FOLDER_INFO: Treetop.BuiltInFolderInfo = {
 
 beforeEach(() => {
   nodeStoreMap = new Map() as Treetop.NodeStoreMap;
-  filterActive = writable(false);
+  currentFilterActive = false;
 
   const callback: OnClickedCallback = (nodeId) => {
     void nodeId;
@@ -53,7 +54,7 @@ describe('when a filter is active', () => {
     folderNode = createFolderNode();
     nodeStoreMap.set(folderNode.id, writable(folderNode));
 
-    filterActive.set(true);
+    currentFilterActive = true;
   });
 
   it('is disabled for a folder', () => {

@@ -18,7 +18,8 @@ import {
 // Folder component requirements
 let builtInFolderInfo: Treetop.BuiltInFolderInfo;
 let nodeStoreMap: Treetop.NodeStoreMap;
-let filterActive: Writable<boolean>;
+let currentFilterActive: boolean;
+const filterActive = () => currentFilterActive;
 let filterSet: Treetop.FilterSet;
 let nodeId: string;
 
@@ -112,7 +113,7 @@ beforeEach(() => {
   };
   nodeStoreMap = new Map() as Treetop.NodeStoreMap;
   lastVisitTimeMap = new Map() as Treetop.LastVisitTimeMap;
-  filterActive = writable(false);
+  currentFilterActive = false;
   filterSet = new SvelteSet();
   truncate = writable(false);
   tooltips = writable(false);
@@ -669,7 +670,7 @@ describe('filter active', () => {
     nodeStoreMap.set(folderNode3.id, writable(folderNode3));
 
     // Enable filter
-    filterActive.set(true);
+    currentFilterActive = true;
   });
 
   describe('rooted at bookmarks root', () => {
