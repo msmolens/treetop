@@ -1,4 +1,4 @@
-import type { SvelteSet } from 'svelte/reactivity';
+import type { SvelteMap, SvelteSet } from 'svelte/reactivity';
 import type { Writable } from 'svelte/store';
 
 // Bookmark node type
@@ -32,7 +32,7 @@ export type NodeStoreMap = Map<string, Writable<FolderNode>>;
 
 // Map from node ID to last visit time in milliseconds since the epoch.
 // Provides access to the last visit times of bookmarks.
-export type LastVisitTimeMap = Map<string, Writable<number>>;
+export type LastVisitTimeMap = SvelteMap<string, number>;
 
 // Set of node IDs that match the active filter.
 export type FilterSet = SvelteSet<string>;

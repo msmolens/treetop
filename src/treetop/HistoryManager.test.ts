@@ -1,5 +1,6 @@
 /* eslint no-irregular-whitespace: ["error", { "skipComments": true }] */
-import { get, writable } from 'svelte/store';
+import { SvelteMap } from 'svelte/reactivity';
+import { writable } from 'svelte/store';
 import { faker } from '@faker-js/faker';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -36,7 +37,7 @@ let folderNode2: Treetop.FolderNode;
 
 beforeEach(() => {
   nodeStoreMap = new Map() as Treetop.NodeStoreMap;
-  lastVisitTimeMap = new Map() as Treetop.LastVisitTimeMap;
+  lastVisitTimeMap = new SvelteMap();
   historyManager = new HistoryManager(lastVisitTimeMap);
 
   // Create node tree:
@@ -71,8 +72,8 @@ describe('init', () => {
 
     expect(lastVisitTimeMap.size).toBe(7);
 
-    for (const lastVisitTimeStore of lastVisitTimeMap.values()) {
-      expect(get(lastVisitTimeStore)).toBe(0);
+    for (const lastVisitTime of lastVisitTimeMap.values()) {
+      expect(lastVisitTime).toBe(0);
     }
   });
 });
@@ -116,9 +117,9 @@ describe('loadHistory', () => {
     expect(getVisits).toHaveBeenNthCalledWith(7, { url: bookmarkNodes[6].url });
 
     expect(lastVisitTimeMap.size).toBe(7);
-    for (const [nodeId, lastVisitTimeStore] of lastVisitTimeMap.entries()) {
+    for (const [nodeId, lastVisitTime] of lastVisitTimeMap.entries()) {
       const visitTime = visitTimeMap.get(nodeId) ?? 0;
-      expect(get(lastVisitTimeStore)).toBe(visitTime);
+      expect(lastVisitTime).toBe(visitTime);
     }
   });
 
@@ -157,13 +158,13 @@ describe('unloadHistory', () => {
     ];
 
     for (const nodeId of nodeIds) {
-      lastVisitTimeMap.set(nodeId, writable(faker.date.past().getTime()));
+      lastVisitTimeMap.set(nodeId, faker.date.past().getTime());
     }
 
     historyManager.unloadHistory();
 
     for (const nodeId of nodeIds) {
-      expect(get(lastVisitTimeMap.get(nodeId)!)).toBe(0);
+      expect(lastVisitTimeMap.get(nodeId)!).toBe(0);
     }
   });
 });
@@ -182,7 +183,7 @@ describe('handleBookmarkCreated', () => {
     expect(getVisits).toHaveBeenCalledWith({ url: bookmarkNode.url });
 
     expect(lastVisitTimeMap.has(bookmarkNode.id)).toBe(true);
-    expect(get(lastVisitTimeMap.get(bookmarkNode.id)!)).toBe(0);
+    expect(lastVisitTimeMap.get(bookmarkNode.id)!).toBe(0);
   });
 
   it('sets last visit time for a new visited bookmark', async () => {
@@ -200,9 +201,7 @@ describe('handleBookmarkCreated', () => {
     expect(getVisits).toHaveBeenCalledWith({ url: bookmarkNode.url });
 
     expect(lastVisitTimeMap.has(bookmarkNode.id)).toBe(true);
-    expect(get(lastVisitTimeMap.get(bookmarkNode.id)!)).toBe(
-      visitItem.visitTime!,
-    );
+    expect(lastVisitTimeMap.get(bookmarkNode.id)!).toBe(visitItem.visitTime!);
   });
 
   it('ignores new folders', async () => {
@@ -217,7 +216,7 @@ describe('handleBookmarkRemoved', () => {
   it('removes last visit time for a bookmark', () => {
     const baseNode = createOtherBookmarksNode();
     const bookmarkNode = createBrowserBookmarkNode(baseNode);
-    lastVisitTimeMap.set(bookmarkNode.id, writable(0));
+    lastVisitTimeMap.set(bookmarkNode.id, 0);
     const initialSize = lastVisitTimeMap.size;
 
     historyManager.handleBookmarkRemoved(bookmarkNode.id);
@@ -241,7 +240,7 @@ describe('handleBookmarkChanged', () => {
   it('updates last visit time of a bookmark when its URL is visited', async () => {
     const baseNode = createOtherBookmarksNode();
     const bookmarkNode = createBrowserBookmarkNode(baseNode);
-    lastVisitTimeMap.set(bookmarkNode.id, writable(0));
+    lastVisitTimeMap.set(bookmarkNode.id, 0);
 
     const newUrl = faker.internet.url();
     const changeInfo: Treetop.BookmarkChangeInfo = {
@@ -259,15 +258,13 @@ describe('handleBookmarkChanged', () => {
     expect(getVisits).toHaveBeenCalledOnce();
     expect(getVisits).toHaveBeenCalledWith({ url: newUrl });
 
-    expect(get(lastVisitTimeMap.get(bookmarkNode.id)!)).toBe(
-      visitItem.visitTime!,
-    );
+    expect(lastVisitTimeMap.get(bookmarkNode.id)!).toBe(visitItem.visitTime!);
   });
 
   it('resets last visit time of a bookmark when its URL is not visited', async () => {
     const baseNode = createOtherBookmarksNode();
     const bookmarkNode = createBrowserBookmarkNode(baseNode);
-    lastVisitTimeMap.set(bookmarkNode.id, writable(0));
+    lastVisitTimeMap.set(bookmarkNode.id, 0);
 
     const newUrl = faker.internet.url();
     const changeInfo: Treetop.BookmarkChangeInfo = {
@@ -283,7 +280,7 @@ describe('handleBookmarkChanged', () => {
     expect(getVisits).toHaveBeenCalledOnce();
     expect(getVisits).toHaveBeenCalledWith({ url: newUrl });
 
-    expect(get(lastVisitTimeMap.get(bookmarkNode.id)!)).toBe(0);
+    expect(lastVisitTimeMap.get(bookmarkNode.id)!).toBe(0);
   });
 
   it('ignores folders', async () => {
@@ -305,8 +302,8 @@ describe('handleVisited', () => {
     const bookmarkNode2 = createBrowserBookmarkNode(baseNode);
     bookmarkNode1.url = historyItem.url!;
     bookmarkNode2.url = historyItem.url!;
-    lastVisitTimeMap.set(bookmarkNode1.id, writable(0));
-    lastVisitTimeMap.set(bookmarkNode2.id, writable(0));
+    lastVisitTimeMap.set(bookmarkNode1.id, 0);
+    lastVisitTimeMap.set(bookmarkNode2.id, 0);
 
     const search = vi.fn().mockResolvedValue([bookmarkNode1, bookmarkNode2]);
     vi.spyOn(chrome.bookmarks, 'search').mockImplementation(search);
@@ -316,10 +313,10 @@ describe('handleVisited', () => {
     expect(search).toHaveBeenCalledOnce();
     expect(search).toHaveBeenCalledWith({ url: historyItem.url });
 
-    expect(get(lastVisitTimeMap.get(bookmarkNode1.id)!)).toBe(
+    expect(lastVisitTimeMap.get(bookmarkNode1.id)!).toBe(
       historyItem.lastVisitTime!,
     );
-    expect(get(lastVisitTimeMap.get(bookmarkNode2.id)!)).toBe(
+    expect(lastVisitTimeMap.get(bookmarkNode2.id)!).toBe(
       historyItem.lastVisitTime!,
     );
   });
@@ -329,8 +326,8 @@ describe('handleVisited', () => {
     const baseNode = createOtherBookmarksNode();
     const bookmarkNode1 = createBrowserBookmarkNode(baseNode);
     const bookmarkNode2 = createBrowserBookmarkNode(baseNode);
-    lastVisitTimeMap.set(bookmarkNode1.id, writable(0));
-    lastVisitTimeMap.set(bookmarkNode2.id, writable(0));
+    lastVisitTimeMap.set(bookmarkNode1.id, 0);
+    lastVisitTimeMap.set(bookmarkNode2.id, 0);
 
     const search = vi.fn().mockResolvedValue([]);
     vi.spyOn(chrome.bookmarks, 'search').mockImplementation(search);
@@ -340,8 +337,8 @@ describe('handleVisited', () => {
     expect(search).toHaveBeenCalledOnce();
     expect(search).toHaveBeenCalledWith({ url: historyItem.url });
 
-    expect(get(lastVisitTimeMap.get(bookmarkNode1.id)!)).toBe(0);
-    expect(get(lastVisitTimeMap.get(bookmarkNode2.id)!)).toBe(0);
+    expect(lastVisitTimeMap.get(bookmarkNode1.id)!).toBe(0);
+    expect(lastVisitTimeMap.get(bookmarkNode2.id)!).toBe(0);
   });
 });
 
@@ -349,7 +346,7 @@ describe('handleVisitRemoved', () => {
   it('resets last visit time when a bookmarked URL is removed from history', async () => {
     const baseNode = createOtherBookmarksNode();
     const bookmarkNode = createBrowserBookmarkNode(baseNode);
-    lastVisitTimeMap.set(bookmarkNode.id, writable(1e6));
+    lastVisitTimeMap.set(bookmarkNode.id, 1e6);
 
     const search = vi.fn().mockResolvedValue([bookmarkNode]);
     vi.spyOn(chrome.bookmarks, 'search').mockImplementation(search);
@@ -364,13 +361,13 @@ describe('handleVisitRemoved', () => {
     expect(search).toHaveBeenCalledOnce();
     expect(search).toHaveBeenCalledWith({ url: bookmarkNode.url });
 
-    expect(get(lastVisitTimeMap.get(bookmarkNode.id)!)).toBe(0);
+    expect(lastVisitTimeMap.get(bookmarkNode.id)!).toBe(0);
   });
 
   it('ignores when a non-bookmarked URL is removed from history', async () => {
     const baseNode = createOtherBookmarksNode();
     const bookmarkNode = createBrowserBookmarkNode(baseNode);
-    lastVisitTimeMap.set(bookmarkNode.id, writable(1e6));
+    lastVisitTimeMap.set(bookmarkNode.id, 1e6);
 
     const url = faker.internet.url();
 
@@ -387,21 +384,15 @@ describe('handleVisitRemoved', () => {
     expect(search).toHaveBeenCalledOnce();
     expect(search).toHaveBeenCalledWith({ url });
 
-    expect(get(lastVisitTimeMap.get(bookmarkNode.id)!)).toBe(1e6);
+    expect(lastVisitTimeMap.get(bookmarkNode.id)!).toBe(1e6);
   });
 
   it('resets all last visit times when all history is removed', async () => {
     const baseNode = createOtherBookmarksNode();
     const bookmarkNode1 = createBrowserBookmarkNode(baseNode);
     const bookmarkNode2 = createBrowserBookmarkNode(baseNode);
-    lastVisitTimeMap.set(
-      bookmarkNode1.id,
-      writable(faker.date.past().getTime()),
-    );
-    lastVisitTimeMap.set(
-      bookmarkNode2.id,
-      writable(faker.date.past().getTime()),
-    );
+    lastVisitTimeMap.set(bookmarkNode1.id, faker.date.past().getTime());
+    lastVisitTimeMap.set(bookmarkNode2.id, faker.date.past().getTime());
 
     const removeInfo: Treetop.HistoryRemovedResult = {
       allHistory: true,
@@ -410,7 +401,7 @@ describe('handleVisitRemoved', () => {
 
     await historyManager.handleVisitRemoved(removeInfo);
 
-    expect(get(lastVisitTimeMap.get(bookmarkNode1.id)!)).toBe(0);
-    expect(get(lastVisitTimeMap.get(bookmarkNode2.id)!)).toBe(0);
+    expect(lastVisitTimeMap.get(bookmarkNode1.id)!).toBe(0);
+    expect(lastVisitTimeMap.get(bookmarkNode2.id)!).toBe(0);
   });
 });

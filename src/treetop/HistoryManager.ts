@@ -1,4 +1,4 @@
-import { get, writable } from 'svelte/store';
+import { get } from 'svelte/store';
 
 import { isBookmark } from './bookmarktreenode-utils';
 import * as Treetop from './types';
@@ -19,7 +19,7 @@ export class HistoryManager {
       const node: Treetop.FolderNode = get(nodeStore);
       node.children.forEach((child) => {
         if (child.type === Treetop.NodeType.Bookmark) {
-          this.lastVisitTimeMap.set(child.id, writable(0));
+          this.lastVisitTimeMap.set(child.id, 0);
         }
       });
     }
@@ -58,8 +58,7 @@ export class HistoryManager {
     const results = await Promise.all(promises);
     results.forEach((items, index) => {
       if (items.length > 0) {
-        const lastVisitTime = this.lastVisitTimeMap.get(nodeIds[index])!;
-        lastVisitTime.set(items[0].visitTime!);
+        this.lastVisitTimeMap.set(nodeIds[index], items[0].visitTime!);
       }
     });
 
@@ -70,8 +69,8 @@ export class HistoryManager {
    * Reset all last visit time stores.
    */
   unloadHistory(): void {
-    for (const lastVisitTime of this.lastVisitTimeMap.values()) {
-      lastVisitTime.set(0);
+    for (const nodeId of this.lastVisitTimeMap.keys()) {
+      this.lastVisitTimeMap.set(nodeId, 0);
     }
 
     this.loaded = false;
@@ -93,8 +92,7 @@ export class HistoryManager {
     });
 
     const visitTime = items.length > 0 ? items[0].visitTime! : 0;
-    const lastVisitTime = writable(visitTime);
-    this.lastVisitTimeMap.set(bookmark.id, lastVisitTime);
+    this.lastVisitTimeMap.set(bookmark.id, visitTime);
   }
 
   /**
@@ -120,9 +118,8 @@ export class HistoryManager {
       url: changeInfo.url,
     });
 
-    const lastVisitTime = this.lastVisitTimeMap.get(id)!;
     const newLastVisitTime = items.length > 0 ? items[0].visitTime! : 0;
-    lastVisitTime.set(newLastVisitTime);
+    this.lastVisitTimeMap.set(id, newLastVisitTime);
   }
 
   /**
@@ -135,8 +132,7 @@ export class HistoryManager {
     });
 
     nodes.forEach((node) => {
-      const lastVisitTime = this.lastVisitTimeMap.get(node.id)!;
-      lastVisitTime.set(result.lastVisitTime!);
+      this.lastVisitTimeMap.set(node.id, result.lastVisitTime!);
     });
   }
 
@@ -149,8 +145,8 @@ export class HistoryManager {
   ): Promise<void> {
     if (removed.allHistory) {
       // All history was removed
-      for (const lastVisitTime of this.lastVisitTimeMap.values()) {
-        lastVisitTime.set(0);
+      for (const nodeId of this.lastVisitTimeMap.keys()) {
+        this.lastVisitTimeMap.set(nodeId, 0);
       }
     } else {
       // TODO: Investigate why `removed.urls` is sometimes empty on Chrome
@@ -160,8 +156,7 @@ export class HistoryManager {
         const nodes = await chrome.bookmarks.search({ url });
 
         nodes.forEach((node) => {
-          const lastVisitTime = this.lastVisitTimeMap.get(node.id)!;
-          lastVisitTime.set(0);
+          this.lastVisitTimeMap.set(node.id, 0);
         });
       }
     }

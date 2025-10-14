@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onDestroy, onMount, setContext } from 'svelte';
-  import { SvelteSet } from 'svelte/reactivity';
+  import { SvelteMap, SvelteSet } from 'svelte/reactivity';
   import { get, type Unsubscriber, type Writable } from 'svelte/store';
   import { fade } from 'svelte/transition';
   import LinearProgress from '@smui/linear-progress';
@@ -64,10 +64,7 @@
 
   // ID to last visit time map.
   // Populated with a store for each bookmark.
-  const lastVisitTimeMap: Treetop.LastVisitTimeMap = new Map<
-    string,
-    Writable<number>
-  >();
+  const lastVisitTimeMap: Treetop.LastVisitTimeMap = new SvelteMap();
 
   // Set of node IDs that match the active filter.
   const filterSet: Treetop.FilterSet = new SvelteSet();

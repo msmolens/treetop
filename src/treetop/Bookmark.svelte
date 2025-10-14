@@ -21,7 +21,7 @@
   const tooltips = getContext<Writable<boolean>>('tooltips');
   const clock = getContext<SvelteDate>('clock');
 
-  let lastVisitTime = lastVisitTimeMap.get(nodeId)!;
+  const lastVisitTime = $derived(lastVisitTimeMap.get(nodeId)!);
 
   // Maximum length of displayed bookmark titles and, in tooltips, URLs.
   const maxLength = 78;
@@ -52,7 +52,7 @@
 
   // Approximate number of days since last visit
   const lastVisitTimeDays = $derived(
-    (clock.getTime() - $lastVisitTime) / MILLISECONDS_PER_DAY,
+    (clock.getTime() - lastVisitTime) / MILLISECONDS_PER_DAY,
   );
 
   // Set visited class based on number of days since last visit
