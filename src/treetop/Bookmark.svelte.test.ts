@@ -1,4 +1,4 @@
-import { SvelteDate } from 'svelte/reactivity';
+import { SvelteDate, SvelteMap } from 'svelte/reactivity';
 import { type Writable, writable } from 'svelte/store';
 import { faker } from '@faker-js/faker';
 import { render, screen } from '@testing-library/svelte';
@@ -45,8 +45,8 @@ beforeEach(() => {
   title = faker.word.words();
   url = faker.internet.url();
 
-  lastVisitTimeMap = new Map() as Treetop.LastVisitTimeMap;
-  lastVisitTimeMap.set(nodeId, writable(0));
+  lastVisitTimeMap = new SvelteMap();
+  lastVisitTimeMap.set(nodeId, 0);
 
   truncate = writable(false);
   tooltips = writable(false);
@@ -186,7 +186,7 @@ describe('sets class based on last visit time', () => {
     ({ deltaHours, className }) => {
       const deltaMs = deltaHours * MILLISECONDS_PER_HOUR;
       const lastVisitTime = Date.now() - deltaMs;
-      lastVisitTimeMap.get(nodeId)!.set(lastVisitTime);
+      lastVisitTimeMap.set(nodeId, lastVisitTime);
 
       setup();
 
@@ -202,7 +202,7 @@ describe('sets class based on last visit time', () => {
   `('visited $deltaHours ago -> no class', ({ deltaHours }) => {
     const deltaMs = deltaHours * MILLISECONDS_PER_HOUR;
     const lastVisitTime = Date.now() - deltaMs;
-    lastVisitTimeMap.get(nodeId)!.set(lastVisitTime);
+    lastVisitTimeMap.set(nodeId, lastVisitTime);
 
     setup();
 
