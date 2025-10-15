@@ -17,7 +17,7 @@ export class FilterManager {
 
   constructor(
     private readonly filterSet: Treetop.FilterSet,
-    private readonly nodeStoreMap: Treetop.NodeStoreMap,
+    private readonly folderNodeMap: Treetop.FolderNodeMap,
   ) {}
 
   /**
@@ -29,11 +29,11 @@ export class FilterManager {
     // Pass 1:
     // Add bookmarks that match the filter string to the FilterSet.
     // Additionally, add their immediate parent folders to the FilterSet.
-    for (const nodeStore of this.nodeStoreMap.values()) {
+    for (const folderNode of this.folderNodeMap.values()) {
       let addedChild = false;
 
-      const folderNode: Treetop.FolderNode = get(nodeStore);
-      for (const child of folderNode.children) {
+      const node: Treetop.FolderNode = get(folderNode);
+      for (const child of node.children) {
         if (child.type === Treetop.NodeType.Bookmark) {
           if (
             this.matchesFilter(child.title) ||
@@ -46,19 +46,19 @@ export class FilterManager {
       }
 
       if (addedChild) {
-        this.filterSet.add(folderNode.id);
+        this.filterSet.add(node.id);
       }
     }
 
     // Pass 2
     // For each folder in the FilterSet, add the folders on the path to the root
     // folder.
-    for (const nodeStore of this.nodeStoreMap.values()) {
-      const node: Treetop.FolderNode = get(nodeStore);
+    for (const folderNode of this.folderNodeMap.values()) {
+      const node: Treetop.FolderNode = get(folderNode);
       if (this.filterSet.has(node.id)) {
         let curNode = node;
         while (curNode.parentId) {
-          curNode = get(this.nodeStoreMap.get(curNode.parentId)!);
+          curNode = get(this.folderNodeMap.get(curNode.parentId)!);
           this.filterSet.add(curNode.id);
         }
       }
@@ -102,7 +102,7 @@ export class FilterManager {
     // Add the folders on the path to the root folder to the FilterSet
     let parentId = bookmark.parentId;
     while (parentId) {
-      const node = get(this.nodeStoreMap.get(parentId)!);
+      const node = get(this.folderNodeMap.get(parentId)!);
       this.filterSet.add(node.id);
       parentId = node.parentId;
     }

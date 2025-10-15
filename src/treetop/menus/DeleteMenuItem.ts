@@ -8,7 +8,7 @@ import { MenuItem, type OnClickedCallback } from './MenuItem';
 export class DeleteMenuItem extends MenuItem {
   constructor(
     private readonly builtInFolderInfo: Treetop.BuiltInFolderInfo,
-    private readonly nodeStoreMap: Treetop.NodeStoreMap,
+    private readonly folderNodeMap: Treetop.FolderNodeMap,
     private readonly filterActive: () => boolean,
     onClickedCallback: OnClickedCallback,
   ) {
@@ -23,7 +23,7 @@ export class DeleteMenuItem extends MenuItem {
     }
 
     // Disable deleting folders when filter is active
-    if (this.nodeStoreMap.has(nodeId) && this.filterActive()) {
+    if (this.folderNodeMap.has(nodeId) && this.filterActive()) {
       return false;
     }
 

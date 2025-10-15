@@ -12,7 +12,7 @@ import {
 } from '../../../test/utils/factories';
 
 let menuItem: OpenAllInTabsMenuItem;
-let nodeStoreMap: Treetop.NodeStoreMap;
+let folderNodeMap: Treetop.FolderNodeMap;
 
 const BUILT_IN_FOLDER_INFO: Treetop.BuiltInFolderInfo = {
   rootNodeId: 'bookmarks-root-id',
@@ -20,7 +20,7 @@ const BUILT_IN_FOLDER_INFO: Treetop.BuiltInFolderInfo = {
 };
 
 beforeEach(() => {
-  nodeStoreMap = new Map() as Treetop.NodeStoreMap;
+  folderNodeMap = new Map() as Treetop.FolderNodeMap;
 
   const callback: OnClickedCallback = (nodeId) => {
     void nodeId;
@@ -28,7 +28,7 @@ beforeEach(() => {
 
   menuItem = new OpenAllInTabsMenuItem(
     BUILT_IN_FOLDER_INFO,
-    nodeStoreMap,
+    folderNodeMap,
     callback,
   );
 });
@@ -47,7 +47,7 @@ describe('folders', () => {
 
   beforeEach(() => {
     folderNode = createFolderNode();
-    nodeStoreMap.set(folderNode.id, writable(folderNode));
+    folderNodeMap.set(folderNode.id, writable(folderNode));
   });
 
   it('is disabled for empty folder', () => {
