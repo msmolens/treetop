@@ -133,15 +133,8 @@
       {/if}
       {#each node.children as child (child.id)}
         {#if child.type === Treetop.NodeType.Bookmark}
-          <!--
-            Destructure child to work around the following false positive linter
-            error when calling filterSet.has(child.id):
-
-            Unsafe argument of type `any` assigned to a parameter of type `string`  @typescript-eslint/no-unsafe-argument
-          -->
-          {@const { id, title, url } = child}
-          {#if !filterActive() || filterSet.has(id)}
-            <Bookmark nodeId={id} {title} {url} />
+          {#if !filterActive() || filterSet.has(child.id)}
+            <Bookmark nodeId={child.id} title={child.title} url={child.url} />
           {/if}
         {:else if child.type === Treetop.NodeType.Folder}
           <Folder nodeId={child.id} />
