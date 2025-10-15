@@ -1,7 +1,6 @@
 /* eslint no-irregular-whitespace: ["error", { "skipComments": true }] */
 
 import { SvelteDate, SvelteMap, SvelteSet } from 'svelte/reactivity';
-import { type Writable, writable } from 'svelte/store';
 import { render, screen } from '@testing-library/svelte';
 import type { MockInstance } from 'vitest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -25,8 +24,8 @@ let nodeId: string;
 
 // Bookmark component requirements
 let lastVisitTimeMap: Treetop.LastVisitTimeMap;
-let truncate: Writable<boolean>;
-let tooltips: Writable<boolean>;
+const truncate = () => false;
+const tooltips = () => false;
 let clock: SvelteDate;
 
 let rootNode: Treetop.FolderNode;
@@ -115,8 +114,6 @@ beforeEach(() => {
   lastVisitTimeMap = new SvelteMap();
   currentFilterActive = false;
   filterSet = new SvelteSet();
-  truncate = writable(false);
-  tooltips = writable(false);
   clock = new SvelteDate();
 });
 
