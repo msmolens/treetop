@@ -57,7 +57,7 @@
 
   // ID to node store map.
   // Populated with a store for each folder.
-  const nodeStoreMap: Treetop.NodeStoreMap = new Map<
+  const folderNodeMap: Treetop.FolderNodeMap = new Map<
     string,
     Writable<Treetop.FolderNode>
   >();
@@ -77,7 +77,7 @@
 
   // Bookmarks manager
   const bookmarksManager = new BookmarksManager(
-    nodeStoreMap,
+    folderNodeMap,
     builtInFolderInfo,
   );
 
@@ -85,7 +85,7 @@
   const historyManager = new HistoryManager(lastVisitTimeMap);
 
   // Filter manager
-  const filterManager = new FilterManager(filterSet, nodeStoreMap);
+  const filterManager = new FilterManager(filterSet, folderNodeMap);
 
   // Whether the filter is active.
   let filterActive = $state(false);
@@ -95,7 +95,7 @@
 
   // Make bookmark data available to other components
   setContext('builtInFolderInfo', builtInFolderInfo);
-  setContext('nodeStoreMap', nodeStoreMap);
+  setContext('folderNodeMap', folderNodeMap);
   setContext('lastVisitTimeMap', lastVisitTimeMap);
   setContext('filterActive', () => filterActive);
   setContext('filterSet', filterSet);
@@ -175,8 +175,8 @@
    * If a filter is active, open only the children that match the filter.
    */
   function openAllInTabs(nodeId: string) {
-    const nodeStore = nodeStoreMap.get(nodeId)!;
-    const node: Treetop.FolderNode = get(nodeStore);
+    const folderNode = folderNodeMap.get(nodeId)!;
+    const node: Treetop.FolderNode = get(folderNode);
 
     const activeFilterSet = filterActive ? filterSet : undefined;
 
@@ -245,10 +245,10 @@
    * confirmation dialog.
    */
   function deleteBookmark(nodeId: string) {
-    const nodeStore = nodeStoreMap.get(nodeId);
-    if (nodeStore !== undefined) {
+    const folderNode = folderNodeMap.get(nodeId);
+    if (folderNode !== undefined) {
       // Folder
-      const node = get(nodeStore);
+      const node = get(folderNode);
       if (node.children.length === 0) {
         chrome.bookmarks.remove(nodeId).catch((err: unknown) => {
           console.error(err);
@@ -538,9 +538,9 @@
 
     // Load history
     try {
-      historyManager.init(nodeStoreMap);
+      historyManager.init(folderNodeMap);
       if ($showRecentlyVisited) {
-        await historyManager.loadHistory(nodeStoreMap);
+        await historyManager.loadHistory(folderNodeMap);
       }
     } catch (err: unknown) {
       console.error(err);
@@ -550,7 +550,7 @@
     // Initialize or reset history manager when 'showRecentlyVisited' preference changes
     unsubscribeShowRecentlyVisited = showRecentlyVisited.subscribe((value) => {
       if (value) {
-        historyManager.loadHistory(nodeStoreMap).catch((err: unknown) => {
+        historyManager.loadHistory(folderNodeMap).catch((err: unknown) => {
           console.error(err);
           handleError(chrome.i18n.getMessage('errorLoadingHistory'));
         });
@@ -560,7 +560,7 @@
     });
 
     // Validate specified root bookmark ID, falling back to bookmarks root
-    if (!rootBookmarkId || !nodeStoreMap.has(rootBookmarkId)) {
+    if (!rootBookmarkId || !folderNodeMap.has(rootBookmarkId)) {
       rootBookmarkId = builtInFolderInfo.rootNodeId ?? '';
     }
 
@@ -581,14 +581,18 @@
       'delete',
       new DeleteMenuItem(
         builtInFolderInfo,
-        nodeStoreMap,
+        folderNodeMap,
         () => filterActive,
         deleteBookmark,
       ),
     );
     menuManager.registerMenuItem(
       'openAllInTabs',
-      new OpenAllInTabsMenuItem(builtInFolderInfo, nodeStoreMap, openAllInTabs),
+      new OpenAllInTabsMenuItem(
+        builtInFolderInfo,
+        folderNodeMap,
+        openAllInTabs,
+      ),
     );
     menuManager.registerMenuItem(
       'properties',

@@ -25,7 +25,7 @@ const randomStringContaining = (str: string) => {
   )}`;
 };
 
-let nodeStoreMap: Treetop.NodeStoreMap;
+let folderNodeMap: Treetop.FolderNodeMap;
 let filterSet: Treetop.FilterSet;
 let filterManager: FilterManager;
 let folderNode1: Treetop.FolderNode;
@@ -36,9 +36,9 @@ let folderNode5: Treetop.FolderNode;
 let folderNode6: Treetop.FolderNode;
 
 beforeEach(() => {
-  nodeStoreMap = new Map() as Treetop.NodeStoreMap;
+  folderNodeMap = new Map() as Treetop.FolderNodeMap;
   filterSet = new SvelteSet();
-  filterManager = new FilterManager(filterSet, nodeStoreMap);
+  filterManager = new FilterManager(filterSet, folderNodeMap);
 
   // Create node tree:
   // folderNode1
@@ -114,12 +114,12 @@ beforeEach(() => {
   });
   folderNode5.children.push(folderNode6);
 
-  nodeStoreMap.set(folderNode1.id, writable(folderNode1));
-  nodeStoreMap.set(folderNode2.id, writable(folderNode2));
-  nodeStoreMap.set(folderNode3.id, writable(folderNode3));
-  nodeStoreMap.set(folderNode4.id, writable(folderNode4));
-  nodeStoreMap.set(folderNode5.id, writable(folderNode5));
-  nodeStoreMap.set(folderNode6.id, writable(folderNode6));
+  folderNodeMap.set(folderNode1.id, writable(folderNode1));
+  folderNodeMap.set(folderNode2.id, writable(folderNode2));
+  folderNodeMap.set(folderNode3.id, writable(folderNode3));
+  folderNodeMap.set(folderNode4.id, writable(folderNode4));
+  folderNodeMap.set(folderNode5.id, writable(folderNode5));
+  folderNodeMap.set(folderNode6.id, writable(folderNode6));
 });
 
 describe('setFilter', () => {

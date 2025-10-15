@@ -9,7 +9,7 @@ import * as Treetop from './types';
  */
 export class BookmarksManager {
   constructor(
-    private readonly nodeStoreMap: Treetop.NodeStoreMap,
+    private readonly folderNodeMap: Treetop.FolderNodeMap,
     private readonly builtInFolderInfo: Treetop.BuiltInFolderInfo,
   ) {}
 
@@ -39,7 +39,7 @@ export class BookmarksManager {
       const node = nodes.pop()!;
 
       if (isFolder(node)) {
-        this.buildNodeStore(node);
+        this.buildFolderNode(node);
         nodes.push(...node.children!);
       }
     }
@@ -90,16 +90,16 @@ export class BookmarksManager {
   /**
    * Create and record a node store for the specified bookmark node.
    */
-  private buildNodeStore(node: chrome.bookmarks.BookmarkTreeNode): void {
+  private buildFolderNode(node: chrome.bookmarks.BookmarkTreeNode): void {
     const newNode = this.convertNode(node);
-    const nodeStore = writable(newNode);
-    this.nodeStoreMap.set(node.id, nodeStore);
+    const folderNode = writable(newNode);
+    this.folderNodeMap.set(node.id, folderNode);
   }
 
   /**
    * Update the node store for the specified bookmark ID.
    */
-  private async updateNodeStore(nodeId: string): Promise<void> {
+  private async updateFolderNode(nodeId: string): Promise<void> {
     const [node] = await chrome.bookmarks.get(nodeId);
 
     if (!isFolder(node)) {
@@ -109,8 +109,8 @@ export class BookmarksManager {
     node.children = await chrome.bookmarks.getChildren(node.id);
 
     const newNode = this.convertNode(node);
-    const nodeStore = this.nodeStoreMap.get(nodeId)!;
-    nodeStore.set(newNode);
+    const folderNode = this.folderNodeMap.get(nodeId)!;
+    folderNode.set(newNode);
   }
 
   /**
@@ -124,11 +124,11 @@ export class BookmarksManager {
       // Add node store for the new folder
       const [node] = await chrome.bookmarks.get(id);
       node.children = await chrome.bookmarks.getChildren(id);
-      this.buildNodeStore(node);
+      this.buildFolderNode(node);
     }
 
     // Update parent node of the new bookmark
-    await this.updateNodeStore(bookmark.parentId!);
+    await this.updateFolderNode(bookmark.parentId!);
   }
 
   /**
@@ -144,13 +144,13 @@ export class BookmarksManager {
     const removedNodeIds = [];
 
     if (isFolder(removeInfo.node)) {
-      const nodeStore = this.nodeStoreMap.get(id)!;
-      const nodes: [Treetop.FolderNode] = [get(nodeStore)];
+      const folderNode = this.folderNodeMap.get(id)!;
+      const nodes: [Treetop.FolderNode] = [get(folderNode)];
 
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       while (nodes.length) {
         const node = nodes.pop()!;
-        this.nodeStoreMap.delete(node.id);
+        this.folderNodeMap.delete(node.id);
         removedNodeIds.push(node.id);
 
         // Store removed bookmark IDs
@@ -161,8 +161,8 @@ export class BookmarksManager {
         }
 
         // Enqueue child folders for removal
-        for (const childNodeStore of this.nodeStoreMap.values()) {
-          const currentNode: Treetop.FolderNode = get(childNodeStore);
+        for (const childFolderNode of this.folderNodeMap.values()) {
+          const currentNode: Treetop.FolderNode = get(childFolderNode);
           if (currentNode.parentId === node.id) {
             nodes.push(currentNode);
           }
@@ -173,7 +173,7 @@ export class BookmarksManager {
     }
 
     // Update parent node of the deleted bookmark
-    await this.updateNodeStore(removeInfo.parentId);
+    await this.updateFolderNode(removeInfo.parentId);
 
     return removedNodeIds;
   }
@@ -185,13 +185,13 @@ export class BookmarksManager {
     id: string,
     _changeInfo: Treetop.BookmarkChangeInfo,
   ): Promise<void> {
-    if (this.nodeStoreMap.has(id)) {
+    if (this.folderNodeMap.has(id)) {
       // Folder changed. Update its node.
-      await this.updateNodeStore(id);
+      await this.updateFolderNode(id);
     } else {
       // Bookmark changed. Update the parent folder node.
       const [node] = await chrome.bookmarks.get(id);
-      await this.updateNodeStore(node.parentId!);
+      await this.updateFolderNode(node.parentId!);
     }
   }
 
@@ -207,11 +207,11 @@ export class BookmarksManager {
     const oldParentId = moveInfo.oldParentId;
 
     // Update parent folder
-    await this.updateNodeStore(parentId);
+    await this.updateFolderNode(parentId);
 
     // Update old parent folder
     if (parentId !== oldParentId) {
-      await this.updateNodeStore(oldParentId);
+      await this.updateFolderNode(oldParentId);
     }
   }
 }

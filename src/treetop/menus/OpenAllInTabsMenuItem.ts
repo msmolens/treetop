@@ -10,7 +10,7 @@ import { MenuItem, type OnClickedCallback } from './MenuItem';
 export class OpenAllInTabsMenuItem extends MenuItem {
   constructor(
     private readonly builtInFolderInfo: Treetop.BuiltInFolderInfo,
-    private readonly nodeStoreMap: Treetop.NodeStoreMap,
+    private readonly folderNodeMap: Treetop.FolderNodeMap,
     onClickedCallback: OnClickedCallback,
   ) {
     super(onClickedCallback);
@@ -25,12 +25,12 @@ export class OpenAllInTabsMenuItem extends MenuItem {
       return false;
     }
 
-    const nodeStore = this.nodeStoreMap.get(nodeId);
-    if (nodeStore === undefined) {
+    const folderNode = this.folderNodeMap.get(nodeId);
+    if (folderNode === undefined) {
       return false;
     }
 
-    const node: Treetop.FolderNode = get(nodeStore);
+    const node: Treetop.FolderNode = get(folderNode);
 
     return node.children.length > 0;
   }

@@ -15,11 +15,11 @@
 
   const builtInFolderInfo: Treetop.BuiltInFolderInfo =
     getContext('builtInFolderInfo');
-  const nodeStoreMap: Treetop.NodeStoreMap = getContext('nodeStoreMap');
+  const folderNodeMap = getContext<Treetop.FolderNodeMap>('folderNodeMap');
   const filterActive = getContext<() => boolean>('filterActive');
   const filterSet = getContext<Treetop.FilterSet>('filterSet');
 
-  let node: Writable<Treetop.FolderNode> = nodeStoreMap.get(nodeId)!;
+  let node: Writable<Treetop.FolderNode> = folderNodeMap.get(nodeId)!;
 
   // Nodes for the folder heading.
   // For the root folder, get the folder nodes from bookmarks root to the selected root.
@@ -33,8 +33,8 @@
     const nodes = [node];
 
     while (node.parentId) {
-      const nodeStore = nodeStoreMap.get(node.parentId)!;
-      node = get(nodeStore);
+      const folderNode = folderNodeMap.get(node.parentId)!;
+      node = get(folderNode);
       nodes.unshift(node);
     }
 

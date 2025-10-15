@@ -29,14 +29,14 @@ const getBookmarkNodes = (
   return bookmarkNodes;
 };
 
-let nodeStoreMap: Treetop.NodeStoreMap;
+let folderNodeMap: Treetop.FolderNodeMap;
 let lastVisitTimeMap: Treetop.LastVisitTimeMap;
 let historyManager: HistoryManager;
 let folderNode1: Treetop.FolderNode;
 let folderNode2: Treetop.FolderNode;
 
 beforeEach(() => {
-  nodeStoreMap = new Map() as Treetop.NodeStoreMap;
+  folderNodeMap = new Map() as Treetop.FolderNodeMap;
   lastVisitTimeMap = new SvelteMap();
   historyManager = new HistoryManager(lastVisitTimeMap);
 
@@ -62,13 +62,13 @@ beforeEach(() => {
   }
   folderNode1.children.push(folderNode2);
 
-  nodeStoreMap.set(folderNode1.id, writable(folderNode1));
-  nodeStoreMap.set(folderNode2.id, writable(folderNode2));
+  folderNodeMap.set(folderNode1.id, writable(folderNode1));
+  folderNodeMap.set(folderNode2.id, writable(folderNode2));
 });
 
 describe('init', () => {
   it('sets default last visit time for bookmarks', () => {
-    historyManager.init(nodeStoreMap);
+    historyManager.init(folderNodeMap);
 
     expect(lastVisitTimeMap.size).toBe(7);
 
@@ -80,7 +80,7 @@ describe('init', () => {
 
 describe('loadHistory', () => {
   beforeEach(() => {
-    historyManager.init(nodeStoreMap);
+    historyManager.init(folderNodeMap);
   });
 
   it('sets last visit time of visited bookmarks', async () => {
@@ -105,7 +105,7 @@ describe('loadHistory', () => {
       getVisits.mockResolvedValueOnce(visitItems);
     });
 
-    await historyManager.loadHistory(nodeStoreMap);
+    await historyManager.loadHistory(folderNodeMap);
 
     expect(getVisits).toHaveBeenCalledTimes(7);
     expect(getVisits).toHaveBeenNthCalledWith(1, { url: bookmarkNodes[0].url });
@@ -135,8 +135,8 @@ describe('loadHistory', () => {
       getVisits.mockResolvedValueOnce(visitItems);
     });
 
-    await historyManager.loadHistory(nodeStoreMap);
-    await historyManager.loadHistory(nodeStoreMap);
+    await historyManager.loadHistory(folderNodeMap);
+    await historyManager.loadHistory(folderNodeMap);
 
     expect(getVisits).toHaveBeenCalledTimes(7);
     expect(getVisits).toHaveBeenNthCalledWith(1, { url: bookmarkNodes[0].url });

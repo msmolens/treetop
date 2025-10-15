@@ -9,7 +9,7 @@ import type * as Treetop from '@Treetop/treetop/types';
 import { createFolderNode } from '../../../test/utils/factories';
 
 let menuItem: DeleteMenuItem;
-let nodeStoreMap: Treetop.NodeStoreMap;
+let folderNodeMap: Treetop.FolderNodeMap;
 let currentFilterActive: boolean;
 const filterActive = () => currentFilterActive;
 
@@ -19,7 +19,7 @@ const BUILT_IN_FOLDER_INFO: Treetop.BuiltInFolderInfo = {
 };
 
 beforeEach(() => {
-  nodeStoreMap = new Map() as Treetop.NodeStoreMap;
+  folderNodeMap = new Map() as Treetop.FolderNodeMap;
   currentFilterActive = false;
 
   const callback: OnClickedCallback = (nodeId) => {
@@ -28,7 +28,7 @@ beforeEach(() => {
 
   menuItem = new DeleteMenuItem(
     BUILT_IN_FOLDER_INFO,
-    nodeStoreMap,
+    folderNodeMap,
     filterActive,
     callback,
   );
@@ -52,7 +52,7 @@ describe('when a filter is active', () => {
 
   beforeEach(() => {
     folderNode = createFolderNode();
-    nodeStoreMap.set(folderNode.id, writable(folderNode));
+    folderNodeMap.set(folderNode.id, writable(folderNode));
 
     currentFilterActive = true;
   });

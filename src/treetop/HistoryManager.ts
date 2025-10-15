@@ -14,9 +14,9 @@ export class HistoryManager {
   /**
    * Initialize default last visit time stores for all bookmark nodes.
    */
-  init(nodeStoreMap: Treetop.NodeStoreMap): void {
-    for (const nodeStore of nodeStoreMap.values()) {
-      const node: Treetop.FolderNode = get(nodeStore);
+  init(folderNodeMap: Treetop.FolderNodeMap): void {
+    for (const folderNode of folderNodeMap.values()) {
+      const node: Treetop.FolderNode = get(folderNode);
       node.children.forEach((child) => {
         if (child.type === Treetop.NodeType.Bookmark) {
           this.lastVisitTimeMap.set(child.id, 0);
@@ -28,7 +28,7 @@ export class HistoryManager {
   /**
    * Load history for all bookmarks and initialize last visit time stores.
    */
-  async loadHistory(nodeStoreMap: Treetop.NodeStoreMap): Promise<void> {
+  async loadHistory(folderNodeMap: Treetop.FolderNodeMap): Promise<void> {
     if (this.loaded) {
       return;
     }
@@ -41,8 +41,8 @@ export class HistoryManager {
     // Get last visit time of bookmarked URLs
     //
 
-    for (const nodeStore of nodeStoreMap.values()) {
-      const node: Treetop.FolderNode = get(nodeStore);
+    for (const folderNode of folderNodeMap.values()) {
+      const node: Treetop.FolderNode = get(folderNode);
       node.children.forEach((child) => {
         if (child.type === Treetop.NodeType.Bookmark) {
           const promise = chrome.history.getVisits({

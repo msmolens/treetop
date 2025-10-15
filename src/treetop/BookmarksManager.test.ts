@@ -24,7 +24,7 @@ const getFolderNode = (
   return get(store);
 };
 
-let nodeStoreMap: Treetop.NodeStoreMap;
+let folderNodeMap: Treetop.FolderNodeMap;
 let bookmarksManager: BookmarksManager;
 let bookmarksTree: chrome.bookmarks.BookmarkTreeNode[];
 let bookmarksRoot: chrome.bookmarks.BookmarkTreeNode;
@@ -32,7 +32,7 @@ let numBuiltInFolders = 0;
 let builtInFolderInfo: Treetop.BuiltInFolderInfo;
 
 beforeEach(() => {
-  nodeStoreMap = new Map() as Treetop.NodeStoreMap;
+  folderNodeMap = new Map() as Treetop.FolderNodeMap;
   bookmarksTree = createBrowserBookmarksTree();
   bookmarksRoot = bookmarksTree[0];
   numBuiltInFolders = 1 + bookmarksRoot.children!.length;
@@ -40,7 +40,7 @@ beforeEach(() => {
     rootNodeId: null,
     builtInFolderIds: [],
   };
-  bookmarksManager = new BookmarksManager(nodeStoreMap, builtInFolderInfo);
+  bookmarksManager = new BookmarksManager(folderNodeMap, builtInFolderInfo);
 });
 
 describe('loadBookmarks', () => {
@@ -63,12 +63,12 @@ describe('loadBookmarks', () => {
 
     await bookmarksManager.loadBookmarks();
 
-    expect(nodeStoreMap.size).toBe(numBuiltInFolders);
+    expect(folderNodeMap.size).toBe(numBuiltInFolders);
 
     for (const folder of bookmarksRoot.children!) {
-      expect(nodeStoreMap.get(folder.id)).toBeDefined();
+      expect(folderNodeMap.get(folder.id)).toBeDefined();
 
-      const node = get(nodeStoreMap.get(folder.id)!);
+      const node = get(folderNodeMap.get(folder.id)!);
       expect(node.id).toBe(folder.id);
       expect(node.title).toBe(folder.title);
     }
@@ -83,9 +83,9 @@ describe('loadBookmarks', () => {
 
     await bookmarksManager.loadBookmarks();
 
-    expect(nodeStoreMap.size).toBe(numBuiltInFolders);
+    expect(folderNodeMap.size).toBe(numBuiltInFolders);
 
-    expect(nodeStoreMap.has(MOBILE_BOOKMARKS_GUID)).toBe(false);
+    expect(folderNodeMap.has(MOBILE_BOOKMARKS_GUID)).toBe(false);
   });
 
   it('creates nodes for folders', async () => {
@@ -99,11 +99,11 @@ describe('loadBookmarks', () => {
 
     await bookmarksManager.loadBookmarks();
 
-    expect(nodeStoreMap.size).toBe(numBuiltInFolders + folders.length);
+    expect(folderNodeMap.size).toBe(numBuiltInFolders + folders.length);
 
     for (const folder of folders) {
-      expect(nodeStoreMap.get(folder.id)).toBeDefined();
-      expect(get(nodeStoreMap.get(folder.id)!)).toMatchObject({
+      expect(folderNodeMap.get(folder.id)).toBeDefined();
+      expect(get(folderNodeMap.get(folder.id)!)).toMatchObject({
         id: folder.id,
         type: Treetop.NodeType.Folder,
         title: folder.title,
@@ -123,10 +123,10 @@ describe('loadBookmarks', () => {
 
     await bookmarksManager.loadBookmarks();
 
-    expect(nodeStoreMap.size).toBe(numBuiltInFolders + 3);
+    expect(folderNodeMap.size).toBe(numBuiltInFolders + 3);
 
-    expect(nodeStoreMap.get(parentFolder.id)).toBeDefined();
-    expect(get(nodeStoreMap.get(parentFolder.id)!)).toMatchObject({
+    expect(folderNodeMap.get(parentFolder.id)).toBeDefined();
+    expect(get(folderNodeMap.get(parentFolder.id)!)).toMatchObject({
       id: parentFolder.id,
       type: Treetop.NodeType.Folder,
       title: parentFolder.title,
@@ -144,16 +144,16 @@ describe('loadBookmarks', () => {
       ],
     });
 
-    expect(nodeStoreMap.get(childFolder1.id)).toBeDefined();
-    expect(get(nodeStoreMap.get(childFolder1.id)!)).toMatchObject({
+    expect(folderNodeMap.get(childFolder1.id)).toBeDefined();
+    expect(get(folderNodeMap.get(childFolder1.id)!)).toMatchObject({
       id: childFolder1.id,
       type: Treetop.NodeType.Folder,
       title: childFolder1.title,
       children: [],
     });
 
-    expect(nodeStoreMap.get(childFolder2.id)).toBeDefined();
-    expect(get(nodeStoreMap.get(childFolder2.id)!)).toMatchObject({
+    expect(folderNodeMap.get(childFolder2.id)).toBeDefined();
+    expect(get(folderNodeMap.get(childFolder2.id)!)).toMatchObject({
       id: childFolder2.id,
       type: Treetop.NodeType.Folder,
       title: childFolder2.title,
@@ -174,10 +174,10 @@ describe('loadBookmarks', () => {
 
     await bookmarksManager.loadBookmarks();
 
-    expect(nodeStoreMap.size).toBe(numBuiltInFolders + 1);
+    expect(folderNodeMap.size).toBe(numBuiltInFolders + 1);
 
-    expect(nodeStoreMap.get(folder.id)).toBeDefined();
-    expect(get(nodeStoreMap.get(folder.id)!)).toMatchObject({
+    expect(folderNodeMap.get(folder.id)).toBeDefined();
+    expect(get(folderNodeMap.get(folder.id)!)).toMatchObject({
       id: folder.id,
       type: Treetop.NodeType.Folder,
       title: folder.title,
@@ -221,14 +221,14 @@ describe('handleBookmarkCreated', () => {
     const getTree = vi.fn().mockResolvedValue(bookmarksTree);
     vi.spyOn(chrome.bookmarks, 'getTree').mockImplementation(getTree);
     await bookmarksManager.loadBookmarks();
-    expect(nodeStoreMap.size).toBe(numBuiltInFolders + 1);
-    expect(nodeStoreMap.get(baseNode.id)).toBeDefined();
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children).toHaveLength(
+    expect(folderNodeMap.size).toBe(numBuiltInFolders + 1);
+    expect(folderNodeMap.get(baseNode.id)).toBeDefined();
+    expect(getFolderNode(folderNodeMap.get(baseNode.id)).children).toHaveLength(
       2,
     );
-    expect(nodeStoreMap.get(folderNode.id)).toBeDefined();
+    expect(folderNodeMap.get(folderNode.id)).toBeDefined();
     expect(
-      getFolderNode(nodeStoreMap.get(folderNode.id)).children,
+      getFolderNode(folderNodeMap.get(folderNode.id)).children,
     ).toHaveLength(1);
   });
 
@@ -253,14 +253,14 @@ describe('handleBookmarkCreated', () => {
     expect(getChildren).toHaveBeenCalledWith(folderNode.id);
 
     // New node store is not created for a bookmark
-    expect(nodeStoreMap.size).toBe(numBuiltInFolders + 1);
+    expect(folderNodeMap.size).toBe(numBuiltInFolders + 1);
 
     // New bookmark node appears in parent node's children
     expect(
-      getFolderNode(nodeStoreMap.get(folderNode.id)).children,
+      getFolderNode(folderNodeMap.get(folderNode.id)).children,
     ).toHaveLength(2);
     expect(
-      getFolderNode(nodeStoreMap.get(folderNode.id)).children,
+      getFolderNode(folderNodeMap.get(folderNode.id)).children,
     ).toContainEqual({
       id: node.id,
       type: Treetop.NodeType.Bookmark,
@@ -301,9 +301,9 @@ describe('handleBookmarkCreated', () => {
     expect(get).toHaveBeenNthCalledWith(2, folderNode.id);
 
     // New node store is created for a folder
-    expect(nodeStoreMap.size).toBe(numBuiltInFolders + 2);
-    expect(nodeStoreMap.get(node.id)).toBeDefined();
-    expect(getFolderNode(nodeStoreMap.get(node.id))).toMatchObject({
+    expect(folderNodeMap.size).toBe(numBuiltInFolders + 2);
+    expect(folderNodeMap.get(node.id)).toBeDefined();
+    expect(getFolderNode(folderNodeMap.get(node.id))).toMatchObject({
       id: node.id,
       type: Treetop.NodeType.Folder,
       title: node.title,
@@ -312,10 +312,10 @@ describe('handleBookmarkCreated', () => {
 
     // New folder node appears in parent node's children
     expect(
-      getFolderNode(nodeStoreMap.get(folderNode.id)).children,
+      getFolderNode(folderNodeMap.get(folderNode.id)).children,
     ).toHaveLength(2);
     expect(
-      getFolderNode(nodeStoreMap.get(folderNode.id)).children,
+      getFolderNode(folderNodeMap.get(folderNode.id)).children,
     ).toContainEqual({
       id: node.id,
       type: Treetop.NodeType.Folder,
@@ -353,18 +353,18 @@ describe('handleBookmarkRemoved', () => {
     const getTree = vi.fn().mockResolvedValue(bookmarksTree);
     vi.spyOn(chrome.bookmarks, 'getTree').mockImplementation(getTree);
     await bookmarksManager.loadBookmarks();
-    expect(nodeStoreMap.size).toBe(numBuiltInFolders + 2);
-    expect(nodeStoreMap.get(baseNode.id)).toBeDefined();
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children).toHaveLength(
+    expect(folderNodeMap.size).toBe(numBuiltInFolders + 2);
+    expect(folderNodeMap.get(baseNode.id)).toBeDefined();
+    expect(getFolderNode(folderNodeMap.get(baseNode.id)).children).toHaveLength(
       2,
     );
-    expect(nodeStoreMap.get(folderNode1.id)).toBeDefined();
+    expect(folderNodeMap.get(folderNode1.id)).toBeDefined();
     expect(
-      getFolderNode(nodeStoreMap.get(folderNode1.id)).children.length,
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children.length,
     ).toBe(3);
-    expect(nodeStoreMap.get(folderNode2.id)).toBeDefined();
+    expect(folderNodeMap.get(folderNode2.id)).toBeDefined();
     expect(
-      getFolderNode(nodeStoreMap.get(folderNode2.id)).children.length,
+      getFolderNode(folderNodeMap.get(folderNode2.id)).children.length,
     ).toBe(1);
 
     void bookmarkNode1;
@@ -383,10 +383,10 @@ describe('handleBookmarkRemoved', () => {
 
     expect(folderNode2.id).toBe(bookmarkNode4.parentId);
     expect(
-      getFolderNode(nodeStoreMap.get(folderNode2.id)).children.length,
+      getFolderNode(folderNodeMap.get(folderNode2.id)).children.length,
     ).toBe(1);
 
-    const initialNodeStoreMapSize = nodeStoreMap.size;
+    const initialFolderNodeMapSize = folderNodeMap.size;
 
     // Call bookmark removed handler
     const removeInfo: Treetop.BookmarkRemoveInfo = {
@@ -406,9 +406,9 @@ describe('handleBookmarkRemoved', () => {
 
     expect(removedNodeIds).toHaveLength(1);
     expect(removedNodeIds).toContain(bookmarkNode4.id);
-    expect(nodeStoreMap.size).toBe(initialNodeStoreMapSize);
+    expect(folderNodeMap.size).toBe(initialFolderNodeMapSize);
     expect(
-      getFolderNode(nodeStoreMap.get(folderNode2.id)).children.length,
+      getFolderNode(folderNodeMap.get(folderNode2.id)).children.length,
     ).toBe(0);
   });
 
@@ -423,16 +423,16 @@ describe('handleBookmarkRemoved', () => {
     vi.spyOn(chrome.bookmarks, 'getChildren').mockImplementation(getChildren);
 
     expect(baseNode.id).toBe(folderNode1.parentId);
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children).toHaveLength(
+    expect(getFolderNode(folderNodeMap.get(baseNode.id)).children).toHaveLength(
       2,
     );
     expect(
-      getFolderNode(nodeStoreMap.get(folderNode1.id)).children.length,
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children.length,
     ).toBe(3);
     expect(
-      getFolderNode(nodeStoreMap.get(folderNode2.id)).children.length,
+      getFolderNode(folderNodeMap.get(folderNode2.id)).children.length,
     ).toBe(1);
-    const initialNodeStoreMapSize = nodeStoreMap.size;
+    const initialFolderNodeMapSize = folderNodeMap.size;
 
     // Call bookmark removed handler
     const removeInfo: Treetop.BookmarkRemoveInfo = {
@@ -456,8 +456,8 @@ describe('handleBookmarkRemoved', () => {
     expect(removedNodeIds).toContain(bookmarkNode3.id);
     expect(removedNodeIds).toContain(folderNode2.id);
     expect(removedNodeIds).toContain(bookmarkNode4.id);
-    expect(nodeStoreMap.size).toBe(initialNodeStoreMapSize - 2);
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children).toHaveLength(
+    expect(folderNodeMap.size).toBe(initialFolderNodeMapSize - 2);
+    expect(getFolderNode(folderNodeMap.get(baseNode.id)).children).toHaveLength(
       1,
     );
   });
@@ -482,35 +482,35 @@ describe('handleBookmarkChanged', () => {
     const getTree = vi.fn().mockResolvedValue(bookmarksTree);
     vi.spyOn(chrome.bookmarks, 'getTree').mockImplementation(getTree);
     await bookmarksManager.loadBookmarks();
-    expect(nodeStoreMap.size).toBe(numBuiltInFolders + 1);
-    expect(nodeStoreMap.get(baseNode.id)).toBeDefined();
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children).toHaveLength(
+    expect(folderNodeMap.size).toBe(numBuiltInFolders + 1);
+    expect(folderNodeMap.get(baseNode.id)).toBeDefined();
+    expect(getFolderNode(folderNodeMap.get(baseNode.id)).children).toHaveLength(
       1,
     );
-    expect(nodeStoreMap.get(folderNode1.id)).toBeDefined();
+    expect(folderNodeMap.get(folderNode1.id)).toBeDefined();
     expect(
-      getFolderNode(nodeStoreMap.get(folderNode1.id)).children.length,
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children.length,
     ).toBe(2);
   });
 
   it('changed bookmark', async () => {
     expect(folderNode1.id).toBe(bookmarkNode1.parentId);
     expect(
-      getFolderNode(nodeStoreMap.get(folderNode1.id)).children.length,
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children.length,
     ).toBe(2);
     expect(
       (
-        getFolderNode(nodeStoreMap.get(folderNode1.id))
+        getFolderNode(folderNodeMap.get(folderNode1.id))
           .children[0] as Treetop.BookmarkNode
       ).title,
     ).toBe(bookmarkNode1.title);
     expect(
       (
-        getFolderNode(nodeStoreMap.get(folderNode1.id))
+        getFolderNode(folderNodeMap.get(folderNode1.id))
           .children[0] as Treetop.BookmarkNode
       ).url,
     ).toBe(bookmarkNode1.url);
-    const initialNodeStoreMapSize = nodeStoreMap.size;
+    const initialFolderNodeMapSize = folderNodeMap.size;
 
     bookmarkNode1.title = faker.word.words();
     bookmarkNode1.url = faker.internet.url();
@@ -538,19 +538,19 @@ describe('handleBookmarkChanged', () => {
     expect(getChildren).toHaveBeenCalledOnce();
     expect(getChildren).toHaveBeenCalledWith(folderNode1.id);
 
-    expect(nodeStoreMap.size).toBe(initialNodeStoreMapSize);
+    expect(folderNodeMap.size).toBe(initialFolderNodeMapSize);
     expect(
-      getFolderNode(nodeStoreMap.get(folderNode1.id)).children.length,
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children.length,
     ).toBe(2);
     expect(
       (
-        getFolderNode(nodeStoreMap.get(folderNode1.id))
+        getFolderNode(folderNodeMap.get(folderNode1.id))
           .children[0] as Treetop.BookmarkNode
       ).title,
     ).toBe(bookmarkNode1.title);
     expect(
       (
-        getFolderNode(nodeStoreMap.get(folderNode1.id))
+        getFolderNode(folderNodeMap.get(folderNode1.id))
           .children[0] as Treetop.BookmarkNode
       ).url,
     ).toBe(bookmarkNode1.url);
@@ -558,15 +558,15 @@ describe('handleBookmarkChanged', () => {
 
   it('changed folder', async () => {
     expect(
-      getFolderNode(nodeStoreMap.get(folderNode1.id)).children.length,
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children.length,
     ).toBe(2);
-    expect(getFolderNode(nodeStoreMap.get(folderNode1.id)).children[0].id).toBe(
-      bookmarkNode1.id,
-    );
-    expect(getFolderNode(nodeStoreMap.get(folderNode1.id)).children[1].id).toBe(
-      bookmarkNode2.id,
-    );
-    const initialNodeStoreMapSize = nodeStoreMap.size;
+    expect(
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children[0].id,
+    ).toBe(bookmarkNode1.id);
+    expect(
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children[1].id,
+    ).toBe(bookmarkNode2.id);
+    const initialFolderNodeMapSize = folderNodeMap.size;
 
     folderNode1.title = faker.word.words();
 
@@ -587,19 +587,19 @@ describe('handleBookmarkChanged', () => {
     expect(getChildren).toHaveBeenCalledOnce();
     expect(getChildren).toHaveBeenCalledWith(folderNode1.id);
 
-    expect(nodeStoreMap.size).toBe(initialNodeStoreMapSize);
-    expect(getFolderNode(nodeStoreMap.get(folderNode1.id)).title).toBe(
+    expect(folderNodeMap.size).toBe(initialFolderNodeMapSize);
+    expect(getFolderNode(folderNodeMap.get(folderNode1.id)).title).toBe(
       folderNode1.title,
     );
     expect(
-      getFolderNode(nodeStoreMap.get(folderNode1.id)).children.length,
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children.length,
     ).toBe(2);
-    expect(getFolderNode(nodeStoreMap.get(folderNode1.id)).children[0].id).toBe(
-      bookmarkNode1.id,
-    );
-    expect(getFolderNode(nodeStoreMap.get(folderNode1.id)).children[1].id).toBe(
-      bookmarkNode2.id,
-    );
+    expect(
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children[0].id,
+    ).toBe(bookmarkNode1.id);
+    expect(
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children[1].id,
+    ).toBe(bookmarkNode2.id);
   });
 });
 
@@ -625,14 +625,14 @@ describe('handleBookmarkMoved', () => {
     const getTree = vi.fn().mockResolvedValue(bookmarksTree);
     vi.spyOn(chrome.bookmarks, 'getTree').mockImplementation(getTree);
     await bookmarksManager.loadBookmarks();
-    expect(nodeStoreMap.size).toBe(numBuiltInFolders + 1);
-    expect(nodeStoreMap.get(baseNode.id)).toBeDefined();
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children).toHaveLength(
+    expect(folderNodeMap.size).toBe(numBuiltInFolders + 1);
+    expect(folderNodeMap.get(baseNode.id)).toBeDefined();
+    expect(getFolderNode(folderNodeMap.get(baseNode.id)).children).toHaveLength(
       2,
     );
-    expect(nodeStoreMap.get(folderNode1.id)).toBeDefined();
+    expect(folderNodeMap.get(folderNode1.id)).toBeDefined();
     expect(
-      getFolderNode(nodeStoreMap.get(folderNode1.id)).children.length,
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children.length,
     ).toBe(2);
     void bookmarkNode1;
   });
@@ -642,13 +642,13 @@ describe('handleBookmarkMoved', () => {
     expect(baseNode.id).toBe(folderNode1.parentId);
     expect(folderNode1.id).toBe(bookmarkNode2.parentId);
     expect(folderNode1.id).toBe(bookmarkNode3.parentId);
-    expect(getFolderNode(nodeStoreMap.get(folderNode1.id)).children[0].id).toBe(
-      bookmarkNode2.id,
-    );
-    expect(getFolderNode(nodeStoreMap.get(folderNode1.id)).children[1].id).toBe(
-      bookmarkNode3.id,
-    );
-    const initialNodeStoreMapSize = nodeStoreMap.size;
+    expect(
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children[0].id,
+    ).toBe(bookmarkNode2.id);
+    expect(
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children[1].id,
+    ).toBe(bookmarkNode3.id);
+    const initialFolderNodeMapSize = folderNodeMap.size;
 
     // Move bookmarkNode3 to index 0
     const children = folderNode1.children!;
@@ -674,16 +674,16 @@ describe('handleBookmarkMoved', () => {
     expect(getChildren).toHaveBeenCalledOnce();
     expect(getChildren).toHaveBeenCalledWith(folderNode1.id);
 
-    expect(nodeStoreMap.size).toBe(initialNodeStoreMapSize);
+    expect(folderNodeMap.size).toBe(initialFolderNodeMapSize);
     expect(
-      getFolderNode(nodeStoreMap.get(folderNode1.id)).children.length,
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children.length,
     ).toBe(2);
-    expect(getFolderNode(nodeStoreMap.get(folderNode1.id)).children[0].id).toBe(
-      bookmarkNode3.id,
-    );
-    expect(getFolderNode(nodeStoreMap.get(folderNode1.id)).children[1].id).toBe(
-      bookmarkNode2.id,
-    );
+    expect(
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children[0].id,
+    ).toBe(bookmarkNode3.id);
+    expect(
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children[1].id,
+    ).toBe(bookmarkNode2.id);
   });
 
   it('moved to parent folder', async () => {
@@ -691,19 +691,19 @@ describe('handleBookmarkMoved', () => {
     expect(baseNode.id).toBe(folderNode1.parentId);
     expect(folderNode1.id).toBe(bookmarkNode2.parentId);
     expect(folderNode1.id).toBe(bookmarkNode3.parentId);
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children[0].id).toBe(
+    expect(getFolderNode(folderNodeMap.get(baseNode.id)).children[0].id).toBe(
       bookmarkNode1.id,
     );
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children[1].id).toBe(
+    expect(getFolderNode(folderNodeMap.get(baseNode.id)).children[1].id).toBe(
       folderNode1.id,
     );
-    expect(getFolderNode(nodeStoreMap.get(folderNode1.id)).children[0].id).toBe(
-      bookmarkNode2.id,
-    );
-    expect(getFolderNode(nodeStoreMap.get(folderNode1.id)).children[1].id).toBe(
-      bookmarkNode3.id,
-    );
-    const initialNodeStoreMapSize = nodeStoreMap.size;
+    expect(
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children[0].id,
+    ).toBe(bookmarkNode2.id);
+    expect(
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children[1].id,
+    ).toBe(bookmarkNode3.id);
+    const initialFolderNodeMapSize = folderNodeMap.size;
 
     // Move bookmarkNode3 to base folder
     baseNode.children!.unshift(folderNode1.children!.pop()!);
@@ -736,25 +736,25 @@ describe('handleBookmarkMoved', () => {
     expect(get).toHaveBeenNthCalledWith(1, baseNode.id);
     expect(get).toHaveBeenNthCalledWith(2, folderNode1.id);
 
-    expect(nodeStoreMap.size).toBe(initialNodeStoreMapSize);
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children).toHaveLength(
+    expect(folderNodeMap.size).toBe(initialFolderNodeMapSize);
+    expect(getFolderNode(folderNodeMap.get(baseNode.id)).children).toHaveLength(
       3,
     );
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children[0].id).toBe(
+    expect(getFolderNode(folderNodeMap.get(baseNode.id)).children[0].id).toBe(
       bookmarkNode3.id,
     );
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children[1].id).toBe(
+    expect(getFolderNode(folderNodeMap.get(baseNode.id)).children[1].id).toBe(
       bookmarkNode1.id,
     );
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children[2].id).toBe(
+    expect(getFolderNode(folderNodeMap.get(baseNode.id)).children[2].id).toBe(
       folderNode1.id,
     );
     expect(
-      getFolderNode(nodeStoreMap.get(folderNode1.id)).children.length,
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children.length,
     ).toBe(1);
-    expect(getFolderNode(nodeStoreMap.get(folderNode1.id)).children[0].id).toBe(
-      bookmarkNode2.id,
-    );
+    expect(
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children[0].id,
+    ).toBe(bookmarkNode2.id);
   });
 
   it('moved to child folder', async () => {
@@ -762,19 +762,19 @@ describe('handleBookmarkMoved', () => {
     expect(baseNode.id).toBe(folderNode1.parentId);
     expect(folderNode1.id).toBe(bookmarkNode2.parentId);
     expect(folderNode1.id).toBe(bookmarkNode3.parentId);
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children[0].id).toBe(
+    expect(getFolderNode(folderNodeMap.get(baseNode.id)).children[0].id).toBe(
       bookmarkNode1.id,
     );
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children[1].id).toBe(
+    expect(getFolderNode(folderNodeMap.get(baseNode.id)).children[1].id).toBe(
       folderNode1.id,
     );
-    expect(getFolderNode(nodeStoreMap.get(folderNode1.id)).children[0].id).toBe(
-      bookmarkNode2.id,
-    );
-    expect(getFolderNode(nodeStoreMap.get(folderNode1.id)).children[1].id).toBe(
-      bookmarkNode3.id,
-    );
-    const initialNodeStoreMapSize = nodeStoreMap.size;
+    expect(
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children[0].id,
+    ).toBe(bookmarkNode2.id);
+    expect(
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children[1].id,
+    ).toBe(bookmarkNode3.id);
+    const initialFolderNodeMapSize = folderNodeMap.size;
 
     // Move bookmarkNode1 to folderNode1
     folderNode1.children!.unshift(baseNode.children!.shift()!);
@@ -807,24 +807,24 @@ describe('handleBookmarkMoved', () => {
     expect(get).toHaveBeenNthCalledWith(1, folderNode1.id);
     expect(get).toHaveBeenNthCalledWith(2, baseNode.id);
 
-    expect(nodeStoreMap.size).toBe(initialNodeStoreMapSize);
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children).toHaveLength(
+    expect(folderNodeMap.size).toBe(initialFolderNodeMapSize);
+    expect(getFolderNode(folderNodeMap.get(baseNode.id)).children).toHaveLength(
       1,
     );
-    expect(getFolderNode(nodeStoreMap.get(baseNode.id)).children[0].id).toBe(
+    expect(getFolderNode(folderNodeMap.get(baseNode.id)).children[0].id).toBe(
       folderNode1.id,
     );
     expect(
-      getFolderNode(nodeStoreMap.get(folderNode1.id)).children.length,
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children.length,
     ).toBe(3);
-    expect(getFolderNode(nodeStoreMap.get(folderNode1.id)).children[0].id).toBe(
-      bookmarkNode1.id,
-    );
-    expect(getFolderNode(nodeStoreMap.get(folderNode1.id)).children[1].id).toBe(
-      bookmarkNode2.id,
-    );
-    expect(getFolderNode(nodeStoreMap.get(folderNode1.id)).children[2].id).toBe(
-      bookmarkNode3.id,
-    );
+    expect(
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children[0].id,
+    ).toBe(bookmarkNode1.id);
+    expect(
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children[1].id,
+    ).toBe(bookmarkNode2.id);
+    expect(
+      getFolderNode(folderNodeMap.get(folderNode1.id)).children[2].id,
+    ).toBe(bookmarkNode3.id);
   });
 });
