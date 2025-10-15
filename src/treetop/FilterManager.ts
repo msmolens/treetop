@@ -1,5 +1,3 @@
-import { get } from 'svelte/store';
-
 import { isBookmark } from './bookmarktreenode-utils';
 import * as Treetop from './types';
 
@@ -32,8 +30,7 @@ export class FilterManager {
     for (const folderNode of this.folderNodeMap.values()) {
       let addedChild = false;
 
-      const node: Treetop.FolderNode = get(folderNode);
-      for (const child of node.children) {
+      for (const child of folderNode.children) {
         if (child.type === Treetop.NodeType.Bookmark) {
           if (
             this.matchesFilter(child.title) ||
@@ -46,7 +43,7 @@ export class FilterManager {
       }
 
       if (addedChild) {
-        this.filterSet.add(node.id);
+        this.filterSet.add(folderNode.id);
       }
     }
 
@@ -54,11 +51,10 @@ export class FilterManager {
     // For each folder in the FilterSet, add the folders on the path to the root
     // folder.
     for (const folderNode of this.folderNodeMap.values()) {
-      const node: Treetop.FolderNode = get(folderNode);
-      if (this.filterSet.has(node.id)) {
-        let curNode = node;
+      if (this.filterSet.has(folderNode.id)) {
+        let curNode = folderNode;
         while (curNode.parentId) {
-          curNode = get(this.folderNodeMap.get(curNode.parentId)!);
+          curNode = this.folderNodeMap.get(curNode.parentId)!;
           this.filterSet.add(curNode.id);
         }
       }
@@ -102,9 +98,9 @@ export class FilterManager {
     // Add the folders on the path to the root folder to the FilterSet
     let parentId = bookmark.parentId;
     while (parentId) {
-      const node = get(this.folderNodeMap.get(parentId)!);
-      this.filterSet.add(node.id);
-      parentId = node.parentId;
+      const folderNode = this.folderNodeMap.get(parentId)!;
+      this.filterSet.add(folderNode.id);
+      parentId = folderNode.parentId;
     }
   }
 

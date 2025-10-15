@@ -1,5 +1,4 @@
 import type { SvelteMap, SvelteSet } from 'svelte/reactivity';
-import type { Writable } from 'svelte/store';
 
 // Bookmark node type
 export enum NodeType {
@@ -26,9 +25,9 @@ export interface FolderNode extends BaseNode {
 
 export type Node = BookmarkNode | FolderNode;
 
-// Map from node ID to a store holding a folder node.
+// Map from node ID to a folder node.
 // Provides access to bookmark data.
-export type FolderNodeMap = Map<string, Writable<FolderNode>>;
+export type FolderNodeMap = SvelteMap<string, FolderNode>;
 
 // Map from node ID to last visit time in milliseconds since the epoch.
 // Provides access to the last visit times of bookmarks.

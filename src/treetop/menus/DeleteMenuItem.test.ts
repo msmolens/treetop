@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { SvelteMap } from 'svelte/reactivity';
 import { faker } from '@faker-js/faker';
 import { beforeEach, describe, expect, it } from 'vitest';
 
@@ -19,7 +19,7 @@ const BUILT_IN_FOLDER_INFO: Treetop.BuiltInFolderInfo = {
 };
 
 beforeEach(() => {
-  folderNodeMap = new Map() as Treetop.FolderNodeMap;
+  folderNodeMap = new SvelteMap();
   currentFilterActive = false;
 
   const callback: OnClickedCallback = (nodeId) => {
@@ -52,7 +52,7 @@ describe('when a filter is active', () => {
 
   beforeEach(() => {
     folderNode = createFolderNode();
-    folderNodeMap.set(folderNode.id, writable(folderNode));
+    folderNodeMap.set(folderNode.id, folderNode);
 
     currentFilterActive = true;
   });

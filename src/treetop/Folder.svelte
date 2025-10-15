@@ -1,6 +1,5 @@
 <script lang="ts">
   import { getContext } from 'svelte';
-  import { get, type Writable } from 'svelte/store';
 
   import Bookmark from './Bookmark.svelte';
   import Folder from './Folder.svelte';
@@ -19,12 +18,12 @@
   const filterActive = getContext<() => boolean>('filterActive');
   const filterSet = getContext<Treetop.FilterSet>('filterSet');
 
-  let node: Writable<Treetop.FolderNode> = folderNodeMap.get(nodeId)!;
+  const node = $derived(folderNodeMap.get(nodeId)!);
 
   // Nodes for the folder heading.
   // For the root folder, get the folder nodes from bookmarks root to the selected root.
   // Otherwise, include only the folder node itself.
-  const folderNodes = $derived(root ? getFolderNodes($node) : [$node]);
+  const folderNodes = $derived(root ? getFolderNodes(node) : [node]);
 
   /**
    * Get folder nodes from bookmarks root to the selected root.
@@ -33,8 +32,7 @@
     const nodes = [node];
 
     while (node.parentId) {
-      const folderNode = folderNodeMap.get(node.parentId)!;
-      node = get(folderNode);
+      node = folderNodeMap.get(node.parentId)!;
       nodes.unshift(node);
     }
 
@@ -59,7 +57,7 @@
   // Include selected root title in document title.
   // Don't use fallback title.
   const documentTitle = $derived(
-    $node.title ? `Treetop: ${$node.title}` : 'Treetop',
+    node.title ? `Treetop: ${node.title}` : 'Treetop',
   );
 </script>
 
@@ -117,7 +115,7 @@
   {/if}
 </svelte:head>
 
-{#if root || !filterActive() || filterSet.has($node.id)}
+{#if root || !filterActive() || filterSet.has(node.id)}
   <div class="folder" class:root>
     <div class="heading">
       <div class="title">
@@ -133,7 +131,7 @@
       {#if root && filterActive() && !filterSet.has(nodeId)}
         <em>{chrome.i18n.getMessage('noResults')}</em>
       {/if}
-      {#each $node.children as child (child.id)}
+      {#each node.children as child (child.id)}
         {#if child.type === Treetop.NodeType.Bookmark}
           <!--
             Destructure child to work around the following false positive linter

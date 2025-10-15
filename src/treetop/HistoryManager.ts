@@ -1,5 +1,3 @@
-import { get } from 'svelte/store';
-
 import { isBookmark } from './bookmarktreenode-utils';
 import * as Treetop from './types';
 
@@ -16,8 +14,7 @@ export class HistoryManager {
    */
   init(folderNodeMap: Treetop.FolderNodeMap): void {
     for (const folderNode of folderNodeMap.values()) {
-      const node: Treetop.FolderNode = get(folderNode);
-      node.children.forEach((child) => {
+      folderNode.children.forEach((child) => {
         if (child.type === Treetop.NodeType.Bookmark) {
           this.lastVisitTimeMap.set(child.id, 0);
         }
@@ -42,8 +39,7 @@ export class HistoryManager {
     //
 
     for (const folderNode of folderNodeMap.values()) {
-      const node: Treetop.FolderNode = get(folderNode);
-      node.children.forEach((child) => {
+      folderNode.children.forEach((child) => {
         if (child.type === Treetop.NodeType.Bookmark) {
           const promise = chrome.history.getVisits({
             url: child.url,
