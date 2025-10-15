@@ -1,6 +1,6 @@
 /* eslint no-irregular-whitespace: ["error", { "skipComments": true }] */
 
-import { SvelteDate, SvelteSet } from 'svelte/reactivity';
+import { SvelteDate, SvelteMap, SvelteSet } from 'svelte/reactivity';
 import { type Writable, writable } from 'svelte/store';
 import { render, screen } from '@testing-library/svelte';
 import type { MockInstance } from 'vitest';
@@ -111,8 +111,8 @@ beforeEach(() => {
     rootNodeId: 'bookmarks-root-id',
     builtInFolderIds: ['bookmarks-toolbar-id', 'other-bookmarks-id'],
   };
-  folderNodeMap = new Map() as Treetop.FolderNodeMap;
-  lastVisitTimeMap = new Map() as Treetop.LastVisitTimeMap;
+  folderNodeMap = new SvelteMap();
+  lastVisitTimeMap = new SvelteMap();
   currentFilterActive = false;
   filterSet = new SvelteSet();
   truncate = writable(false);
@@ -129,7 +129,7 @@ describe('rooted at bookmarks root', () => {
       // rootNode
       rootNode = createFolderNode({ id: builtInFolderInfo.rootNodeId! });
 
-      folderNodeMap.set(rootNode.id, writable(rootNode));
+      folderNodeMap.set(rootNode.id, rootNode);
 
       nodeId = rootNode.id;
 
@@ -174,7 +174,7 @@ describe('rooted at bookmarks root', () => {
         title: '',
       });
 
-      folderNodeMap.set(rootNode.id, writable(rootNode));
+      folderNodeMap.set(rootNode.id, rootNode);
 
       nodeId = rootNode.id;
 
@@ -219,8 +219,8 @@ describe('rooted at bookmarks root', () => {
       folderNode.parentId = rootNode.id;
       rootNode.children.push(folderNode);
 
-      folderNodeMap.set(rootNode.id, writable(rootNode));
-      folderNodeMap.set(folderNode.id, writable(folderNode));
+      folderNodeMap.set(rootNode.id, rootNode);
+      folderNodeMap.set(folderNode.id, folderNode);
 
       nodeId = rootNode.id;
 
@@ -287,9 +287,9 @@ describe('rooted at bookmarks root', () => {
       folderNode2.children.push(createBookmarkNode());
       folderNode1.children.push(folderNode2);
 
-      folderNodeMap.set(rootNode.id, writable(rootNode));
-      folderNodeMap.set(folderNode1.id, writable(folderNode1));
-      folderNodeMap.set(folderNode2.id, writable(folderNode2));
+      folderNodeMap.set(rootNode.id, rootNode);
+      folderNodeMap.set(folderNode1.id, folderNode1);
+      folderNodeMap.set(folderNode2.id, folderNode2);
 
       nodeId = rootNode.id;
 
@@ -399,9 +399,9 @@ describe('rooted at bookmarks root', () => {
       folderNode2.children.push(createBookmarkNode());
       rootNode.children.push(folderNode2);
 
-      folderNodeMap.set(rootNode.id, writable(rootNode));
-      folderNodeMap.set(folderNode1.id, writable(folderNode1));
-      folderNodeMap.set(folderNode2.id, writable(folderNode2));
+      folderNodeMap.set(rootNode.id, rootNode);
+      folderNodeMap.set(folderNode1.id, folderNode1);
+      folderNodeMap.set(folderNode2.id, folderNode2);
 
       nodeId = rootNode.id;
 
@@ -506,10 +506,10 @@ describe('rooted at subfolder', () => {
     folderNode3.children.push(createBookmarkNode());
     folderNode2.children.push(folderNode3);
 
-    folderNodeMap.set(rootNode.id, writable(rootNode));
-    folderNodeMap.set(folderNode1.id, writable(folderNode1));
-    folderNodeMap.set(folderNode2.id, writable(folderNode2));
-    folderNodeMap.set(folderNode3.id, writable(folderNode3));
+    folderNodeMap.set(rootNode.id, rootNode);
+    folderNodeMap.set(folderNode1.id, folderNode1);
+    folderNodeMap.set(folderNode2.id, folderNode2);
+    folderNodeMap.set(folderNode3.id, folderNode3);
 
     nodeId = folderNode2.id;
 
@@ -664,10 +664,10 @@ describe('filter active', () => {
     folderNode3.children.push(bookmarkNode6);
     folderNode2.children.push(folderNode3);
 
-    folderNodeMap.set(rootNode.id, writable(rootNode));
-    folderNodeMap.set(folderNode1.id, writable(folderNode1));
-    folderNodeMap.set(folderNode2.id, writable(folderNode2));
-    folderNodeMap.set(folderNode3.id, writable(folderNode3));
+    folderNodeMap.set(rootNode.id, rootNode);
+    folderNodeMap.set(folderNode1.id, folderNode1);
+    folderNodeMap.set(folderNode2.id, folderNode2);
+    folderNodeMap.set(folderNode3.id, folderNode3);
 
     // Enable filter
     currentFilterActive = true;

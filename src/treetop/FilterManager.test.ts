@@ -1,7 +1,6 @@
 /* eslint no-irregular-whitespace: ["error", { "skipComments": true }] */
 
-import { SvelteSet } from 'svelte/reactivity';
-import { writable } from 'svelte/store';
+import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 import { faker } from '@faker-js/faker';
 import { beforeEach, describe, expect, it } from 'vitest';
 
@@ -36,7 +35,7 @@ let folderNode5: Treetop.FolderNode;
 let folderNode6: Treetop.FolderNode;
 
 beforeEach(() => {
-  folderNodeMap = new Map() as Treetop.FolderNodeMap;
+  folderNodeMap = new SvelteMap();
   filterSet = new SvelteSet();
   filterManager = new FilterManager(filterSet, folderNodeMap);
 
@@ -114,12 +113,12 @@ beforeEach(() => {
   });
   folderNode5.children.push(folderNode6);
 
-  folderNodeMap.set(folderNode1.id, writable(folderNode1));
-  folderNodeMap.set(folderNode2.id, writable(folderNode2));
-  folderNodeMap.set(folderNode3.id, writable(folderNode3));
-  folderNodeMap.set(folderNode4.id, writable(folderNode4));
-  folderNodeMap.set(folderNode5.id, writable(folderNode5));
-  folderNodeMap.set(folderNode6.id, writable(folderNode6));
+  folderNodeMap.set(folderNode1.id, folderNode1);
+  folderNodeMap.set(folderNode2.id, folderNode2);
+  folderNodeMap.set(folderNode3.id, folderNode3);
+  folderNodeMap.set(folderNode4.id, folderNode4);
+  folderNodeMap.set(folderNode5.id, folderNode5);
+  folderNodeMap.set(folderNode6.id, folderNode6);
 });
 
 describe('setFilter', () => {

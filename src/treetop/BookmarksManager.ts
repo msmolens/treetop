@@ -1,11 +1,9 @@
-import { get, writable } from 'svelte/store';
-
 import { isBookmark, isFolder } from './bookmarktreenode-utils';
 import { MOBILE_BOOKMARKS_GUID } from './constants';
 import * as Treetop from './types';
 
 /**
- * Class to initialize and manage updating bookmark node stores.
+ * Class to initialize and manage updating bookmark nodes.
  */
 export class BookmarksManager {
   constructor(
@@ -14,7 +12,7 @@ export class BookmarksManager {
   ) {}
 
   /**
-   * Load all bookmarks and initialize node stores for folders.
+   * Load all bookmarks and initialize nodes for folders.
    * Initialize built-in folder info.
    */
   async loadBookmarks(): Promise<void> {
@@ -34,7 +32,7 @@ export class BookmarksManager {
       ({ id }) => id,
     );
 
-    // Initialize node stores for folders
+    // Initialize nodes for folders
     while (nodes.length > 0) {
       const node = nodes.pop()!;
 
@@ -88,16 +86,15 @@ export class BookmarksManager {
   }
 
   /**
-   * Create and record a node store for the specified bookmark node.
+   * Create and record a node for the specified bookmark node.
    */
   private buildFolderNode(node: chrome.bookmarks.BookmarkTreeNode): void {
-    const newNode = this.convertNode(node);
-    const folderNode = writable(newNode);
+    const folderNode = this.convertNode(node);
     this.folderNodeMap.set(node.id, folderNode);
   }
 
   /**
-   * Update the node store for the specified bookmark ID.
+   * Update the node for the specified bookmark ID.
    */
   private async updateFolderNode(nodeId: string): Promise<void> {
     const [node] = await chrome.bookmarks.get(nodeId);
@@ -108,20 +105,19 @@ export class BookmarksManager {
 
     node.children = await chrome.bookmarks.getChildren(node.id);
 
-    const newNode = this.convertNode(node);
-    const folderNode = this.folderNodeMap.get(nodeId)!;
-    folderNode.set(newNode);
+    const folderNode = this.convertNode(node);
+    this.folderNodeMap.set(nodeId, folderNode);
   }
 
   /**
-   * Create a store for a newly created bookmark node.
+   * Create a node for a newly created bookmark node.
    */
   async handleBookmarkCreated(
     id: string,
     bookmark: chrome.bookmarks.BookmarkTreeNode,
   ): Promise<void> {
     if (isFolder(bookmark)) {
-      // Add node store for the new folder
+      // Add node for the new folder
       const [node] = await chrome.bookmarks.get(id);
       node.children = await chrome.bookmarks.getChildren(id);
       this.buildFolderNode(node);
@@ -132,8 +128,8 @@ export class BookmarksManager {
   }
 
   /**
-   * Delete stores for removed bookmarks. When the removed bookmark is a folder,
-   * recursively delete stores for its children.
+   * Delete nodes for removed bookmarks. When the removed bookmark is a folder,
+   * recursively delete nodes for its children.
    *
    * @return Array of the removed bookmark node IDs.
    */
@@ -145,9 +141,8 @@ export class BookmarksManager {
 
     if (isFolder(removeInfo.node)) {
       const folderNode = this.folderNodeMap.get(id)!;
-      const nodes: [Treetop.FolderNode] = [get(folderNode)];
+      const nodes = [folderNode];
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       while (nodes.length) {
         const node = nodes.pop()!;
         this.folderNodeMap.delete(node.id);
@@ -162,9 +157,8 @@ export class BookmarksManager {
 
         // Enqueue child folders for removal
         for (const childFolderNode of this.folderNodeMap.values()) {
-          const currentNode: Treetop.FolderNode = get(childFolderNode);
-          if (currentNode.parentId === node.id) {
-            nodes.push(currentNode);
+          if (childFolderNode.parentId === node.id) {
+            nodes.push(childFolderNode);
           }
         }
       }
@@ -179,7 +173,7 @@ export class BookmarksManager {
   }
 
   /**
-   * Update the store for a modified bookmark.
+   * Update the node for a modified bookmark.
    */
   async handleBookmarkChanged(
     id: string,
@@ -196,7 +190,7 @@ export class BookmarksManager {
   }
 
   /**
-   * Update stores when a bookmark is moved to a different folder or to a new
+   * Update nodes when a bookmark is moved to a different folder or to a new
    * offset within its folder.
    */
   async handleBookmarkMoved(

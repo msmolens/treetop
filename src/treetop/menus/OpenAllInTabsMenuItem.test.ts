@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { SvelteMap } from 'svelte/reactivity';
 import { faker } from '@faker-js/faker';
 import { beforeEach, describe, expect, it } from 'vitest';
 
@@ -20,7 +20,7 @@ const BUILT_IN_FOLDER_INFO: Treetop.BuiltInFolderInfo = {
 };
 
 beforeEach(() => {
-  folderNodeMap = new Map() as Treetop.FolderNodeMap;
+  folderNodeMap = new SvelteMap();
 
   const callback: OnClickedCallback = (nodeId) => {
     void nodeId;
@@ -47,7 +47,7 @@ describe('folders', () => {
 
   beforeEach(() => {
     folderNode = createFolderNode();
-    folderNodeMap.set(folderNode.id, writable(folderNode));
+    folderNodeMap.set(folderNode.id, folderNode);
   });
 
   it('is disabled for empty folder', () => {

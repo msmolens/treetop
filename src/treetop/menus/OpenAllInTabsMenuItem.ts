@@ -1,5 +1,3 @@
-import { get } from 'svelte/store';
-
 import type * as Treetop from '@Treetop/treetop/types';
 
 import { MenuItem, type OnClickedCallback } from './MenuItem';
@@ -30,8 +28,6 @@ export class OpenAllInTabsMenuItem extends MenuItem {
       return false;
     }
 
-    const node: Treetop.FolderNode = get(folderNode);
-
-    return node.children.length > 0;
+    return folderNode.children.length > 0;
   }
 }

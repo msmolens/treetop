@@ -1,6 +1,5 @@
 /* eslint no-irregular-whitespace: ["error", { "skipComments": true }] */
 import { SvelteMap } from 'svelte/reactivity';
-import { writable } from 'svelte/store';
 import { faker } from '@faker-js/faker';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -36,7 +35,7 @@ let folderNode1: Treetop.FolderNode;
 let folderNode2: Treetop.FolderNode;
 
 beforeEach(() => {
-  folderNodeMap = new Map() as Treetop.FolderNodeMap;
+  folderNodeMap = new SvelteMap();
   lastVisitTimeMap = new SvelteMap();
   historyManager = new HistoryManager(lastVisitTimeMap);
 
@@ -62,8 +61,8 @@ beforeEach(() => {
   }
   folderNode1.children.push(folderNode2);
 
-  folderNodeMap.set(folderNode1.id, writable(folderNode1));
-  folderNodeMap.set(folderNode2.id, writable(folderNode2));
+  folderNodeMap.set(folderNode1.id, folderNode1);
+  folderNodeMap.set(folderNode2.id, folderNode2);
 });
 
 describe('init', () => {

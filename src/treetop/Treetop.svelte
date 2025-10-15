@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onDestroy, onMount, setContext } from 'svelte';
   import { SvelteMap, SvelteSet } from 'svelte/reactivity';
-  import { get, type Unsubscriber, type Writable } from 'svelte/store';
+  import type { Unsubscriber } from 'svelte/store';
   import { fade } from 'svelte/transition';
   import LinearProgress from '@smui/linear-progress';
   import Snackbar, { Label } from '@smui/snackbar';
@@ -55,15 +55,12 @@
   // Create bookmarks data and manager
   //
 
-  // ID to node store map.
-  // Populated with a store for each folder.
-  const folderNodeMap: Treetop.FolderNodeMap = new Map<
-    string,
-    Writable<Treetop.FolderNode>
-  >();
+  // ID to folder node map.
+  // Populated with a node for each folder.
+  const folderNodeMap: Treetop.FolderNodeMap = new SvelteMap();
 
   // ID to last visit time map.
-  // Populated with a store for each bookmark.
+  // Populated with a node for each bookmark.
   const lastVisitTimeMap: Treetop.LastVisitTimeMap = new SvelteMap();
 
   // Set of node IDs that match the active filter.
@@ -176,13 +173,12 @@
    */
   function openAllInTabs(nodeId: string) {
     const folderNode = folderNodeMap.get(nodeId)!;
-    const node: Treetop.FolderNode = get(folderNode);
 
     const activeFilterSet = filterActive ? filterSet : undefined;
 
     const promises: Promise<chrome.tabs.Tab>[] = [];
 
-    node.children.forEach((child) => {
+    folderNode.children.forEach((child) => {
       if (child.type === Treetop.NodeType.Bookmark) {
         if (!activeFilterSet || activeFilterSet.has(child.id)) {
           promises.push(
@@ -248,8 +244,7 @@
     const folderNode = folderNodeMap.get(nodeId);
     if (folderNode !== undefined) {
       // Folder
-      const node = get(folderNode);
-      if (node.children.length === 0) {
+      if (folderNode.children.length === 0) {
         chrome.bookmarks.remove(nodeId).catch((err: unknown) => {
           console.error(err);
           handleError(chrome.i18n.getMessage('errorDeletingFolder'));
