@@ -2,7 +2,7 @@ import { isBookmark } from './bookmarktreenode-utils';
 import * as Treetop from './types';
 
 /**
- * Class to initialize and manage updating last visit time stores for bookmarks.
+ * Class to initialize and manage updating last visit times for bookmarks.
  */
 export class HistoryManager {
   private loaded = false;
@@ -10,7 +10,7 @@ export class HistoryManager {
   constructor(private readonly lastVisitTimeMap: Treetop.LastVisitTimeMap) {}
 
   /**
-   * Initialize default last visit time stores for all bookmark nodes.
+   * Initialize default last visit time for all bookmark nodes.
    */
   init(folderNodeMap: Treetop.FolderNodeMap): void {
     for (const folderNode of folderNodeMap.values()) {
@@ -23,7 +23,7 @@ export class HistoryManager {
   }
 
   /**
-   * Load history for all bookmarks and initialize last visit time stores.
+   * Load history for all bookmarks and initialize last visit times.
    */
   async loadHistory(folderNodeMap: Treetop.FolderNodeMap): Promise<void> {
     if (this.loaded) {
@@ -62,7 +62,7 @@ export class HistoryManager {
   }
 
   /**
-   * Reset all last visit time stores.
+   * Reset all last visit times.
    */
   unloadHistory(): void {
     for (const nodeId of this.lastVisitTimeMap.keys()) {
@@ -73,7 +73,7 @@ export class HistoryManager {
   }
 
   /**
-   * Create a last visit time store for a newly created bookmark node.
+   * Create a last visit time for a newly created bookmark node.
    */
   async handleBookmarkCreated(
     _id: string,
@@ -92,14 +92,14 @@ export class HistoryManager {
   }
 
   /**
-   * Delete the last visit time store for a removed bookmark.
+   * Delete the last visit time for a removed bookmark.
    */
   handleBookmarkRemoved(id: string): void {
     this.lastVisitTimeMap.delete(id);
   }
 
   /**
-   * Update the last visit time store for a modified bookmark.
+   * Update the last visit time for a modified bookmark.
    */
   async handleBookmarkChanged(
     id: string,
@@ -119,7 +119,7 @@ export class HistoryManager {
   }
 
   /**
-   * Update the last visit time store when the user visits a bookmarked URL.
+   * Update the last visit time when the user visits a bookmarked URL.
    */
   async handleVisited(result: chrome.history.HistoryItem): Promise<void> {
     // Update bookmark nodes that match the visited URL
@@ -133,8 +133,7 @@ export class HistoryManager {
   }
 
   /**
-   * Reset the last visit time stores when a page is removed from the browser
-   * history.
+   * Reset the last visit times when a page is removed from the browser history.
    */
   async handleVisitRemoved(
     removed: Treetop.HistoryRemovedResult,
