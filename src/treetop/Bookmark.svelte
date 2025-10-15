@@ -1,7 +1,6 @@
 <script lang="ts">
   import { getContext } from 'svelte';
   import type { SvelteDate } from 'svelte/reactivity';
-  import type { Writable } from 'svelte/store';
   import lodashTruncate from 'lodash-es/truncate';
 
   import type * as Treetop from './types';
@@ -17,8 +16,8 @@
 
   const lastVisitTimeMap: Treetop.LastVisitTimeMap =
     getContext('lastVisitTimeMap');
-  const truncate = getContext<Writable<boolean>>('truncate');
-  const tooltips = getContext<Writable<boolean>>('tooltips');
+  const truncate = getContext<() => boolean>('truncate');
+  const tooltips = getContext<() => boolean>('tooltips');
   const clock = getContext<SvelteDate>('clock');
 
   const lastVisitTime = $derived(lastVisitTimeMap.get(nodeId)!);
@@ -29,7 +28,7 @@
   // Set name, truncating based on preference setting.
   // Fall back to URL if title is blank.
   const name = $derived(
-    $truncate
+    truncate()
       ? lodashTruncate(title || url, {
           length: maxLength,
           separator: ' ',
@@ -40,7 +39,7 @@
   // Set tooltip if preference is enabled.
   // Display title and URL on separate lines, truncating long URLs in the middle.
   const tooltip = $derived(
-    $tooltips ? `${title}\n${truncateMiddle(url, maxLength)}` : undefined,
+    tooltips() ? `${title}\n${truncateMiddle(url, maxLength)}` : undefined,
   );
 
   // Number of milliseconds in a day

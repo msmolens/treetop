@@ -1,5 +1,4 @@
 import { SvelteDate, SvelteMap } from 'svelte/reactivity';
-import { type Writable, writable } from 'svelte/store';
 import { faker } from '@faker-js/faker';
 import { render, screen } from '@testing-library/svelte';
 import escapeRegExp from 'lodash-es/escapeRegExp';
@@ -11,8 +10,10 @@ import type * as Treetop from '@Treetop/treetop/types';
 import ContextWrapper from '../../test/utils/ContextWrapper.svelte';
 
 let lastVisitTimeMap: Treetop.LastVisitTimeMap;
-let truncate: Writable<boolean>;
-let tooltips: Writable<boolean>;
+let currentTruncate: boolean;
+const truncate = () => currentTruncate;
+let currentTooltips: boolean;
+const tooltips = () => currentTooltips;
 let clock: SvelteDate;
 let nodeId: string;
 let title: string;
@@ -48,8 +49,8 @@ beforeEach(() => {
   lastVisitTimeMap = new SvelteMap();
   lastVisitTimeMap.set(nodeId, 0);
 
-  truncate = writable(false);
-  tooltips = writable(false);
+  currentTruncate = false;
+  currentTooltips = false;
 
   clock = new SvelteDate();
 });
@@ -81,7 +82,7 @@ it('uses URL as content when title is empty', () => {
 
 describe('truncate option', () => {
   beforeEach(() => {
-    truncate.set(true);
+    currentTruncate = true;
   });
 
   it('truncates long title', () => {
@@ -133,7 +134,7 @@ describe('truncate option', () => {
 
 describe('tooltips option', () => {
   beforeEach(() => {
-    tooltips.set(true);
+    currentTooltips = true;
   });
 
   it('title attribute contains title and URL', () => {

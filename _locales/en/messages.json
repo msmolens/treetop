@@ -172,6 +172,10 @@
     "message": "Error opening tab.",
     "description": "Message shown when an error occurs when opening a tab."
   },
+  "errorRefreshingHistoryManager": {
+    "message": "Error refreshing history manager.",
+    "description": "Message shown when an error occurs when refreshing the history manager."
+  },
   "openSourceAttributions": {
     "message": "Open Source Attributions",
     "description": "Text for link to open source attributions."

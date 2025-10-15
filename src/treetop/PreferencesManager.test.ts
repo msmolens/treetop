@@ -1,4 +1,3 @@
-import { get, type Writable } from 'svelte/store';
 import { faker } from '@faker-js/faker';
 import EventEmitter from 'node:events';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -21,7 +20,7 @@ describe('constructor', () => {
   });
 });
 
-describe('createStore', () => {
+describe('createPreference', () => {
   beforeEach(() => {
     const addListener = vi.fn();
     vi.spyOn(chrome.storage.onChanged, 'addListener').mockImplementation(
@@ -32,23 +31,23 @@ describe('createStore', () => {
   });
 
   it.each(['value', 2, false, true, ['value'], [2], [false], [true]])(
-    'creates and returns a store for value: %p',
+    'creates and returns a preference for value: %p',
     (value: Treetop.PreferenceValue) => {
       const name = faker.word.sample();
-      const store = preferencesManager.createStore(name, value);
+      const preference = preferencesManager.createPreference(name, value);
 
-      expect(get(store)).toBe(value);
+      expect(preference()).toBe(value);
     },
   );
 });
 
 describe('loadPreferences', () => {
-  let stringStore: Writable<Treetop.PreferenceValue>;
-  let numberStore: Writable<Treetop.PreferenceValue>;
-  let booleanStore: Writable<Treetop.PreferenceValue>;
-  let stringArrayStore: Writable<Treetop.PreferenceValue>;
-  let numberArrayStore: Writable<Treetop.PreferenceValue>;
-  let booleanArrayStore: Writable<Treetop.PreferenceValue>;
+  let stringPreference: () => Treetop.PreferenceValue;
+  let numberPreference: () => Treetop.PreferenceValue;
+  let booleanPreference: () => Treetop.PreferenceValue;
+  let stringArrayPreference: () => Treetop.PreferenceValue;
+  let numberArrayPreference: () => Treetop.PreferenceValue;
+  let booleanArrayPreference: () => Treetop.PreferenceValue;
 
   beforeEach(() => {
     const addListener = vi.fn();
@@ -57,17 +56,24 @@ describe('loadPreferences', () => {
     );
 
     preferencesManager = new PreferencesManager();
-    stringStore = preferencesManager.createStore('string', 'value');
-    numberStore = preferencesManager.createStore('number', 2);
-    booleanStore = preferencesManager.createStore('boolean', true);
-    stringArrayStore = preferencesManager.createStore('string_array', [
-      'value',
-    ]);
-    numberArrayStore = preferencesManager.createStore('number_array', [2]);
-    booleanArrayStore = preferencesManager.createStore('boolean_array', [true]);
+    stringPreference = preferencesManager.createPreference('string', 'value');
+    numberPreference = preferencesManager.createPreference('number', 2);
+    booleanPreference = preferencesManager.createPreference('boolean', true);
+    stringArrayPreference = preferencesManager.createPreference(
+      'string_array',
+      ['value'],
+    );
+    numberArrayPreference = preferencesManager.createPreference(
+      'number_array',
+      [2],
+    );
+    booleanArrayPreference = preferencesManager.createPreference(
+      'boolean_array',
+      [true],
+    );
   });
 
-  it('loads preferences from storage and initializes stores', async () => {
+  it('loads preferences from storage and initializes preference state', async () => {
     const values = {
       string: 'value2',
       number: 3,
@@ -83,15 +89,15 @@ describe('loadPreferences', () => {
 
     await preferencesManager.loadPreferences();
 
-    expect(get(stringStore)).toBe('value2');
-    expect(get(numberStore)).toBe(3);
-    expect(get(booleanStore)).toBe(false);
-    expect(get(stringArrayStore)).toStrictEqual(['value2']);
-    expect(get(numberArrayStore)).toStrictEqual([3]);
-    expect(get(booleanArrayStore)).toStrictEqual([false]);
+    expect(stringPreference()).toBe('value2');
+    expect(numberPreference()).toBe(3);
+    expect(booleanPreference()).toBe(false);
+    expect(stringArrayPreference()).toStrictEqual(['value2']);
+    expect(numberArrayPreference()).toStrictEqual([3]);
+    expect(booleanArrayPreference()).toStrictEqual([false]);
   });
 
-  it('ignores preferences from storage without a corresponding store', async () => {
+  it('ignores preferences from storage without a corresponding preference', async () => {
     const values = { other: true };
 
     vi.spyOn(chrome.storage.local, 'get').mockImplementation(
@@ -102,14 +108,14 @@ describe('loadPreferences', () => {
   });
 });
 
-describe('handleStoreChanged', () => {
+describe('handleStorageChanged', () => {
   let emitter: EventEmitter;
-  let stringStore: Writable<Treetop.PreferenceValue>;
-  let numberStore: Writable<Treetop.PreferenceValue>;
-  let booleanStore: Writable<Treetop.PreferenceValue>;
-  let stringArrayStore: Writable<Treetop.PreferenceValue>;
-  let numberArrayStore: Writable<Treetop.PreferenceValue>;
-  let booleanArrayStore: Writable<Treetop.PreferenceValue>;
+  let stringPreference: () => Treetop.PreferenceValue;
+  let numberPreference: () => Treetop.PreferenceValue;
+  let booleanPreference: () => Treetop.PreferenceValue;
+  let stringArrayPreference: () => Treetop.PreferenceValue;
+  let numberArrayPreference: () => Treetop.PreferenceValue;
+  let booleanArrayPreference: () => Treetop.PreferenceValue;
 
   beforeEach(() => {
     emitter = new EventEmitter();
@@ -120,17 +126,24 @@ describe('handleStoreChanged', () => {
     );
 
     preferencesManager = new PreferencesManager();
-    stringStore = preferencesManager.createStore('string', 'value');
-    numberStore = preferencesManager.createStore('number', 3);
-    booleanStore = preferencesManager.createStore('boolean', true);
-    stringArrayStore = preferencesManager.createStore('string_array', [
-      'value',
-    ]);
-    numberArrayStore = preferencesManager.createStore('number_array', [2]);
-    booleanArrayStore = preferencesManager.createStore('boolean_array', [true]);
+    stringPreference = preferencesManager.createPreference('string', 'value');
+    numberPreference = preferencesManager.createPreference('number', 3);
+    booleanPreference = preferencesManager.createPreference('boolean', true);
+    stringArrayPreference = preferencesManager.createPreference(
+      'string_array',
+      ['value'],
+    );
+    numberArrayPreference = preferencesManager.createPreference(
+      'number_array',
+      [2],
+    );
+    booleanArrayPreference = preferencesManager.createPreference(
+      'boolean_array',
+      [true],
+    );
   });
 
-  it('updates stores when store values change', () => {
+  it('updates preferences when storage values change', () => {
     const changes = {
       string: {
         newValue: 'value2',
@@ -154,15 +167,15 @@ describe('handleStoreChanged', () => {
 
     emitter.emit('onChanged', changes, 'local');
 
-    expect(get(stringStore)).toBe('value2');
-    expect(get(numberStore)).toBe(4);
-    expect(get(booleanStore)).toBe(false);
-    expect(get(stringArrayStore)).toStrictEqual(['value2']);
-    expect(get(numberArrayStore)).toStrictEqual([3]);
-    expect(get(booleanArrayStore)).toStrictEqual([false]);
+    expect(stringPreference()).toBe('value2');
+    expect(numberPreference()).toBe(4);
+    expect(booleanPreference()).toBe(false);
+    expect(stringArrayPreference()).toStrictEqual(['value2']);
+    expect(numberArrayPreference()).toStrictEqual([3]);
+    expect(booleanArrayPreference()).toStrictEqual([false]);
   });
 
-  it('ignores store changes without a corresponding store', () => {
+  it('ignores storage changes without a corresponding preference', () => {
     const changes = { other: { newValue: true } };
 
     emitter.emit('onChanged', changes, 'local');

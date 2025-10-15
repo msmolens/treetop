@@ -1,4 +1,4 @@
-import { type Writable, writable } from 'svelte/store';
+import { SvelteMap } from 'svelte/reactivity';
 
 import type * as Treetop from './types';
 
@@ -7,12 +7,12 @@ type StorageChangedCallback = Parameters<
 >[0];
 
 /**
- * Class to create and manage updating preference stores.
+ * Class to create and manage updating preferences.
  */
 export class PreferencesManager {
-  private readonly stores = new Map<
+  private readonly preferences = new SvelteMap<
     string,
-    Writable<Treetop.PreferenceValue>
+    Treetop.PreferenceValue
   >();
 
   // Bound event handler
@@ -26,37 +26,36 @@ export class PreferencesManager {
   }
 
   /**
-   * Create and register a store.
+   * Create and register a preference.
    */
-  createStore(
+  createPreference(
     name: string,
     value: Treetop.PreferenceValue,
-  ): Writable<Treetop.PreferenceValue> {
-    const store = writable(value);
-    this.stores.set(name, store);
-    return store;
+  ): () => Treetop.PreferenceValue {
+    this.preferences.set(name, value);
+
+    return () => this.preferences.get(name)!;
   }
 
   /**
-   * Load preferences from storage and initialize stores.
+   * Load preferences from storage and initialize preference state.
    */
   async loadPreferences(): Promise<void> {
     // Get preferences from storage
     const results = await chrome.storage.local.get();
 
-    // Initialize stores
+    // Initialize preference state
     for (const key of Object.keys(results)) {
       const value = results[key] as Treetop.PreferenceValue;
 
-      const store = this.stores.get(key);
-      if (store !== undefined) {
-        store.set(value);
+      if (this.preferences.has(key)) {
+        this.preferences.set(key, value);
       }
     }
   }
 
   /**
-   * Update preferences stores when storage values change.
+   * Update preference state when storage values change.
    */
   private handleStorageChanged(
     changes: Record<string, chrome.storage.StorageChange>,
@@ -65,9 +64,8 @@ export class PreferencesManager {
     for (const key of Object.keys(changes)) {
       const value = changes[key].newValue as Treetop.PreferenceValue;
 
-      const store = this.stores.get(key);
-      if (store !== undefined) {
-        store.set(value);
+      if (this.preferences.has(key)) {
+        this.preferences.set(key, value);
       }
     }
   }

@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onDestroy, onMount, setContext } from 'svelte';
   import { SvelteMap, SvelteSet } from 'svelte/reactivity';
-  import type { Unsubscriber } from 'svelte/store';
   import { fade } from 'svelte/transition';
   import LinearProgress from '@smui/linear-progress';
   import Snackbar, { Label } from '@smui/snackbar';
@@ -36,20 +35,20 @@
   //
 
   const preferencesManager = new PreferencesManager();
-  const truncate = preferencesManager.createStore('truncate', true);
-  const tooltips = preferencesManager.createStore('tooltips', true);
-  const showRecentlyVisited = preferencesManager.createStore(
+  const truncate = preferencesManager.createPreference('truncate', true);
+  const tooltips = preferencesManager.createPreference('tooltips', true);
+  const showRecentlyVisited = preferencesManager.createPreference(
     'showRecentlyVisited',
     true,
   );
-  const colorScheme = preferencesManager.createStore('colorScheme', 'light');
+  const colorScheme = preferencesManager.createPreference(
+    'colorScheme',
+    'light',
+  );
 
   // Make select preferences available to other components
   setContext('truncate', truncate);
   setContext('tooltips', tooltips);
-
-  // Function to unsubscribe from the 'showRecentlyVisited' preference
-  let unsubscribeShowRecentlyVisited: Unsubscriber;
 
   //
   // Create bookmarks data and manager
@@ -149,12 +148,42 @@
       body.classList.remove('colorSchemeLight');
       body.classList.remove('colorSchemeDark');
 
-      if ($colorScheme === 'light') {
+      if (colorScheme() === 'light') {
         body.classList.add('colorSchemeLight');
-      } else if ($colorScheme === 'dark') {
+      } else if (colorScheme() === 'dark') {
         body.classList.add('colorSchemeDark');
       }
     }
+  });
+
+  // Load or unload history when the 'showRecentlyVisited' preference changes
+  $effect(() => {
+    // Reference the preference outside of the async function call to ensure
+    // that the effect re-runs when the preference changes.
+    // From https://svelte.dev/docs/svelte/$effect:
+    //
+    //     An effect only depends on the values that it read the last time it ran.
+    //
+    showRecentlyVisited();
+
+    // Refresh the history manager only after Treetop is initialized
+    async function refreshHistoryManager() {
+      await ready;
+
+      if (showRecentlyVisited()) {
+        historyManager.loadHistory(folderNodeMap).catch((err: unknown) => {
+          console.error(err);
+          handleError(chrome.i18n.getMessage('errorLoadingHistory'));
+        });
+      } else {
+        historyManager.unloadHistory();
+      }
+    }
+
+    refreshHistoryManager().catch((err: unknown) => {
+      console.error(err);
+      handleError(chrome.i18n.getMessage('errorRefreshingHistoryManager'));
+    });
   });
 
   /**
@@ -324,7 +353,7 @@
 
     promises.push(bookmarksManager.handleBookmarkCreated(id, bookmark));
 
-    if ($showRecentlyVisited) {
+    if (showRecentlyVisited()) {
       promises.push(historyManager.handleBookmarkCreated(id, bookmark));
     }
 
@@ -358,7 +387,7 @@
     });
     filterManager.endBatchRemove();
 
-    if ($showRecentlyVisited) {
+    if (showRecentlyVisited()) {
       removedNodeIds.forEach((nodeId) => {
         historyManager.handleBookmarkRemoved(nodeId);
       });
@@ -383,7 +412,7 @@
 
     filterManager.handleBookmarkChanged(id, changeInfo);
 
-    if ($showRecentlyVisited) {
+    if (showRecentlyVisited()) {
       await historyManager.handleBookmarkChanged(id, changeInfo);
     }
   }
@@ -419,7 +448,7 @@
   //
 
   async function asyncOnVisited(result: chrome.history.HistoryItem) {
-    if ($showRecentlyVisited) {
+    if (showRecentlyVisited()) {
       await historyManager.handleVisited(result);
     }
   }
@@ -432,7 +461,7 @@
   }
 
   async function asyncOnVisitRemoved(removed: Treetop.HistoryRemovedResult) {
-    if ($showRecentlyVisited) {
+    if (showRecentlyVisited()) {
       await historyManager.handleVisitRemoved(removed);
     }
   }
@@ -534,25 +563,13 @@
     // Load history
     try {
       historyManager.init(folderNodeMap);
-      if ($showRecentlyVisited) {
+      if (showRecentlyVisited()) {
         await historyManager.loadHistory(folderNodeMap);
       }
     } catch (err: unknown) {
       console.error(err);
       handleError(chrome.i18n.getMessage('errorLoadingHistory'));
     }
-
-    // Initialize or reset history manager when 'showRecentlyVisited' preference changes
-    unsubscribeShowRecentlyVisited = showRecentlyVisited.subscribe((value) => {
-      if (value) {
-        historyManager.loadHistory(folderNodeMap).catch((err: unknown) => {
-          console.error(err);
-          handleError(chrome.i18n.getMessage('errorLoadingHistory'));
-        });
-      } else {
-        historyManager.unloadHistory();
-      }
-    });
 
     // Validate specified root bookmark ID, falling back to bookmarks root
     if (!rootBookmarkId || !folderNodeMap.has(rootBookmarkId)) {
@@ -598,9 +615,6 @@
   });
 
   onDestroy(() => {
-    // Unsubscribe from the 'showRecentlyVisited' option
-    unsubscribeShowRecentlyVisited();
-
     // Unregister menu event handlers
     document.removeEventListener('contextmenu', onContextMenu);
     chrome.contextMenus.onClicked.removeListener(onMenuClicked);
@@ -647,9 +661,9 @@
 </style>
 
 <svelte:head>
-  {#if $colorScheme === 'light' || $colorScheme === 'system'}
+  {#if colorScheme() === 'light' || colorScheme() === 'system'}
     <link rel="stylesheet" href="/smui.css" />
-  {:else if $colorScheme === 'dark'}
+  {:else if colorScheme() === 'dark'}
     <link rel="stylesheet" href="/smui-dark.css" />
   {/if}
 </svelte:head>
