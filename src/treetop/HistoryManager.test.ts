@@ -1,6 +1,7 @@
 /* eslint no-irregular-whitespace: ["error", { "skipComments": true }] */
 import { SvelteMap } from 'svelte/reactivity';
 import { faker } from '@faker-js/faker';
+import maxBy from 'lodash-es/maxBy';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { HistoryManager } from '@Treetop/treetop/HistoryManager';
@@ -14,6 +15,8 @@ import {
   createHistoryItem,
   createOtherBookmarksNode,
   createVisitItem,
+  createVisitItems,
+  type CreateVisitItemsOptions,
 } from '../../test/utils/factories';
 
 const getBookmarkNodes = (
@@ -82,45 +85,63 @@ describe('loadHistory', () => {
     historyManager.init(folderNodeMap);
   });
 
-  it('sets last visit time of visited bookmarks', async () => {
-    const getVisits = vi.fn();
-    vi.spyOn(chrome.history, 'getVisits').mockImplementation(getVisits);
+  it.each(['chrome', 'firefox'] as const)(
+    'sets last visit time of visited bookmarks with getVisits order convention for %s',
+    async (order) => {
+      const getVisits = vi.fn();
+      vi.spyOn(chrome.history, 'getVisits').mockImplementation(getVisits);
 
-    const visitTimeMap = new Map<string, number>();
+      const visitTimeMap = new Map<string, number>();
 
-    const bookmarkNodes = [];
-    bookmarkNodes.push(...getBookmarkNodes(folderNode1));
-    bookmarkNodes.push(...getBookmarkNodes(folderNode2));
-    // Bookmarks alternate between unvisited and visited
-    bookmarkNodes.forEach((node, index) => {
-      const visitItems = [];
-      let visitTime = 0;
-      if (index & 1) {
-        const visitItem = createVisitItem();
-        visitTime = visitItem.visitTime!;
-        visitItems.push(visitItem);
+      const bookmarkNodes = [];
+      bookmarkNodes.push(...getBookmarkNodes(folderNode1));
+      bookmarkNodes.push(...getBookmarkNodes(folderNode2));
+      // Bookmarks alternate between unvisited and visited
+      bookmarkNodes.forEach((node, index) => {
+        let visitItems: chrome.history.VisitItem[] = [];
+        let mostRecentVisitTime = 0;
+        const count = index & 1 ? faker.number.int({ min: 1, max: 10 }) : 0;
+        if (count > 0) {
+          visitItems = createVisitItems({ count, order });
+          mostRecentVisitTime =
+            maxBy(visitItems, (item) => item.visitTime)?.visitTime ?? 0;
+        }
+        visitTimeMap.set(node.id, mostRecentVisitTime);
+        getVisits.mockResolvedValueOnce(visitItems);
+      });
+
+      await historyManager.loadHistory(folderNodeMap);
+
+      expect(getVisits).toHaveBeenCalledTimes(7);
+      expect(getVisits).toHaveBeenNthCalledWith(1, {
+        url: bookmarkNodes[0].url,
+      });
+      expect(getVisits).toHaveBeenNthCalledWith(2, {
+        url: bookmarkNodes[1].url,
+      });
+      expect(getVisits).toHaveBeenNthCalledWith(3, {
+        url: bookmarkNodes[2].url,
+      });
+      expect(getVisits).toHaveBeenNthCalledWith(4, {
+        url: bookmarkNodes[3].url,
+      });
+      expect(getVisits).toHaveBeenNthCalledWith(5, {
+        url: bookmarkNodes[4].url,
+      });
+      expect(getVisits).toHaveBeenNthCalledWith(6, {
+        url: bookmarkNodes[5].url,
+      });
+      expect(getVisits).toHaveBeenNthCalledWith(7, {
+        url: bookmarkNodes[6].url,
+      });
+
+      expect(lastVisitTimeMap.size).toBe(7);
+      for (const [nodeId, lastVisitTime] of lastVisitTimeMap.entries()) {
+        const visitTime = visitTimeMap.get(nodeId) ?? 0;
+        expect(lastVisitTime).toBe(visitTime);
       }
-      visitTimeMap.set(node.id, visitTime);
-      getVisits.mockResolvedValueOnce(visitItems);
-    });
-
-    await historyManager.loadHistory(folderNodeMap);
-
-    expect(getVisits).toHaveBeenCalledTimes(7);
-    expect(getVisits).toHaveBeenNthCalledWith(1, { url: bookmarkNodes[0].url });
-    expect(getVisits).toHaveBeenNthCalledWith(2, { url: bookmarkNodes[1].url });
-    expect(getVisits).toHaveBeenNthCalledWith(3, { url: bookmarkNodes[2].url });
-    expect(getVisits).toHaveBeenNthCalledWith(4, { url: bookmarkNodes[3].url });
-    expect(getVisits).toHaveBeenNthCalledWith(5, { url: bookmarkNodes[4].url });
-    expect(getVisits).toHaveBeenNthCalledWith(6, { url: bookmarkNodes[5].url });
-    expect(getVisits).toHaveBeenNthCalledWith(7, { url: bookmarkNodes[6].url });
-
-    expect(lastVisitTimeMap.size).toBe(7);
-    for (const [nodeId, lastVisitTime] of lastVisitTimeMap.entries()) {
-      const visitTime = visitTimeMap.get(nodeId) ?? 0;
-      expect(lastVisitTime).toBe(visitTime);
-    }
-  });
+    },
+  );
 
   it('no-op when called twice in a row', async () => {
     const getVisits = vi.fn();
@@ -185,23 +206,45 @@ describe('handleBookmarkCreated', () => {
     expect(lastVisitTimeMap.get(bookmarkNode.id)!).toBe(0);
   });
 
-  it('sets last visit time for a new visited bookmark', async () => {
-    const baseNode = createOtherBookmarksNode();
-    const bookmarkNode = createBrowserBookmarkNode(baseNode);
+  it.each<{ count: number; order: CreateVisitItemsOptions['order'] }>([
+    { count: 0, order: 'chrome' },
+    { count: 0, order: 'firefox' },
+    { count: 1, order: 'chrome' },
+    { count: 1, order: 'firefox' },
+    { count: 2, order: 'chrome' },
+    { count: 2, order: 'firefox' },
+    { count: 3, order: 'chrome' },
+    { count: 3, order: 'firefox' },
+    { count: 4, order: 'chrome' },
+    { count: 4, order: 'firefox' },
+    { count: 5, order: 'chrome' },
+    { count: 5, order: 'firefox' },
+    { count: 9, order: 'chrome' },
+    { count: 9, order: 'firefox' },
+    { count: 10, order: 'chrome' },
+    { count: 10, order: 'firefox' },
+  ])(
+    'sets last visit time of visited bookmarks with getVisits of length $count and order convention for $order',
+    async ({ count, order }) => {
+      const baseNode = createOtherBookmarksNode();
+      const bookmarkNode = createBrowserBookmarkNode(baseNode);
 
-    const visitItem = createVisitItem();
+      const visitItems = createVisitItems({ count, order });
+      const mostRecentVisitTime =
+        maxBy(visitItems, (item) => item.visitTime)?.visitTime ?? 0;
 
-    const getVisits = vi.fn().mockResolvedValue([visitItem]);
-    vi.spyOn(chrome.history, 'getVisits').mockImplementation(getVisits);
+      const getVisits = vi.fn().mockResolvedValueOnce(visitItems);
+      vi.spyOn(chrome.history, 'getVisits').mockImplementation(getVisits);
 
-    await historyManager.handleBookmarkCreated(bookmarkNode.id, bookmarkNode);
+      await historyManager.handleBookmarkCreated(bookmarkNode.id, bookmarkNode);
 
-    expect(getVisits).toHaveBeenCalledOnce();
-    expect(getVisits).toHaveBeenCalledWith({ url: bookmarkNode.url });
+      expect(getVisits).toHaveBeenCalledOnce();
+      expect(getVisits).toHaveBeenCalledWith({ url: bookmarkNode.url });
 
-    expect(lastVisitTimeMap.has(bookmarkNode.id)).toBe(true);
-    expect(lastVisitTimeMap.get(bookmarkNode.id)!).toBe(visitItem.visitTime!);
-  });
+      expect(lastVisitTimeMap.has(bookmarkNode.id)).toBe(true);
+      expect(lastVisitTimeMap.get(bookmarkNode.id)!).toBe(mostRecentVisitTime);
+    },
+  );
 
   it('ignores new folders', async () => {
     const baseNode = createOtherBookmarksNode();
@@ -236,29 +279,51 @@ describe('handleBookmarkRemoved', () => {
 });
 
 describe('handleBookmarkChanged', () => {
-  it('updates last visit time of a bookmark when its URL is visited', async () => {
-    const baseNode = createOtherBookmarksNode();
-    const bookmarkNode = createBrowserBookmarkNode(baseNode);
-    lastVisitTimeMap.set(bookmarkNode.id, 0);
+  it.each<{ count: number; order: CreateVisitItemsOptions['order'] }>([
+    { count: 0, order: 'chrome' },
+    { count: 0, order: 'firefox' },
+    { count: 1, order: 'chrome' },
+    { count: 1, order: 'firefox' },
+    { count: 2, order: 'chrome' },
+    { count: 2, order: 'firefox' },
+    { count: 3, order: 'chrome' },
+    { count: 3, order: 'firefox' },
+    { count: 4, order: 'chrome' },
+    { count: 4, order: 'firefox' },
+    { count: 5, order: 'chrome' },
+    { count: 5, order: 'firefox' },
+    { count: 9, order: 'chrome' },
+    { count: 9, order: 'firefox' },
+    { count: 10, order: 'chrome' },
+    { count: 10, order: 'firefox' },
+  ])(
+    'updates last visit time of a bookmark when its URL is visited for getVisits of length $count and order convention for $order',
+    async ({ count, order }) => {
+      const baseNode = createOtherBookmarksNode();
+      const bookmarkNode = createBrowserBookmarkNode(baseNode);
+      lastVisitTimeMap.set(bookmarkNode.id, 0);
 
-    const newUrl = faker.internet.url();
-    const changeInfo: Treetop.BookmarkChangeInfo = {
-      title: bookmarkNode.title,
-      url: newUrl,
-    };
+      const newUrl = faker.internet.url();
+      const changeInfo: Treetop.BookmarkChangeInfo = {
+        title: bookmarkNode.title,
+        url: newUrl,
+      };
 
-    const visitItem = createVisitItem();
+      const visitItems = createVisitItems({ count, order });
+      const mostRecentVisitTime =
+        maxBy(visitItems, (item) => item.visitTime)?.visitTime ?? 0;
 
-    const getVisits = vi.fn().mockResolvedValue([visitItem]);
-    vi.spyOn(chrome.history, 'getVisits').mockImplementation(getVisits);
+      const getVisits = vi.fn().mockResolvedValueOnce(visitItems);
+      vi.spyOn(chrome.history, 'getVisits').mockImplementation(getVisits);
 
-    await historyManager.handleBookmarkChanged(bookmarkNode.id, changeInfo);
+      await historyManager.handleBookmarkChanged(bookmarkNode.id, changeInfo);
 
-    expect(getVisits).toHaveBeenCalledOnce();
-    expect(getVisits).toHaveBeenCalledWith({ url: newUrl });
+      expect(getVisits).toHaveBeenCalledOnce();
+      expect(getVisits).toHaveBeenCalledWith({ url: newUrl });
 
-    expect(lastVisitTimeMap.get(bookmarkNode.id)!).toBe(visitItem.visitTime!);
-  });
+      expect(lastVisitTimeMap.get(bookmarkNode.id)!).toBe(mostRecentVisitTime);
+    },
+  );
 
   it('resets last visit time of a bookmark when its URL is not visited', async () => {
     const baseNode = createOtherBookmarksNode();

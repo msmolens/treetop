@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix a bug on Chrome where a previously visited bookmark might not display in a
+  larger font even if it's been visited recently.
+
 ## [3.0.0] - 2025-10-10
 
 ### Changed

@@ -2,6 +2,31 @@ import { isBookmark } from './bookmarktreenode-utils';
 import * as Treetop from './types';
 
 /**
+ * Get the most recently visited item from a list of chrome.history.VisitItems.
+ * The `chrome.history.getVisits` API behaves differently depending on the
+ * browser:
+ *
+ *   Chrome: Visits are sorted in chronological order.
+ *   Firefox: Visits are sorted in reverse chronological order.
+ *
+ * See:
+ * - https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/history/getVisits
+ * - https://bugzilla.mozilla.org/show_bug.cgi?id=1389588
+ *
+ */
+function getMostRecentItem(items: chrome.history.VisitItem[]) {
+  // The most recent item is either the first or the last, depending on the
+  // browser
+  const first = items.at(0);
+  const last = items.at(-1);
+
+  const firstVisitTime = first?.visitTime ?? 0;
+  const lastVisitTime = last?.visitTime ?? 0;
+
+  return firstVisitTime > lastVisitTime ? first : last;
+}
+
+/**
  * Class to initialize and manage updating last visit times for bookmarks.
  */
 export class HistoryManager {
@@ -53,8 +78,9 @@ export class HistoryManager {
     // Update last visit times
     const results = await Promise.all(promises);
     results.forEach((items, index) => {
-      if (items.length > 0) {
-        this.lastVisitTimeMap.set(nodeIds[index], items[0].visitTime!);
+      const mostRecentItem = getMostRecentItem(items);
+      if (mostRecentItem?.visitTime) {
+        this.lastVisitTimeMap.set(nodeIds[index], mostRecentItem.visitTime);
       }
     });
 
@@ -87,7 +113,8 @@ export class HistoryManager {
       url: bookmark.url!,
     });
 
-    const visitTime = items.length > 0 ? items[0].visitTime! : 0;
+    const mostRecentItem = getMostRecentItem(items);
+    const visitTime = mostRecentItem?.visitTime ?? 0;
     this.lastVisitTimeMap.set(bookmark.id, visitTime);
   }
 
@@ -114,7 +141,8 @@ export class HistoryManager {
       url: changeInfo.url,
     });
 
-    const newLastVisitTime = items.length > 0 ? items[0].visitTime! : 0;
+    const mostRecentItem = getMostRecentItem(items);
+    const newLastVisitTime = mostRecentItem?.visitTime ?? 0;
     this.lastVisitTimeMap.set(id, newLastVisitTime);
   }
 
