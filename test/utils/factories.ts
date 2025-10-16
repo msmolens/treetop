@@ -120,7 +120,9 @@ export const createHistoryItem = (): chrome.history.HistoryItem => {
   };
 };
 
-export const createVisitItem = (): chrome.history.VisitItem => {
+export const createVisitItem = (
+  withProperties?: Partial<chrome.history.VisitItem>,
+): chrome.history.VisitItem => {
   return {
     id: faker.string.uuid(),
     visitId: faker.string.uuid(),
@@ -128,5 +130,43 @@ export const createVisitItem = (): chrome.history.VisitItem => {
     referringVisitId: faker.string.uuid(),
     transition: 'link',
     isLocal: true,
+    ...withProperties,
   };
+};
+
+export interface CreateVisitItemsOptions {
+  /** The number of items to create */
+  count: number;
+  /**
+   * The browser convention to follow when ordering the items (Chrome:
+   * chronological order; Firefox: reverse chronological order)
+   */
+  order: 'chrome' | 'firefox';
+}
+
+/**
+ * Create a list of `chrome.history.VisitItem`s, as returned by
+ * `chrome.history.getVisits`, sorted according to the behavior of the specified
+ * browser.
+ */
+export const createVisitItems = (
+  opts: CreateVisitItemsOptions = {
+    count: 1,
+    order: 'firefox',
+  },
+): chrome.history.VisitItem[] => {
+  const { count, order } = opts;
+
+  const to = faker.date.recent();
+  const from = faker.date.recent({ refDate: to });
+
+  const items = faker.date
+    .betweens({ from, to, count })
+    .map((date) => createVisitItem({ visitTime: date.getTime() }));
+
+  if (order === 'firefox') {
+    items.reverse();
+  }
+
+  return items;
 };
