@@ -3,16 +3,11 @@ import { describe, expect, it, vi } from 'vitest';
 
 import Treetop from '@Treetop/treetop/Treetop.svelte';
 
-import ContextWrapper from '../../test/utils/ContextWrapper.svelte';
 import { createBrowserBookmarksTree } from '../../test/utils/factories';
 
 const setup = () => {
-  render(ContextWrapper, {
-    Component: Treetop,
-    Props: {
-      rootBookmarkId: null,
-    },
-    Context: {},
+  render(Treetop, {
+    rootBookmarkId: null,
   });
 };
 

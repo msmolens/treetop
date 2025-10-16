@@ -5,14 +5,13 @@ import { render, screen } from '@testing-library/svelte';
 import type { MockInstance } from 'vitest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import Folder from '@Treetop/treetop/Folder.svelte';
 import type * as Treetop from '@Treetop/treetop/types';
 
-import ContextWrapper from '../../test/utils/ContextWrapper.svelte';
 import {
   createBookmarkNode,
   createFolderNode,
 } from '../../test/utils/factories';
+import FolderWrapper from '../../test/utils/FolderWrapper.svelte';
 
 // Folder component requirements
 let builtInFolderInfo: Treetop.BuiltInFolderInfo;
@@ -31,22 +30,17 @@ let clock: SvelteDate;
 let rootNode: Treetop.FolderNode;
 
 const setup = () => {
-  render(ContextWrapper, {
-    Component: Folder,
-    Props: {
-      nodeId,
-      root: true,
-    },
-    Context: {
-      builtInFolderInfo,
-      folderNodeMap,
-      lastVisitTimeMap,
-      filterActive,
-      filterSet,
-      truncate,
-      tooltips,
-      clock,
-    },
+  render(FolderWrapper, {
+    builtInFolderInfo,
+    folderNodeMap,
+    lastVisitTimeMap,
+    filterActive,
+    filterSet,
+    truncate,
+    tooltips,
+    clock,
+    nodeId,
+    root: true,
   });
 };
 

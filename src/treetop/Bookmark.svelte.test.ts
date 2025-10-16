@@ -4,10 +4,9 @@ import { render, screen } from '@testing-library/svelte';
 import escapeRegExp from 'lodash-es/escapeRegExp';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import Bookmark from '@Treetop/treetop/Bookmark.svelte';
 import type * as Treetop from '@Treetop/treetop/types';
 
-import ContextWrapper from '../../test/utils/ContextWrapper.svelte';
+import BookmarkWrapper from '../../test/utils/BookmarkWrapper.svelte';
 
 let lastVisitTimeMap: Treetop.LastVisitTimeMap;
 let currentTruncate: boolean;
@@ -29,15 +28,14 @@ const MILLISECONDS_PER_HOUR =
   60; // minutes per hour
 
 const setup = () => {
-  render(ContextWrapper, {
-    Component: Bookmark,
-    Props: { nodeId, title, url },
-    Context: {
-      lastVisitTimeMap,
-      truncate,
-      tooltips,
-      clock,
-    },
+  render(BookmarkWrapper, {
+    lastVisitTimeMap,
+    truncate,
+    tooltips,
+    clock,
+    nodeId,
+    title,
+    url,
   });
 };
 

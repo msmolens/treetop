@@ -3,14 +3,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import Options from '@Treetop/options/Options.svelte';
 
-import ContextWrapper from '../../test/utils/ContextWrapper.svelte';
-
 const setup = () => {
-  render(ContextWrapper, {
-    Component: Options,
-    Props: {},
-    Context: {},
-  });
+  render(Options);
 };
 
 describe('Options', () => {

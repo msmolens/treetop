@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDestroy, onMount, setContext } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import { SvelteMap, SvelteSet } from 'svelte/reactivity';
   import { fade } from 'svelte/transition';
   import LinearProgress from '@smui/linear-progress';
@@ -14,6 +14,16 @@
   import { BookmarksManager } from './BookmarksManager';
   import { createClock } from './clock.svelte';
   import ConfirmationDialog from './ConfirmationDialog.svelte';
+  import {
+    setBuiltInFolderInfo,
+    setClock,
+    setFilterActive,
+    setFilterSet,
+    setFolderNodeMap,
+    setLastVisitTimeMap,
+    setTooltips,
+    setTruncate,
+  } from './context';
   import FilterInput from './FilterInput.svelte';
   import { FilterManager } from './FilterManager';
   import Folder from './Folder.svelte';
@@ -47,8 +57,8 @@
   );
 
   // Make select preferences available to other components
-  setContext('truncate', truncate);
-  setContext('tooltips', tooltips);
+  setTruncate(truncate);
+  setTooltips(tooltips);
 
   //
   // Create bookmarks data and manager
@@ -90,12 +100,12 @@
   const clock = createClock();
 
   // Make bookmark data available to other components
-  setContext('builtInFolderInfo', builtInFolderInfo);
-  setContext('folderNodeMap', folderNodeMap);
-  setContext('lastVisitTimeMap', lastVisitTimeMap);
-  setContext('filterActive', () => filterActive);
-  setContext('filterSet', filterSet);
-  setContext('clock', clock);
+  setBuiltInFolderInfo(builtInFolderInfo);
+  setFolderNodeMap(folderNodeMap);
+  setLastVisitTimeMap(lastVisitTimeMap);
+  setFilterActive(() => filterActive);
+  setFilterSet(filterSet);
+  setClock(clock);
 
   //
   // Error notification
