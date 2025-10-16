@@ -1,9 +1,12 @@
 <script lang="ts">
-  import { getContext } from 'svelte';
-  import type { SvelteDate } from 'svelte/reactivity';
   import lodashTruncate from 'lodash-es/truncate';
 
-  import type * as Treetop from './types';
+  import {
+    getClock,
+    getLastVisitTimeMap,
+    getTooltips,
+    getTruncate,
+  } from './context';
   import { truncateMiddle } from './utils';
 
   interface Props {
@@ -14,11 +17,10 @@
 
   let { nodeId, title, url }: Props = $props();
 
-  const lastVisitTimeMap: Treetop.LastVisitTimeMap =
-    getContext('lastVisitTimeMap');
-  const truncate = getContext<() => boolean>('truncate');
-  const tooltips = getContext<() => boolean>('tooltips');
-  const clock = getContext<SvelteDate>('clock');
+  const lastVisitTimeMap = getLastVisitTimeMap();
+  const truncate = getTruncate();
+  const tooltips = getTooltips();
+  const clock = getClock();
 
   const lastVisitTime = $derived(lastVisitTimeMap.get(nodeId)!);
 

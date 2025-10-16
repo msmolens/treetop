@@ -1,7 +1,11 @@
 <script lang="ts">
-  import { getContext } from 'svelte';
-
   import Bookmark from './Bookmark.svelte';
+  import {
+    getBuiltInFolderInfo,
+    getFilterActive,
+    getFilterSet,
+    getFolderNodeMap,
+  } from './context';
   import Folder from './Folder.svelte';
   import * as Treetop from './types';
 
@@ -12,11 +16,10 @@
 
   let { nodeId, root = false }: Props = $props();
 
-  const builtInFolderInfo: Treetop.BuiltInFolderInfo =
-    getContext('builtInFolderInfo');
-  const folderNodeMap = getContext<Treetop.FolderNodeMap>('folderNodeMap');
-  const filterActive = getContext<() => boolean>('filterActive');
-  const filterSet = getContext<Treetop.FilterSet>('filterSet');
+  const builtInFolderInfo = getBuiltInFolderInfo();
+  const folderNodeMap = getFolderNodeMap();
+  const filterActive = getFilterActive();
+  const filterSet = getFilterSet();
 
   const node = $derived(folderNodeMap.get(nodeId)!);
 
