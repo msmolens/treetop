@@ -62,7 +62,7 @@
     "rollup-plugin-copy": "~3.5.0",
     "sass": "~1.93.2",
     "smui-theme": "~8.0.3",
-    "svelte": "~5.39.11",
+    "svelte": "~5.40.1",
     "svelte-check": "~4.3.3",
     "typescript": "~5.9.3",
     "typescript-eslint": "~8.45.0",
